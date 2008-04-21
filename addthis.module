@@ -1,6 +1,6 @@
 <?php
 
-function addtoany_perm() {
+function addtothis_perm() {
   //$perms = array('administer content types', 'administer nodes', 'access content', 'view revisions', 'revert revisions');
 
   foreach (node_get_types() as $type) {
