@@ -15,22 +15,19 @@ function addthis_perm() {
   return $perms;
 }
 
-/**
- * Implementation of hook_nodeapi().
- */
-function addthis_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
-  switch ($op) {
-    case 'view':
-      if (user_access('view addthis') and variable_get('addthis_display_in_links', '0')) {
-        $node->content['addthis'] = array(
-          '#value' => '<div class="addthis">'. _addthis_create_button() .'</div>',
-          '#weight' => 1,
-        );
-      }
-      break;
+function addthis_link($type, $node=NULL, $teaser = FALSE) {
+  $links = array();
+					
+  if ($type == 'node' && user_access('view addthis') && variable_get('addthis_display_in_links', '0')) {
+    $links['addthis'] = array(
+      'title' => _addthis_create_button(),
+      'href' => '#',
+      'html' => TRUE,
+    );
   }
-}
 
+  return $links;
+}
 /**
  * Implementation of hook_menu().
  */
@@ -38,11 +35,11 @@ function addthis_menu() {
   $items = array();
 
   $items['admin/settings/addthis'] = array(
-    'title' 			=> t('AddThis module settings'),
-    'description' 		=> t('Set username and customize look and feel for <a href="http://www.addthis.com/">AddThis</a> button.'),
-    'page callback'		=> 'drupal_get_form',
-    'page arguments' 	=> array('addthis_admin_settings'),
-    'access arguments' 	=> array('administer addthis'),
+    'title'            => t('AddThis module settings'),
+    'description'      => t('Set username and customize look and feel for <a href="http://www.addthis.com/">AddThis</a> button.'),
+    'page callback'    => 'drupal_get_form',
+    'page arguments'   => array('addthis_admin_settings'),
+    'access arguments' => array('administer addthis'),
   );
 
   return $items;
@@ -175,6 +172,7 @@ function addthis_block($op = 'list', $delta = 0) {
  *   String containing html code for the button
  */
 function _addthis_create_button() {
+  drupal_add_css((drupal_get_path('module', 'addthis') .'/addthis.css'), $type = 'module', $media = 'all', $preprocess = TRUE);
   return ( sprintf('
     <script type="text/javascript"> 
       addthis_pub = \'%s\';
@@ -186,10 +184,10 @@ function _addthis_create_button() {
       addthis_offset_top = \'%d\';
       addthis_offset_left = \'%d\';
     </script>
-    <a href="http://www.addthis.com/bookmark.php" 
+    <div class="addthis"><a href="http://www.addthis.com/bookmark.php" 
       onmouseover="return addthis_open(this, \'\', \'[URL]\', \'[TITLE]\')" 
       onmouseout="addthis_close()" 
-      onclick="return addthis_sendto()"><img src="%s" width="%d" height="%d" %s /></a>
+      onclick="return addthis_sendto()"><img src="%s" width="%d" height="%d" %s /></a></div>
     <script type="text/javascript" src="http://s7.addthis.com/js/152/addthis_widget.js"></script>
     ',
     variable_get('addthis_user', 'my-username'),
