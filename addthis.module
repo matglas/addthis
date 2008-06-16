@@ -37,14 +37,12 @@ function addthis_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
 function addthis_menu() {
   $items = array();
 
-  // Admin settings.
-  $items[] = array(
-    'path'               => 'admin/settings/addthis',
-    'title'              => t('AddThis module settings'),
-    'callback'           => 'drupal_get_form',
-    'callback arguments' => array('addthis_admin_settings'),
-    'access'             => user_access('administer addthis'),
-    'description'        => t('Set username and customize look and feel for <a href="http://www.addthis.com/">AddThis</a> button.'),
+  $items['admin/settings/addthis'] = array(
+    'title' 			=> t('AddThis module settings'),
+    'description' 		=> t('Set username and customize look and feel for <a href="http://www.addthis.com/">AddThis</a> button.'),
+    'page callback'		=> 'drupal_get_form',
+    'page arguments' 	=> array('addthis_admin_settings'),
+    'access arguments' 	=> array('administer addthis'),
   );
 
   return $items;
