@@ -2,9 +2,9 @@
 // $Id$
 
 /**
-* @file
-* Stand alone module file to handle AddThis button integration
-**/
+ * @file
+ * Stand alone module file to handle AddThis button integration
+ */
 
 /**
  * Implementation of hook_perm().
@@ -17,8 +17,8 @@ function addthis_perm() {
 
 function addthis_link($type, $node=NULL, $teaser = FALSE) {
   $links = array();
-					
-  if ($type == 'node' && user_access('view addthis') && variable_get('addthis_display_in_links', '0')) {
+
+  if ($type == 'node' && user_access('view addthis') && $teaser ? variable_get('addthis_display_in_teasers', '0') : variable_get('addthis_display_in_links', '0') ) {
     $links['addthis'] = array(
       'title' => _addthis_create_button(),
       'href' => '#',
@@ -66,14 +66,22 @@ function addthis_admin_settings() {
   );
   $form['addthis_general_settings']['addthis_display_in_links'] = array(
     '#type'          => 'checkbox',
-    '#title'         => t('Display in node links'),
+    '#title'         => t('Display on node pages'),
     '#default_value' => variable_get('addthis_display_in_links', '0'),
-    '#description'   => t('Display AddThis always at node links section.'),
+    '#description'   => t('Display an AddThis button always on a node page\'s links section.'),
+  );
+  $form['addthis_general_settings']['addthis_display_in_teasers'] = array(
+    '#type'          => 'checkbox',
+    '#title'         => t('Display in node teasers'),
+    '#default_value' => variable_get('addthis_display_in_teasers', '0'),
+    '#description'   => t('Display an AddThis button in the node teasers.'),
   );
 
   $form['addthis_button_settings'] = array(
-    '#type'  => 'fieldset',
-    '#title' => t('Button image settings'),
+    '#type'         => 'fieldset',
+    '#title'        => t('Button image settings'),
+    '#collapsible'  => TRUE,
+    '#collapsed'    => TRUE,
   );
   $form['addthis_button_settings']['addthis_image'] = array(
     '#type'          => 'textfield',
@@ -101,8 +109,10 @@ function addthis_admin_settings() {
   );
 
   $form['addthis_widget_settings'] = array(
-    '#type'  => 'fieldset',
-    '#title' => t('Widget settings'),
+    '#type'         => 'fieldset',
+    '#title'        => t('Widget settings'),
+    '#collapsible'  => TRUE,
+    '#collapsed'    => TRUE,
   );
   $form['addthis_widget_settings']['addthis_logo'] = array(
     '#type'          => 'textfield',
@@ -174,7 +184,7 @@ function addthis_block($op = 'list', $delta = 0) {
 function _addthis_create_button() {
   drupal_add_css((drupal_get_path('module', 'addthis') .'/addthis.css'), $type = 'module', $media = 'all', $preprocess = TRUE);
   return ( sprintf('
-    <script type="text/javascript"> 
+    <script type="text/javascript">
       addthis_pub = \'%s\';
       addthis_logo = \'%s\';
       addthis_logo_background = \'%s\';
@@ -184,9 +194,9 @@ function _addthis_create_button() {
       addthis_offset_top = \'%d\';
       addthis_offset_left = \'%d\';
     </script>
-    <div class="addthis"><a href="http://www.addthis.com/bookmark.php" 
-      onmouseover="return addthis_open(this, \'\', \'[URL]\', \'[TITLE]\')" 
-      onmouseout="addthis_close()" 
+    <div class="addthis"><a href="http://www.addthis.com/bookmark.php"
+      onmouseover="return addthis_open(this, \'\', \'[URL]\', \'[TITLE]\')"
+      onmouseout="addthis_close()"
       onclick="return addthis_sendto()"><img src="%s" width="%d" height="%d" %s /></a></div>
     <script type="text/javascript" src="http://s7.addthis.com/js/152/addthis_widget.js"></script>
     ',
