@@ -20,7 +20,7 @@ function addthis_link($type, $node=NULL, $teaser = FALSE) {
 
   if ($type == 'node' && user_access('view addthis') && $teaser ? variable_get('addthis_display_in_teasers', '0') : variable_get('addthis_display_in_links', '0') ) {
     $links['addthis'] = array(
-      'title' => _addthis_create_button(),
+      'title' => _addthis_create_button($node,$teaser),
       'href' => '#',
       'html' => TRUE,
     );
@@ -181,7 +181,7 @@ function addthis_block($op = 'list', $delta = 0) {
  * @return
  *   String containing html code for the button
  */
-function _addthis_create_button() {
+function _addthis_create_button($node=NULL, $teaser = FALSE) {
   drupal_add_css((drupal_get_path('module', 'addthis') .'/addthis.css'), $type = 'module', $media = 'all', $preprocess = TRUE);
   return ( sprintf('
     <script type="text/javascript">
@@ -195,7 +195,7 @@ function _addthis_create_button() {
       addthis_offset_left = \'%d\';
     </script>
     <div class="addthis"><a href="http://www.addthis.com/bookmark.php"
-      onmouseover="return addthis_open(this, \'\', \'[URL]\', \'[TITLE]\')"
+      onmouseover="return addthis_open(this, \'\', \'%s\', \'%s\')"
       onmouseout="addthis_close()"
       onclick="return addthis_sendto()"><img src="%s" width="%d" height="%d" %s /></a></div>
     <script type="text/javascript" src="http://s7.addthis.com/js/152/addthis_widget.js"></script>
@@ -208,6 +208,8 @@ function _addthis_create_button() {
     variable_get('addthis_options', 'favorites, email, digg, delicious, myspace, facebook, google, live, more'),
     variable_get('addthis_offset_top', '2'),
     variable_get('addthis_offset_left', '2'),
+    $teaser ? url('node/'.$node->nid, array('absolute' => 1) ) : '[URL]',
+    $teaser ? addslashes($node->title) : '[TITLE]',
     variable_get('addthis_image', 'http://s9.addthis.com/button1-share.gif'),
     variable_get('addthis_image_width', '125'),
     variable_get('addthis_image_height', '16'),
