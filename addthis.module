@@ -184,7 +184,7 @@ function addthis_block($op = 'list', $delta = 0) {
  *   String containing html code for the button
  */
 function _addthis_create_button($node=NULL, $teaser = FALSE) {
-  drupal_add_css((drupal_get_path('module', 'addthis') .'/addthis.css'), $type = 'module', $media = 'all', $preprocess = TRUE);
+  drupal_add_css((drupal_get_path('module', 'addthis') .'/addthis.css'));
   return ( sprintf('
     <script type="text/javascript">
       addthis_pub = \'%s\';
