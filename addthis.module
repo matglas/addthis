@@ -184,32 +184,38 @@ function addthis_block($op = 'list', $delta = 0) {
  *   String containing html code for the button
  */
 function _addthis_create_button($node=NULL, $teaser = FALSE) {
-  drupal_add_css((drupal_get_path('module', 'addthis') .'/addthis.css'));
+  global $addthis_counter;
+  $addthis_counter++;
+  if ($addthis_counter == 1) {
+	  drupal_add_css((drupal_get_path('module', 'addthis') .'/addthis.css'));
+	  drupal_add_js(sprintf('
+	    addthis_pub = \'%s\';
+	    addthis_logo = \'%s\';
+	    addthis_logo_background = \'%s\';
+	    addthis_logo_color = \'%s\';
+	    addthis_brand = \'%s\';
+	    addthis_options = \'%s\';
+	    addthis_offset_top = \'%d\';
+	    addthis_offset_left = \'%d\';
+	',
+	    variable_get('addthis_user', 'my-username'),
+	    variable_get('addthis_logo', 'http://www.addthis.com/images/yourlogo.png'),
+	    variable_get('addthis_logo_background', 'EFEFFF'),
+	    variable_get('addthis_logo_color', '666699'),
+	    variable_get('addthis_brand', 'Your Site'),
+	    variable_get('addthis_options', 'favorites, email, digg, delicious, myspace, facebook, google, live, more'),
+	    variable_get('addthis_offset_top', '2'),
+	    variable_get('addthis_offset_left', '2')
+	  ), 'inline');
+  }
+
   return ( sprintf('
-    <script type="text/javascript">
-      addthis_pub = \'%s\';
-      addthis_logo = \'%s\';
-      addthis_logo_background = \'%s\';
-      addthis_logo_color = \'%s\';
-      addthis_brand = \'%s\';
-      addthis_options = \'%s\';
-      addthis_offset_top = \'%d\';
-      addthis_offset_left = \'%d\';
-    </script>
     <div class="addthis"><a href="http://www.addthis.com/bookmark.php"
       onmouseover="return addthis_open(this, \'\', \'%s\', \'%s\')"
       onmouseout="addthis_close()"
       onclick="return addthis_sendto()"><img src="%s" width="%d" height="%d" %s /></a></div>
     <script type="text/javascript" src="http://s7.addthis.com/js/152/addthis_widget.js"></script>
     ',
-    variable_get('addthis_user', 'my-username'),
-    variable_get('addthis_logo', 'http://www.addthis.com/images/yourlogo.png'),
-    variable_get('addthis_logo_background', 'EFEFFF'),
-    variable_get('addthis_logo_color', '666699'),
-    variable_get('addthis_brand', 'Your Site'),
-    variable_get('addthis_options', 'favorites, email, digg, delicious, myspace, facebook, google, live, more'),
-    variable_get('addthis_offset_top', '2'),
-    variable_get('addthis_offset_left', '2'),
     $teaser ? url('node/'.$node->nid, array('absolute' => 1) ) : '[URL]',
     $teaser ? addslashes($node->title) : '[TITLE]',
     variable_get('addthis_image', 'http://s9.addthis.com/button1-share.gif'),
