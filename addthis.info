@@ -1,4 +1,4 @@
 ; $Id$
 name = AddThis
 description = Creates AddThis button as a block, to be used in themes and to node links.
-core = 6.x
+core = 5.x
