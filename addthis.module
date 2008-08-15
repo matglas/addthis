@@ -217,7 +217,7 @@ function _addthis_create_button($node=NULL, $teaser = FALSE) {
       onclick="return addthis_sendto()"><img src="%s" width="%d" height="%d" %s /></a></div>
     <script type="text/javascript" src="http://s7.addthis.com/js/152/addthis_widget.js"></script>
     ',
-    $teaser ? url('node/'. $node->nid, array('absolute' => 1) ) : '[URL]',
+    $teaser ? url('node/'. $node->nid, NULL, NULL, TRUE) : '[URL]',
     $teaser ? addslashes($node->title) : '[TITLE]',
     variable_get('addthis_image', 'http://s9.addthis.com/button1-share.gif'),
     variable_get('addthis_image_width', '125'),
