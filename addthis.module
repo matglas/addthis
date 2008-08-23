@@ -199,7 +199,7 @@ function _addthis_create_button($node=NULL, $teaser = FALSE) {
 	    addthis_offset_top = \'%d\';
 	    addthis_offset_left = \'%d\';
 	',
-        variable_get('addthis_user', 'my-username'),
+        variable_get('addthis_username', 'my-username'),
         variable_get('addthis_logo', 'http://www.addthis.com/images/yourlogo.png'),
         variable_get('addthis_logo_background', 'EFEFFF'),
         variable_get('addthis_logo_color', '666699'),
