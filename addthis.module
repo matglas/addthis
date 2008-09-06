@@ -21,11 +21,13 @@ function addthis_perm() {
 function addthis_link($type, $node=NULL, $teaser = FALSE) {
   $links = array();
 
-  if ($type == 'node' && user_access('view addthis') && $teaser ? variable_get('addthis_display_in_teasers', '0') : variable_get('addthis_display_in_links', '0') ) {
-    $links['addthis'] = array(
-      'title' => _addthis_create_button($node, $teaser),
-      'html' => TRUE,
-    );
+  if ($type === 'node' && user_access('view addthis')) {
+    if (! $teaser || variable_get('addthis_display_in_teasers', '1')) {
+      $links['addthis'] = array(
+          'title' => _addthis_create_button($node, $teaser),
+          'html' => TRUE,
+        );
+    }
   }
 
   return $links;
@@ -36,16 +38,79 @@ function addthis_link($type, $node=NULL, $teaser = FALSE) {
 function addthis_menu() {
   $items = array();
 
-  $items[] = array(
-    'path'                 => 'admin/settings/addthis',
-    'title'                => t('AddThis module settings'),
-    'description'          => t('Set username and customize look and feel for <a href="http://www.addthis.com/">AddThis</a> button.'),
-    'callback'             => 'drupal_get_form',
-    'callback arguments'   => array('addthis_admin_settings'),
-    'access'               => user_access('administer addthis'),
+  $items['admin/settings/addthis'] = array(
+    'title' => 'AddThis module settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('addthis_admin_settings'),
+    'description' => 'Set username and customize look and feel for <a href="http://www.addthis.com/">AddThis</a> button.',
+    'access arguments' => array('addthis_admin_settings'),
+    'menu_name' => 'settings',
   );
 
   return $items;
+}
+
+/**
+ * Implementation of hook_block().
+ */
+function addthis_block($op = 'list', $delta = 0) {
+  if ($op == 'list') {
+    $blocks[0]['info'] = t('AddThis button');
+    return $blocks;
+  }
+  else if ($op == 'view' && user_access('view addthis')) {
+    $block['subject'] = t('AddThis');
+    $block['content'] = _addthis_create_button();
+    return $block;
+  }
+}
+
+/**
+ * Internal function to generate code for AddThis button
+ *
+ * @return
+ *   String containing html code for the button
+ */
+function _addthis_create_button($node=NULL, $teaser = FALSE) {
+  global $_addthis_counter;
+  $_addthis_counter++;
+  if ($_addthis_counter == 1) {
+      drupal_add_css((drupal_get_path('module', 'addthis') .'/addthis.css'));
+      drupal_add_js(sprintf('
+	    addthis_pub = \'%s\';
+	    addthis_logo = \'%s\';
+	    addthis_logo_background = \'%s\';
+	    addthis_logo_color = \'%s\';
+	    addthis_brand = \'%s\';
+	    addthis_options = \'%s\';
+	    addthis_offset_top = \'%d\';
+	    addthis_offset_left = \'%d\';
+	',
+        variable_get('addthis_username', 'my-username'),
+        variable_get('addthis_logo', 'http://www.addthis.com/images/yourlogo.png'),
+        variable_get('addthis_logo_background', 'EFEFFF'),
+        variable_get('addthis_logo_color', '666699'),
+        variable_get('addthis_brand', 'Your Site'),
+        variable_get('addthis_options', 'favorites, email, digg, delicious, myspace, facebook, google, live, more'),
+        variable_get('addthis_offset_top', '2'),
+        variable_get('addthis_offset_left', '2')
+      ), 'inline');
+  }
+
+  return ( sprintf('
+    <div class="addthis"><a href="http://www.addthis.com/bookmark.php"
+      onmouseover="return addthis_open(this, \'\', \'%s\', \'%s\')"
+      onmouseout="addthis_close()"
+      onclick="return addthis_sendto()"><img src="%s" width="%d" height="%d" %s /></a></div>
+    <script type="text/javascript" src="http://s7.addthis.com/js/152/addthis_widget.js"></script>
+    ',
+    $teaser ? url('node/'. $node->nid, NULL, NULL, TRUE) : '[URL]',
+    $teaser ? addslashes($node->title) : '[TITLE]',
+    variable_get('addthis_image', 'http://s9.addthis.com/button1-share.gif'),
+    variable_get('addthis_image_width', '125'),
+    variable_get('addthis_image_height', '16'),
+    variable_get('addthis_image_attributes', 'alt=""')
+  ));
 }
 
 /**
@@ -117,6 +182,12 @@ function addthis_admin_settings() {
     '#collapsible'  => TRUE,
     '#collapsed'    => TRUE,
   );
+  $form['addthis_widget_settings']['addthis_dropdown_disabled'] = array(
+    '#type'          => 'checkbox',
+    '#title'         => t('Disable dropdown'),
+    '#default_value' => variable_get('addthis_dropdown_disabled', '0'),
+    '#description'   => t('You can disable the dropdown for selecting where to share your link and use a pop-up window instead. This can be useful if the button is for example located next to a flash object.'),
+  );
   $form['addthis_widget_settings']['addthis_logo'] = array(
     '#type'          => 'textfield',
     '#title'         => t('Logo url'),
@@ -161,67 +232,4 @@ function addthis_admin_settings() {
     '#description'   => t('Horizontal offset for the drop-down window (in pixels). Example: 2'),
   );
   return system_settings_form($form);
-}
-
-/**
- * Implementation of hook_block().
- */
-function addthis_block($op = 'list', $delta = 0) {
-  if ($op == 'list') {
-    $blocks[0]['info'] = t('AddThis button');
-    return $blocks;
-  }
-  else if ($op == 'view' && user_access('view addthis')) {
-    $block['subject'] = t('AddThis');
-    $block['content'] = _addthis_create_button();
-    return $block;
-  }
-}
-
-/**
- * Internal function to generate code for AddThis button
- *
- * @return
- *   String containing html code for the button
- */
-function _addthis_create_button($node=NULL, $teaser = FALSE) {
-  global $_addthis_counter;
-  $_addthis_counter++;
-  if ($_addthis_counter == 1) {
-      drupal_add_css((drupal_get_path('module', 'addthis') .'/addthis.css'));
-      drupal_add_js(sprintf('
-	    addthis_pub = \'%s\';
-	    addthis_logo = \'%s\';
-	    addthis_logo_background = \'%s\';
-	    addthis_logo_color = \'%s\';
-	    addthis_brand = \'%s\';
-	    addthis_options = \'%s\';
-	    addthis_offset_top = \'%d\';
-	    addthis_offset_left = \'%d\';
-	',
-        variable_get('addthis_username', 'my-username'),
-        variable_get('addthis_logo', 'http://www.addthis.com/images/yourlogo.png'),
-        variable_get('addthis_logo_background', 'EFEFFF'),
-        variable_get('addthis_logo_color', '666699'),
-        variable_get('addthis_brand', 'Your Site'),
-        variable_get('addthis_options', 'favorites, email, digg, delicious, myspace, facebook, google, live, more'),
-        variable_get('addthis_offset_top', '2'),
-        variable_get('addthis_offset_left', '2')
-      ), 'inline');
-  }
-
-  return ( sprintf('
-    <div class="addthis"><a href="http://www.addthis.com/bookmark.php"
-      onmouseover="return addthis_open(this, \'\', \'%s\', \'%s\')"
-      onmouseout="addthis_close()"
-      onclick="return addthis_sendto()"><img src="%s" width="%d" height="%d" %s /></a></div>
-    <script type="text/javascript" src="http://s7.addthis.com/js/152/addthis_widget.js"></script>
-    ',
-    $teaser ? url('node/'. $node->nid, NULL, NULL, TRUE) : '[URL]',
-    $teaser ? addslashes($node->title) : '[TITLE]',
-    variable_get('addthis_image', 'http://s9.addthis.com/button1-share.gif'),
-    variable_get('addthis_image_width', '125'),
-    variable_get('addthis_image_height', '16'),
-    variable_get('addthis_image_attributes', 'alt=""')
-  ));
 }
