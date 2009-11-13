@@ -2,6 +2,9 @@
 
 .addthis {
   display:inline;
-  position:relative;
-  top:2px;
+}
+
+.addthis img {
+  vertical-align: bottom;
+  margin-bottom: 2px;
 }
