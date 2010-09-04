@@ -53,4 +53,7 @@ Future development of this module will include at least RSS support. CCK and Vie
 
 Current maintainers:
 * Vesa Palmu (wesku) - http://drupal.org/user/75070
+* Jaakko Kuurne (jaakko) - http://drupal.org/user/836020
 
+Major contributions by:
+Lesmana Lim (lesmana) - http://drupal.org/user/84263
