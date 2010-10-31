@@ -1,0 +1,31 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Install, update and uninstall functions for the addthis module.
+ */
+
+/**
+ * Implements hook_field_schema().
+ */
+function addthis_field_schema($field) {
+  switch ($field['type']) {
+    case 'addthis':
+      $columns = array(
+        'value' => array(
+          'type' => 'varchar',
+          'length' => $field['settings']['max_length'],
+          'not null' => FALSE,
+        ),
+      );
+      break;
+  }
+  return array(
+    'columns' => $columns,
+    'indexes' => array(
+    ),
+    'foreign keys' => array(
+    ),
+  );
+}

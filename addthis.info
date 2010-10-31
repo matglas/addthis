@@ -1,9 +1,8 @@
 ; $Id$
 name = AddThis
-description = Creates AddThis button as a block, to be used in themes and to node links.
+description = AddThis.com provides an easy way to share your content across the web.
 core = 7.x
-project = "addthis"
-datestamp = "1242663607"
-files[] = "addthis.module"
-files[] = "addthis.admin.inc"
-
+package = Fields
+dependencies[] = field
+files[] = addthis.module
+files[] = addthis.install
