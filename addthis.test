@@ -7,6 +7,12 @@
 
 class AddThisTestCase extends DrupalWebTestCase {
 
+  private $user;
+
+  public function setUp() {
+    parent::setUp('addthis');
+  }
+
   public function getInfo() {
     return array(
       'name' => 'Tests for the AddThis-module.',
@@ -21,6 +27,10 @@ class AddThisTestCase extends DrupalWebTestCase {
     $this->addThisModuleShouldDefineField();
 
     $this->addThisModuleDefinesBlock();
+
+    $this->addThisShouldBeAbleToBeUsedAsField();
+
+    $this->addThisShouldBeAbleToBeUsedAsBlock();
   }
 
   private function addThisModuleShouldProvideHelp() {
@@ -34,6 +44,33 @@ class AddThisTestCase extends DrupalWebTestCase {
 
   private function addThisModuleDefinesBlock() {
     $this->assertEqual(1, count(module_invoke('addthis', 'block_info')), t('AddThis-module should define a block.'));
+  }
+
+  private function addThisShouldBeAbleToBeUsedAsField() {
+    $this->createAndLoginUser();
+
+    $edit = array();
+    $edit["fields[_add_new_field][label]"] = 'addthis_label';
+    $edit["fields[_add_new_field][field_name]"] = 'addthis_field_name';
+    $edit["fields[_add_new_field][type]"] = 'addthis';
+    $edit["fields[_add_new_field][widget_type]"] = 'addthis_button';
+
+    $this->drupalPost('admin/structure/types/manage/article/fields', $edit, t('Save'));
+    
+    $this->assertText('Field settings');
+  }
+
+  private function addThisShouldBeAbleToBeUsedAsBlock() {
+
+  }
+
+  private function createAndLoginUser() {
+    $this->user = $this->createAdminUser();
+    $this->drupalLogin($this->user);
+  }
+
+  private function createAdminUser() {
+    return $this->drupalCreateUser(array('access content', 'administer nodes', 'administer content types'));
   }
 
   private function stringContains($string, $contains) {
