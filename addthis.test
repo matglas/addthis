@@ -15,7 +15,16 @@ class AddThisTestCase extends DrupalWebTestCase {
     );
   }
 
-  public function testAddThisModuleShouldDefineBlock() {
+  public function testFunctionality() {
+    $this->assertTrue($this->stringContains(module_invoke('addthis', 'help', 'admin/help#addthis', NULL), 'About'), 
+                      'AddThis-module should provide help.');
+
+    $this->assertEqual(1, count(module_invoke('addthis', 'field_info')), t('AddThis-module should define a field.'));
+
     $this->assertEqual(1, count(module_invoke('addthis', 'block_info')), t('AddThis-module should define a block.'));
+  }
+
+  private function stringContains($string, $contains) {
+    return strpos($string, $contains) !== FALSE;
   }
 }
