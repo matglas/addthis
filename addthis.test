@@ -23,13 +23,9 @@ class AddThisTestCase extends DrupalWebTestCase {
 
   public function testFunctionality() {
     $this->addThisModuleShouldProvideHelp();
-
     $this->addThisModuleShouldDefineField();
-
-    $this->addThisModuleDefinesBlock();
-
+    $this->addThisModuleShouldDefineBlock();
     $this->addThisShouldBeAbleToBeUsedAsField();
-
     $this->addThisShouldBeAbleToBeUsedAsBlock();
   }
 
@@ -42,7 +38,7 @@ class AddThisTestCase extends DrupalWebTestCase {
     $this->assertEqual(1, count(module_invoke('addthis', 'field_info')), t('AddThis-module should define a field.'));
   }
 
-  private function addThisModuleDefinesBlock() {
+  private function addThisModuleShouldDefineBlock() {
     $this->assertEqual(1, count(module_invoke('addthis', 'block_info')), t('AddThis-module should define a block.'));
   }
 
@@ -50,14 +46,40 @@ class AddThisTestCase extends DrupalWebTestCase {
     $this->createAndLoginUser();
 
     $edit = array();
-    $edit["fields[_add_new_field][label]"] = 'addthis_label';
-    $edit["fields[_add_new_field][field_name]"] = 'addthis_field_name';
+    $label = strtolower($this->randomName());
+    $edit["fields[_add_new_field][label]"] = $label;
+    $edit["fields[_add_new_field][field_name]"] = $label;
     $edit["fields[_add_new_field][type]"] = 'addthis';
     $edit["fields[_add_new_field][widget_type]"] = 'addthis_button';
 
     $this->drupalPost('admin/structure/types/manage/article/fields', $edit, t('Save'));
-    
-    $this->assertText('Field settings');
+
+    $this->assertText($label, 'AddThis-module should be able to be added as a field.');
+    $this->addThisShouldProvideDefaultTypeCompactButton();
+    $this->addThisShouldProvideDefaultTypeDisabled();
+    $this->addThisShouldProvideDefaultTypeLargeButton();
+    $this->addThisShouldProvideDefaultTypeSharecount();
+    $this->addThisShouldProvideDefaultTypeToolbox();
+  }
+
+  private function addThisShouldProvideDefaultTypeCompactButton() {
+    $this->assertText('Compact button', 'AddThis-module should provide default type "Compact button"');
+  }
+
+  private function addThisShouldProvideDefaultTypeDisabled() {
+    $this->assertText('Disabled', 'AddThis-module should provide default type "Disabled"');
+  }
+
+  private function addThisShouldProvideDefaultTypeLargeButton() {
+    $this->assertText('Large button', 'AddThis-module should provide default type "Large button"');
+  } 
+
+  private function addThisShouldProvideDefaultTypeSharecount() {
+    $this->assertText('Sharecount', 'AddThis-module should provide default type "Sharecount"');
+  }
+
+  private function addThisShouldProvideDefaultTypeToolbox() {
+    $this->assertText('Toolbox', 'AddThis-module should provide default type "Toolbox"');
   }
 
   private function addThisShouldBeAbleToBeUsedAsBlock() {
@@ -70,7 +92,7 @@ class AddThisTestCase extends DrupalWebTestCase {
   }
 
   private function createAdminUser() {
-    return $this->drupalCreateUser(array('access content', 'administer nodes', 'administer content types'));
+    return $this->drupalCreateUser(array('access content', 'administer content types', 'administer nodes'));
   }
 
   private function stringContains($string, $contains) {
