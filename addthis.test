@@ -23,9 +23,13 @@ class AddThisTestCase extends DrupalWebTestCase {
 
   public function testFunctionality() {
     $this->addThisModuleShouldProvideHelp();
+
     $this->addThisModuleShouldDefineField();
+
     $this->addThisModuleShouldDefineBlock();
+
     $this->addThisShouldBeAbleToBeUsedAsField();
+
     $this->addThisShouldBeAbleToBeUsedAsBlock();
   }
 
@@ -46,7 +50,7 @@ class AddThisTestCase extends DrupalWebTestCase {
     $this->createAndLoginUser();
 
     $edit = array();
-    $label = strtolower($this->randomName());
+    $label = $this->generateRandomLowercaseString();
     $edit["fields[_add_new_field][label]"] = $label;
     $edit["fields[_add_new_field][field_name]"] = $label;
     $edit["fields[_add_new_field][type]"] = 'addthis';
@@ -55,11 +59,18 @@ class AddThisTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/structure/types/manage/article/fields', $edit, t('Save'));
 
     $this->assertText($label, 'AddThis-module should be able to be added as a field.');
+
     $this->addThisShouldProvideDefaultTypeCompactButton();
+
     $this->addThisShouldProvideDefaultTypeDisabled();
+
     $this->addThisShouldProvideDefaultTypeLargeButton();
+
     $this->addThisShouldProvideDefaultTypeSharecount();
+
     $this->addThisShouldProvideDefaultTypeToolbox();
+
+    $this->addThisFieldSettingsShouldBeAbleToBeSaved($label);
   }
 
   private function addThisShouldProvideDefaultTypeCompactButton() {
@@ -82,6 +93,18 @@ class AddThisTestCase extends DrupalWebTestCase {
     $this->assertText('Toolbox', 'AddThis-module should provide default type "Toolbox"');
   }
 
+  private function addThisFieldSettingsShouldBeAbleToBeSaved($label) {
+    $edit = array();
+    $username = $this->generateRandomLowercaseString();
+    $edit["field[settings][addthis_user]"] = $username;
+    $edit["field[settings][addthis_style]"] = 'large_button';
+
+    $this->drupalPost(NULL, $edit, t('Save field settings'));
+
+    $this->assertText(t("Updated field @name field settings.", array('@name' => $label)),
+                      'AddThis-module field settings should be able to be saved.');
+  }
+
   private function addThisShouldBeAbleToBeUsedAsBlock() {
 
   }
@@ -97,5 +120,9 @@ class AddThisTestCase extends DrupalWebTestCase {
 
   private function stringContains($string, $contains) {
     return strpos($string, $contains) !== FALSE;
+  }
+
+  private function generateRandomLowercaseString() {
+    return strtolower($this->randomName());
   }
 }
