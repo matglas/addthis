@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Tests for the AddThis-module.
+ */
+
+class AddThisTestCase extends DrupalWebTestCase {
+
+  public function getInfo() {
+    return array(
+      'name' => 'Tests for the AddThis-module.',
+      'description' => 'Tests for the AddThis-module.',
+      'group' => 'AddThis',
+    );
+  }
+
+  public function testAddThisModuleShouldDefineBlock() {
+    $this->assertEqual(1, count(module_invoke('addthis', 'block_info')), t('AddThis-module should define a block.'));
+  }
+}

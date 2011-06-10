@@ -280,3 +280,15 @@ function addthis_filter_format_update($format) {
 function addthis_filter_format_disable($format) {
   field_cache_clear();
 }
+
+/**
+ * Implements hook_block_info().
+ */
+function addthis_block_info() {
+  $blockInfo = array();
+  $blockInfo['addthis_block'] = array(
+    'info' => t('An AddThis-block.'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  return $blockInfo;
+}

@@ -5,3 +5,4 @@ package = Fields
 dependencies[] = field
 files[] = addthis.module
 files[] = addthis.install
+files[] = addthis.test
