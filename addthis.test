@@ -106,7 +106,7 @@ class AddThisTestCase extends DrupalWebTestCase {
   }
 
   private function addThisShouldBeAbleToBeUsedAsBlock() {
-
+    $this->assertTrue($this->stringContains($this->drupalGet('admin/structure/block'), 'An AddThis-block.'));
   }
 
   private function createAndLoginUser() {
@@ -115,7 +115,7 @@ class AddThisTestCase extends DrupalWebTestCase {
   }
 
   private function createAdminUser() {
-    return $this->drupalCreateUser(array('access content', 'administer content types', 'administer nodes'));
+    return $this->drupalCreateUser(array('access content', 'administer blocks', 'administer content types', 'administer nodes'));
   }
 
   private function stringContains($string, $contains) {
