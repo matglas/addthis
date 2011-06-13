@@ -45,24 +45,11 @@ function addthis_field_info() {
 function addthis_field_settings_form($field, $instance, $has_data) {
   $settings = $field['settings'];
 
-  $form['addthis_user'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Addthis username'),
-    '#default_value' => isset($settings['addthis_user']) ? $settings['addthis_user'] : '',
-    '#required' => FALSE,
-    '#description' => t('Username at <a href="http://addthis.com/" target="_blank">AddThis.com</a>. Required for statistics.'),
-  );
   $form['addthis_style'] = array(
-    '#type' => 'radios',
+    '#type' => 'select',
     '#title' => t('Select default style'),
     '#default_value' => isset($settings['addthis_style']) ? $settings['addthis_style'] : '',
-    '#options' => array(
-      'disabled' => t('Disabled'),
-      'large_button' => t('Large button'),
-      'compact_button' => t('Compact button'),
-      'toolbox' => t('Toolbox'),
-      'sharecount' => t('Sharecount'),
-    ),
+    '#options' => _addthis_get_widget_type_options(),
   );
 
   return $form;
@@ -171,29 +158,50 @@ function addthis_field_formatter_view($entity_type, $entity, $field, $instance, 
   $element = array();
 
   foreach ($items as $delta => $item) {
-      switch ($item['value']) {
-        case 'large_button':
-          $output = '<a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;username=xa-4ccd432f7eced6a5"><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0"/></a><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=xa-4ccd432f7eced6a5"></script>';
-          break;
-        case 'compact_button':
-          $output = '<a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;username=xa-4ccd257613693d61"><img src="http://s7.addthis.com/static/btn/sm-share-en.gif" width="83" height="16" alt="Bookmark and Share" style="border:0"/></a><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=xa-4ccd257613693d61"></script>';
-          break;
-        case 'toolbox':
-          $output = '<div class="addthis_toolbox addthis_default_style"><a href="http://www.addthis.com/bookmark.php?v=250&amp;username=xa-4ccd43543c7446e9" class="addthis_button_compact">Share</a><span class="addthis_separator">|</span><a class="addthis_button_preferred_1"></a><a class="addthis_button_preferred_2"></a><a class="addthis_button_preferred_3"></a><a class="addthis_button_preferred_4"></a></div><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=xa-4ccd43543c7446e9"></script>';
-          break;
-        case 'sharecount':
-          $output = '<div class="addthis_toolbox addthis_default_style"><a class="addthis_counter"></a></div><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=xa-4ccd4383793d0ab4"></script>';
-          break;
-        default:
-          $output = '';
-          break;
-      }
-      $element[$delta] = array('#markup' => $output);
+    $widgetType = $item['value'];
+    $markup = _addthis_get_widget_markup($widgetType);
+    $element[$delta] = array('#markup' => $markup);
   }
 
   return $element;
 }
 
+function _addthis_get_widget_markup($widgetType = '') {
+  $username = _addthis_get_username();
+  switch ($widgetType) {
+    case 'large_button':
+      $markup = sprintf(
+        '<a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;username=%s"><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0"/></a><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=%s"></script>',
+        $username, $username
+      );
+      break;
+    case 'compact_button':
+      $markup = sprintf(
+        '<a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;username=%s"><img src="http://s7.addthis.com/static/btn/sm-share-en.gif" width="83" height="16" alt="Bookmark and Share" style="border:0"/></a><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=%s"></script>',
+        $username, $username
+      );
+      break;
+    case 'toolbox':
+      $markup = sprintf(
+        '<div class="addthis_toolbox addthis_default_style"><a href="http://www.addthis.com/bookmark.php?v=250&amp;username=%s" class="addthis_button_compact">Share</a><span class="addthis_separator">|</span><a class="addthis_button_preferred_1"></a><a class="addthis_button_preferred_2"></a><a class="addthis_button_preferred_3"></a><a class="addthis_button_preferred_4"></a></div><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=%s"></script>',
+        $username, $username
+      );
+      break;
+    case 'sharecount':
+      $markup = sprintf('<div class="addthis_toolbox addthis_default_style"><a class="addthis_counter"></a></div><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=%s"></script>',
+        $username
+      );
+      break;
+    default:
+      $markup = '';
+      break;
+  }
+  return $markup;
+}
+
+function _addthis_get_username() {
+  return variable_get('addthis_username', '');
+}
 
 /**
  * Implements hook_field_widget_info().
@@ -230,15 +238,8 @@ function addthis_field_widget_form(&$form, &$form_state, $field, $instance, $lan
     case 'addthis_button':
       $main_widget = $element + array(
         '#type' => 'select',
+        '#options' => _addthis_get_widget_type_options(),
         '#default_value' => isset($items[$delta]) ? $items[$delta] : $field['settings']['addthis_style'],
-        '#multiple' => 0,
-        '#options' => array(
-          'disabled' => t('Disabled'),
-          'large_button' => t('Large button'),
-          'compact_button' => t('Compact button'),
-          'toolbox' => t('Toolbox'),
-          'sharecount' => t('Sharecount'),
-        ),
       );
       break;
   }
@@ -248,6 +249,16 @@ function addthis_field_widget_form(&$form, &$form_state, $field, $instance, $lan
   }
 
   return $element;
+}
+
+function _addthis_get_widget_type_options() {
+  return array(
+    'disabled' => t('Disabled'),
+    'large_button' => t('Large button'),
+    'compact_button' => t('Compact button'),
+    'toolbox' => t('Toolbox'),
+    'sharecount' => t('Sharecount'),
+  );
 }
 
 /**
@@ -288,4 +299,58 @@ function addthis_block_info() {
     'cache' => DRUPAL_NO_CACHE,
   );
   return $blockInfo;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function addthis_block_view($blockName = '') {
+  if ($blockName == 'addthis_block') {
+    $widgetType = _addthis_get_widget_type();
+    $markup = _addthis_get_widget_markup($widgetType);
+    return array(
+      'subject' => '',
+      'content' => $markup,
+    );
+  }
+}
+
+function _addthis_get_widget_type() {
+  return variable_get('addthis_block_widget_type', 'compact_button');
+}
+
+/**
+ * Implements hook_block_configure().
+ */
+function addthis_block_configure($delta = '') {
+  $form['addthis_block_widget_type'] = array(
+    '#type' => 'select',
+    '#title' => t('AddThis widget type'),
+    '#options' => _addthis_get_widget_type_options(),
+    '#default_value' => _addthis_get_widget_type(),
+  );
+  return $form;
+}
+
+/**
+ * Implements hook_block_save().
+ */
+function addthis_block_save($delta = '', $edit = array()) {
+  variable_set('addthis_block_widget_type', $edit['addthis_block_widget_type']);
+}
+
+/**
+ * Implements hook_menu().
+ */
+function addthis_menu() {
+  $menuItems['admin/config/system/addthis'] = array(
+    'title' => 'AddThis',
+    'description' => 'Configure AddThis settings.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('addthis_admin_settings_form'),
+    'access arguments' => array('administer nodes'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'addthis.admin.inc',
+  );
+  return $menuItems;
 }

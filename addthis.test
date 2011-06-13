@@ -22,27 +22,29 @@ class AddThisTestCase extends DrupalWebTestCase {
   }
 
   public function testFunctionality() {
-    $this->addThisModuleShouldProvideHelp();
+    $this->addThisShouldProvideHelp();
 
-    $this->addThisModuleShouldDefineField();
+    $this->addThisShouldDefineField();
 
-    $this->addThisModuleShouldDefineBlock();
+    $this->addThisShouldDefineBlock();
 
     $this->addThisShouldBeAbleToBeUsedAsField();
 
     $this->addThisShouldBeAbleToBeUsedAsBlock();
+
+    $this->addThisSystemSettingsShouldBeAbleToBeSaved();
   }
 
-  private function addThisModuleShouldProvideHelp() {
+  private function addThisShouldProvideHelp() {
     $this->assertTrue($this->stringContains(module_invoke('addthis', 'help', 'admin/help#addthis', NULL), 'About'),
                       'AddThis-module should provide help.');
   }
 
-  private function addThisModuleShouldDefineField() {
+  private function addThisShouldDefineField() {
     $this->assertEqual(1, count(module_invoke('addthis', 'field_info')), t('AddThis-module should define a field.'));
   }
 
-  private function addThisModuleShouldDefineBlock() {
+  private function addThisShouldDefineBlock() {
     $this->assertEqual(1, count(module_invoke('addthis', 'block_info')), t('AddThis-module should define a block.'));
   }
 
@@ -60,43 +62,41 @@ class AddThisTestCase extends DrupalWebTestCase {
 
     $this->assertText($label, 'AddThis-module should be able to be added as a field.');
 
-    $this->addThisShouldProvideDefaultTypeCompactButton();
+    $this->addThisShouldProvideWidgetTypeCompactButton();
 
-    $this->addThisShouldProvideDefaultTypeDisabled();
+    $this->addThisShouldProvideWidgetTypeDisabled();
 
-    $this->addThisShouldProvideDefaultTypeLargeButton();
+    $this->addThisShouldProvideWidgetTypeLargeButton();
 
-    $this->addThisShouldProvideDefaultTypeSharecount();
+    $this->addThisShouldProvideWidgetTypeSharecount();
 
-    $this->addThisShouldProvideDefaultTypeToolbox();
+    $this->addThisShouldProvideWidgetTypeToolbox();
 
     $this->addThisFieldSettingsShouldBeAbleToBeSaved($label);
   }
 
-  private function addThisShouldProvideDefaultTypeCompactButton() {
-    $this->assertText('Compact button', 'AddThis-module should provide default type "Compact button"');
+  private function addThisShouldProvideWidgetTypeCompactButton() {
+    $this->assertText('Compact button', 'AddThis-module should provide widget type "Compact button"');
   }
 
-  private function addThisShouldProvideDefaultTypeDisabled() {
-    $this->assertText('Disabled', 'AddThis-module should provide default type "Disabled"');
+  private function addThisShouldProvideWidgetTypeDisabled() {
+    $this->assertText('Disabled', 'AddThis-module should provide widget type "Disabled"');
   }
 
-  private function addThisShouldProvideDefaultTypeLargeButton() {
-    $this->assertText('Large button', 'AddThis-module should provide default type "Large button"');
+  private function addThisShouldProvideWidgetTypeLargeButton() {
+    $this->assertText('Large button', 'AddThis-module should provide widget type "Large button"');
   } 
 
-  private function addThisShouldProvideDefaultTypeSharecount() {
-    $this->assertText('Sharecount', 'AddThis-module should provide default type "Sharecount"');
+  private function addThisShouldProvideWidgetTypeSharecount() {
+    $this->assertText('Sharecount', 'AddThis-module should provide widget type "Sharecount"');
   }
 
-  private function addThisShouldProvideDefaultTypeToolbox() {
-    $this->assertText('Toolbox', 'AddThis-module should provide default type "Toolbox"');
+  private function addThisShouldProvideWidgetTypeToolbox() {
+    $this->assertText('Toolbox', 'AddThis-module should provide widget type "Toolbox"');
   }
 
   private function addThisFieldSettingsShouldBeAbleToBeSaved($label) {
     $edit = array();
-    $username = $this->generateRandomLowercaseString();
-    $edit["field[settings][addthis_user]"] = $username;
     $edit["field[settings][addthis_style]"] = 'large_button';
 
     $this->drupalPost(NULL, $edit, t('Save field settings'));
@@ -107,6 +107,27 @@ class AddThisTestCase extends DrupalWebTestCase {
 
   private function addThisShouldBeAbleToBeUsedAsBlock() {
     $this->assertTrue($this->stringContains($this->drupalGet('admin/structure/block'), 'An AddThis-block.'));
+
+    $this->addThisBlockSettingsShouldBeAbleToBeSaved();
+  }
+
+  private function addThisBlockSettingsShouldBeAbleToBeSaved() {
+    $edit = array();
+    $edit['addthis_block_widget_type'] = 'compact_button';
+
+    $this->drupalPost('admin/structure/block/manage/addthis/addthis_block/configure', $edit, t('Save block'));
+
+    $this->assertText(t('The block configuration has been saved.'));
+  }
+
+  private function addThisSystemSettingsShouldBeAbleToBeSaved() {
+    $edit = array();
+    $username = $this->generateRandomLowercaseString();
+    $edit['addthis_username'] = $username;
+
+    $this->drupalPost('admin/config/system/addthis', $edit, t('Save configuration'));
+
+    $this->assertText(t('The configuration options have been saved.'));
   }
 
   private function createAndLoginUser() {
@@ -123,6 +144,6 @@ class AddThisTestCase extends DrupalWebTestCase {
   }
 
   private function generateRandomLowercaseString() {
-    return strtolower($this->randomName());
+    return drupal_strtolower($this->randomName());
   }
 }
