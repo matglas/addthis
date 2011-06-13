@@ -348,9 +348,21 @@ function addthis_menu() {
     'description' => 'Configure AddThis settings.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('addthis_admin_settings_form'),
-    'access arguments' => array('administer nodes'),
+    'access arguments' => array('administer addthis'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'addthis.admin.inc',
   );
   return $menuItems;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function addthis_permission() {
+  return array(
+    'administer addthis' => array(
+      'title' => t('Administer AddThis'),
+      'description' => t('Perform maintenance tasks for AddThis.'),
+    ),
+  );
 }

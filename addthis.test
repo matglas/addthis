@@ -136,7 +136,15 @@ class AddThisTestCase extends DrupalWebTestCase {
   }
 
   private function createAdminUser() {
-    return $this->drupalCreateUser(array('access content', 'administer blocks', 'administer content types', 'administer nodes'));
+    return $this->drupalCreateUser(
+      array(
+        'access content',
+        'administer addthis',
+        'administer blocks',
+        'administer content types',
+        'administer nodes'
+      )
+    );
   }
 
   private function stringContains($string, $contains) {
