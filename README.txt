@@ -34,6 +34,7 @@ TODO, will be completed before 3.x release.
 
 Current maintainers:
 * Vesa Palmu (wesku) - http://drupal.org/user/75070
+* Jani Palsamäki (janip) - http://drupal.org/user/1356218
 
 Major contributions by:
 Lesmana Lim (lesmana) - http://drupal.org/user/84263
