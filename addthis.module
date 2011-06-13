@@ -123,10 +123,7 @@ function addthis_field_load($entity_type, $entities, $field, $instances, $langco
  * Implements hook_field_is_empty().
  */
 function addthis_field_is_empty($item, $field) {
-  if (empty($item['value']) && (string) $item['value'] !== '0') {
-    return TRUE;
-  }
-  return FALSE;
+  return empty($item['value']) && (string) $item['value'] !== '0';
 }
 
 /**
