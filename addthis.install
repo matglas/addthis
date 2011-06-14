@@ -30,27 +30,6 @@ function addthis_field_schema($field) {
 }
 
 /**
- * Implements hook_requirements().
- */
-function addthis_requirements($phase) {
-  $requirements = array();
-  $t = get_t();
-
-  if ($phase == 'runtime') {
-    if (variable_get('addthis_username', NULL) == NULL) {
-      $requirements['addthis'] = array(
-        'title' => $t('AddThis module'),
-        'description' => $t('AddThis module has not been configured yet. Please configure its settings from the <a href="@url">AddThis settings page</a>.', array('@url' => url('admin/config/system/addthis'))),
-        'severity' => REQUIREMENT_ERROR,
-        'value' => $t('Not configured'),
-      );
-    }
-  }
-
-  return $requirements;
-}
-
-/**
  * Implements hook_uninstall().
  */
 function addthis_uninstall() {
