@@ -113,7 +113,7 @@ class AddThisTestCase extends DrupalWebTestCase {
 
   private function addThisBlockSettingsShouldBeAbleToBeSaved() {
     $edit = array();
-    $edit['addthis_block_widget_type'] = AddThis::WIDGET_TYPE_COMPACT_BUTTON;
+    $edit[AddThis::WIDGET_TYPE_KEY] = AddThis::WIDGET_TYPE_COMPACT_BUTTON;
 
     $this->drupalPost('admin/structure/block/manage/addthis/addthis_block/configure', $edit, t('Save block'));
 
@@ -122,8 +122,8 @@ class AddThisTestCase extends DrupalWebTestCase {
 
   private function addThisSystemSettingsShouldBeAbleToBeSaved() {
     $edit = array();
-    $username = $this->generateRandomLowercaseString();
-    $edit['addthis_username'] = $username;
+    $profileId = $this->generateRandomLowercaseString();
+    $edit[AddThis::PROFILE_ID_KEY] = $profileId;
 
     $this->drupalPost('admin/config/system/addthis', $edit, t('Save configuration'));
 

@@ -274,7 +274,7 @@ function addthis_block_view($blockName = '') {
  * Implements hook_block_configure().
  */
 function addthis_block_configure($delta = '') {
-  $form['addthis_block_widget_type'] = array(
+  $form[AddThis::WIDGET_TYPE_KEY] = array(
     '#type' => 'select',
     '#title' => t('AddThis widget type'),
     '#options' => AddThis::getWidgetTypes(),
@@ -287,7 +287,7 @@ function addthis_block_configure($delta = '') {
  * Implements hook_block_save().
  */
 function addthis_block_save($delta = '', $edit = array()) {
-  variable_set('addthis_block_widget_type', $edit['addthis_block_widget_type']);
+  variable_set(AddThis::WIDGET_TYPE_KEY, $edit[AddThis::WIDGET_TYPE_KEY]);
 }
 
 /**
