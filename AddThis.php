@@ -71,6 +71,10 @@ class AddThis {
     return $markup;
   }
 
+  public static function getProfileId() {
+    return variable_get(AddThis::PROFILE_ID_KEY);
+  }
+
   private static function getBookmarkUrl() {
     return self::BOOKMARK_BASE_URL . self::getProfileIdQueryParameterPrefixedWithAmp();
   }
@@ -89,14 +93,10 @@ class AddThis {
   }
 
   private static function getWidgetScriptElement() {
-    return
-      '<script type="text/javascript" src="'
-      . self::WIDGET_BASE_URL
-      . self::getProfileIdQueryParameterPrefixedWithHash()
-      . '"></script>';
+    return '<script type="text/javascript" src="' . self::getWidgetUrl() . '"></script>';
   }
 
-  public static function getProfileId() {
-    return variable_get(AddThis::PROFILE_ID_KEY);
+  private static function getWidgetUrl() {
+    return self::WIDGET_BASE_URL . self::getProfileIdQueryParameterPrefixedWithHash();
   }
 }
