@@ -8,6 +8,7 @@
 
 class AddThis {
 
+  const MODULE_NAME = 'addthis';
   const WIDGET_TYPE_DISABLED = 'disabled';
   const WIDGET_TYPE_COMPACT_BUTTON = 'compact_button';
   const WIDGET_TYPE_LARGE_BUTTON = 'large_button';

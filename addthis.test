@@ -10,7 +10,7 @@ class AddThisTestCase extends DrupalWebTestCase {
   private $user;
 
   public function setUp() {
-    parent::setUp('addthis');
+    parent::setUp(AddThis::MODULE_NAME);
   }
 
   public function getInfo() {
@@ -36,16 +36,16 @@ class AddThisTestCase extends DrupalWebTestCase {
   }
 
   private function addThisShouldProvideHelp() {
-    $this->assertTrue($this->stringContains(module_invoke('addthis', 'help', 'admin/help#addthis', NULL), 'About'),
+    $this->assertTrue($this->stringContains(module_invoke(AddThis::MODULE_NAME, 'help', 'admin/help#addthis', NULL), 'About'),
                       'AddThis-module should provide help.');
   }
 
   private function addThisShouldDefineField() {
-    $this->assertEqual(1, count(module_invoke('addthis', 'field_info')), t('AddThis-module should define a field.'));
+    $this->assertEqual(1, count(module_invoke(AddThis::MODULE_NAME, 'field_info')), t('AddThis-module should define a field.'));
   }
 
   private function addThisShouldDefineBlock() {
-    $this->assertEqual(1, count(module_invoke('addthis', 'block_info')), t('AddThis-module should define a block.'));
+    $this->assertEqual(1, count(module_invoke(AddThis::MODULE_NAME, 'block_info')), t('AddThis-module should define a block.'));
   }
 
   private function addThisShouldBeAbleToBeUsedAsField() {
