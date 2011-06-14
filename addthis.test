@@ -85,7 +85,7 @@ class AddThisTestCase extends DrupalWebTestCase {
 
   private function addThisShouldProvideWidgetTypeLargeButton() {
     $this->assertText('Large button', 'AddThis-module should provide widget type "Large button"');
-  } 
+  }
 
   private function addThisShouldProvideWidgetTypeSharecount() {
     $this->assertText('Sharecount', 'AddThis-module should provide widget type "Sharecount"');
