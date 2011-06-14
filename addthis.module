@@ -5,6 +5,8 @@
  * Defines simple AddThis field types.
  */
 
+module_load_include('php', 'addthis', 'AddThis');
+
 /**
  * Implements hook_help().
  */
@@ -49,7 +51,7 @@ function addthis_field_settings_form($field, $instance, $has_data) {
     '#type' => 'select',
     '#title' => t('Select default style'),
     '#default_value' => isset($settings['addthis_style']) ? $settings['addthis_style'] : '',
-    '#options' => _addthis_get_widget_type_options(),
+    '#options' => Addthis::getWidgetTypes(),
   );
 
   return $form;
@@ -159,48 +161,11 @@ function addthis_field_formatter_view($entity_type, $entity, $field, $instance, 
 
   foreach ($items as $delta => $item) {
     $widgetType = $item['value'];
-    $markup = _addthis_get_widget_markup($widgetType);
+    $markup = AddThis::getWidgetMarkup($widgetType);
     $element[$delta] = array('#markup' => $markup);
   }
 
   return $element;
-}
-
-function _addthis_get_widget_markup($widgetType = '') {
-  $username = _addthis_get_username();
-  switch ($widgetType) {
-    case 'large_button':
-      $markup = sprintf(
-        '<a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;username=%s"><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0"/></a><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=%s"></script>',
-        $username, $username
-      );
-      break;
-    case 'compact_button':
-      $markup = sprintf(
-        '<a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;username=%s"><img src="http://s7.addthis.com/static/btn/sm-share-en.gif" width="83" height="16" alt="Bookmark and Share" style="border:0"/></a><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=%s"></script>',
-        $username, $username
-      );
-      break;
-    case 'toolbox':
-      $markup = sprintf(
-        '<div class="addthis_toolbox addthis_default_style"><a href="http://www.addthis.com/bookmark.php?v=250&amp;username=%s" class="addthis_button_compact">Share</a><span class="addthis_separator">|</span><a class="addthis_button_preferred_1"></a><a class="addthis_button_preferred_2"></a><a class="addthis_button_preferred_3"></a><a class="addthis_button_preferred_4"></a></div><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=%s"></script>',
-        $username, $username
-      );
-      break;
-    case 'sharecount':
-      $markup = sprintf('<div class="addthis_toolbox addthis_default_style"><a class="addthis_counter"></a></div><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=%s"></script>',
-        $username
-      );
-      break;
-    default:
-      $markup = '';
-      break;
-  }
-  return $markup;
-}
-
-function _addthis_get_username() {
-  return variable_get('addthis_username', '');
 }
 
 /**
@@ -238,7 +203,7 @@ function addthis_field_widget_form(&$form, &$form_state, $field, $instance, $lan
     case 'addthis_button':
       $main_widget = $element + array(
         '#type' => 'select',
-        '#options' => _addthis_get_widget_type_options(),
+        '#options' => AddThis::getWidgetTypes(),
         '#default_value' => isset($items[$delta]) ? $items[$delta] : $field['settings']['addthis_style'],
       );
       break;
@@ -249,16 +214,6 @@ function addthis_field_widget_form(&$form, &$form_state, $field, $instance, $lan
   }
 
   return $element;
-}
-
-function _addthis_get_widget_type_options() {
-  return array(
-    'disabled' => t('Disabled'),
-    'large_button' => t('Large button'),
-    'compact_button' => t('Compact button'),
-    'toolbox' => t('Toolbox'),
-    'sharecount' => t('Sharecount'),
-  );
 }
 
 /**
@@ -306,17 +261,13 @@ function addthis_block_info() {
  */
 function addthis_block_view($blockName = '') {
   if ($blockName == 'addthis_block') {
-    $widgetType = _addthis_get_widget_type();
-    $markup = _addthis_get_widget_markup($widgetType);
+    $widgetType = AddThis::getWidgetType();
+    $markup = AddThis::getWidgetMarkup($widgetType);
     return array(
       'subject' => '',
       'content' => $markup,
     );
   }
-}
-
-function _addthis_get_widget_type() {
-  return variable_get('addthis_block_widget_type', 'compact_button');
 }
 
 /**
@@ -326,8 +277,8 @@ function addthis_block_configure($delta = '') {
   $form['addthis_block_widget_type'] = array(
     '#type' => 'select',
     '#title' => t('AddThis widget type'),
-    '#options' => _addthis_get_widget_type_options(),
-    '#default_value' => _addthis_get_widget_type(),
+    '#options' => AddThis::getWidgetTypes(),
+    '#default_value' => AddThis::getWidgetType(),
   );
   return $form;
 }
