@@ -155,3 +155,42 @@ class AddThisTestCase extends DrupalWebTestCase {
     return drupal_strtolower($this->randomName());
   }
 }
+
+class AddThisPermissionsTestCase extends DrupalWebTestCase {
+
+  private $user;
+
+  public function setUp() {
+    parent::setUp(AddThis::MODULE_NAME);
+    $this->createAndLoginUser();
+  }
+
+  public function getInfo() {
+    return array(
+      'name' => 'Permission tests for the AddThis-module.',
+      'description' => 'Permission tests for the AddThis-module.',
+      'group' => 'AddThis',
+    );
+  }
+
+  public function testUserWithoutAdministerAddThisPermissionShouldNotBeAllowedToAccessAddThisSystemSettings() {
+    $this->assertTrue($this->stringContains($this->drupalGet('admin/config/system/addthis'), t('Access denied')));
+  }
+
+  private function createAdminUserWithoutAddThisAdministrationPermission() {
+    return $this->drupalCreateUser(
+      array(
+        'administer content types',
+      )
+    );
+  }
+
+  private function createAndLoginUser() {
+    $this->user = $this->createAdminUserWithoutAddThisAdministrationPermission();
+    $this->drupalLogin($this->user);
+  }
+
+  private function stringContains($string, $contains) {
+    return strpos($string, $contains) !== FALSE;
+  }
+}
