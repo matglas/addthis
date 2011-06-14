@@ -97,7 +97,7 @@ class AddThisTestCase extends DrupalWebTestCase {
 
   private function addThisFieldSettingsShouldBeAbleToBeSaved($label) {
     $edit = array();
-    $edit["field[settings][addthis_style]"] = 'large_button';
+    $edit["field[settings][addthis_style]"] = AddThis::WIDGET_TYPE_LARGE_BUTTON;
 
     $this->drupalPost(NULL, $edit, t('Save field settings'));
 
@@ -113,7 +113,7 @@ class AddThisTestCase extends DrupalWebTestCase {
 
   private function addThisBlockSettingsShouldBeAbleToBeSaved() {
     $edit = array();
-    $edit['addthis_block_widget_type'] = 'compact_button';
+    $edit['addthis_block_widget_type'] = AddThis::WIDGET_TYPE_COMPACT_BUTTON;
 
     $this->drupalPost('admin/structure/block/manage/addthis/addthis_block/configure', $edit, t('Save block'));
 
