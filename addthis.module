@@ -13,8 +13,7 @@ module_load_include('php', 'addthis', 'AddThis');
 function addthis_help($path, $arg) {
   switch ($path) {
     case 'admin/help#addthis':
-      $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
+      $output = '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t("The AddThis module defines AddThis field type for the Field module. A AddThis field may contain a button, toolbox, sharecount or customized sharing tool using <a href=\"http://addthis.com/\">AddThis.com</a>.") . '</p>';
       return $output;
   }
@@ -249,7 +248,7 @@ function addthis_filter_format_disable($format) {
  */
 function addthis_block_info() {
   $blockInfo = array();
-  $blockInfo['addthis_block'] = array(
+  $blockInfo[AddThis::BLOCK_NAME] = array(
     'info' => t('An AddThis-block.'),
     'cache' => DRUPAL_NO_CACHE,
   );
@@ -260,7 +259,7 @@ function addthis_block_info() {
  * Implements hook_block_view().
  */
 function addthis_block_view($blockName = '') {
-  if ($blockName == 'addthis_block') {
+  if ($blockName == AddThis::BLOCK_NAME) {
     $widgetType = AddThis::getWidgetType();
     $markup = AddThis::getWidgetMarkup($widgetType);
     return array(

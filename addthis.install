@@ -9,6 +9,7 @@
  * Implements hook_field_schema().
  */
 function addthis_field_schema($field) {
+  $columns = array();
   switch ($field['type']) {
     case 'addthis':
       $columns = array(

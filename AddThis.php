@@ -9,6 +9,7 @@
 class AddThis {
 
   const AMP_ENTITY = '&amp;';
+  const BLOCK_NAME = 'addthis_block';
   const BOOKMARK_BASE_URL = 'http://www.addthis.com/bookmark.php?v=250';
   const HASH = '#';
   const MODULE_NAME = 'addthis';
