@@ -8,8 +8,11 @@
 
 class AddThis {
 
+  const AMP_ENTITY = '&amp;';
+  const HASH = '#';
   const MODULE_NAME = 'addthis';
   const PROFILE_ID_KEY = 'addthis_profile_id';
+  const PROFILE_ID_QUERY_PARAMETER = 'pubid';
   const WIDGET_TYPE_KEY = 'addthis_block_widget_type';
   const WIDGET_TYPE_DISABLED = 'disabled';
   const WIDGET_TYPE_COMPACT_BUTTON = 'compact_button';
@@ -32,30 +35,36 @@ class AddThis {
   }
 
   public static function getWidgetMarkup($widgetType = '') {
-    $profileId = self::getProfileId();
     switch ($widgetType) {
       case self::WIDGET_TYPE_LARGE_BUTTON:
-        $markup = sprintf(
-          '<a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;pubid=%s"><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0"/></a><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=%s"></script>',
-          $profileId, $profileId
-        );
+        $markup =
+          '<a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250'
+          . self::getProfileIdQueryParameterPrefixedWithAmp()
+          . '"><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0"/></a><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js'
+          . self::getProfileIdQueryParameterPrefixedWithHash()
+          . '"></script>';
         break;
       case self::WIDGET_TYPE_COMPACT_BUTTON:
-        $markup = sprintf(
-          '<a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;pubid=%s"><img src="http://s7.addthis.com/static/btn/sm-share-en.gif" width="83" height="16" alt="Bookmark and Share" style="border:0"/></a><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=%s"></script>',
-          $profileId, $profileId
-        );
+        $markup =
+          '<a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250'
+          . self::getProfileIdQueryParameterPrefixedWithAmp()
+          . '"><img src="http://s7.addthis.com/static/btn/sm-share-en.gif" width="83" height="16" alt="Bookmark and Share" style="border:0"/></a><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js'
+          . self::getProfileIdQueryParameterPrefixedWithHash()
+          . '"></script>';
         break;
       case self::WIDGET_TYPE_TOOLBOX:
-        $markup = sprintf(
-          '<div class="addthis_toolbox addthis_default_style"><a href="http://www.addthis.com/bookmark.php?v=250&amp;pubid=%s" class="addthis_button_compact">Share</a><span class="addthis_separator">|</span><a class="addthis_button_preferred_1"></a><a class="addthis_button_preferred_2"></a><a class="addthis_button_preferred_3"></a><a class="addthis_button_preferred_4"></a></div><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=%s"></script>',
-          $profileId, $profileId
-        );
+        $markup =
+          '<div class="addthis_toolbox addthis_default_style"><a href="http://www.addthis.com/bookmark.php?v=250'
+          . self::getProfileIdQueryParameterPrefixedWithAmp()
+          . '" class="addthis_button_compact">Share</a><span class="addthis_separator">|</span><a class="addthis_button_preferred_1"></a><a class="addthis_button_preferred_2"></a><a class="addthis_button_preferred_3"></a><a class="addthis_button_preferred_4"></a></div><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js'
+          . self::getProfileIdQueryParameterPrefixedWithHash()
+          . '"></script>';
         break;
       case self::WIDGET_TYPE_SHARECOUNT:
-        $markup = sprintf('<div class="addthis_toolbox addthis_default_style"><a class="addthis_counter"></a></div><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=%s"></script>',
-          $profileId
-        );
+        $markup =
+          '<div class="addthis_toolbox addthis_default_style"><a class="addthis_counter"></a></div><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js'
+          . self::getProfileIdQueryParameterPrefixedWithHash()
+          . '"></script>';
         break;
       default:
         $markup = '';
@@ -64,7 +73,20 @@ class AddThis {
     return $markup;
   }
 
+  private static function getProfileIdQueryParameter($prefix) {
+    $profileId = self::getProfileId();
+    return $profileId != NULL ? $prefix . self::PROFILE_ID_QUERY_PARAMETER . '=' . $profileId : '';
+  }
+
+  private static function getProfileIdQueryParameterPrefixedWithAmp() {
+    return self::getProfileIdQueryParameter(self::AMP_ENTITY);
+  }
+
+  private static function getProfileIdQueryParameterPrefixedWithHash() {
+    return self::getProfileIdQueryParameter(self::HASH);
+  }
+
   public static function getProfileId() {
-    return variable_get(AddThis::PROFILE_ID_KEY, '');
+    return variable_get(AddThis::PROFILE_ID_KEY);
   }
 }
