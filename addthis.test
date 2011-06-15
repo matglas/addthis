@@ -5,18 +5,19 @@
  * Tests for the AddThis-module.
  */
 
-class AddThisTestCase extends DrupalWebTestCase {
+class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
   private $user;
 
   public function setUp() {
     parent::setUp(AddThis::MODULE_NAME);
+    $this->createAndLoginUser();
   }
 
   public function getInfo() {
     return array(
-      'name' => 'Tests for the AddThis-module.',
-      'description' => 'Tests for the AddThis-module.',
+      'name' => 'AddThis: Functionality tests',
+      'description' => 'Functionality tests for the AddThis-module.',
       'group' => 'AddThis',
     );
   }
@@ -36,23 +37,23 @@ class AddThisTestCase extends DrupalWebTestCase {
   }
 
   private function addThisShouldProvideHelp() {
-    $this->assertTrue($this->stringContains(module_invoke(AddThis::MODULE_NAME, 'help', 'admin/help#addthis', NULL), 'About'),
-                      'AddThis-module should provide help.');
+    $helpText = module_invoke(AddThis::MODULE_NAME, 'help', 'admin/help#addthis', NULL);
+    $this->assertTrue(TestHelper::stringContains($helpText, t('About')), 'AddThis-module should provide help.');
   }
 
   private function addThisShouldDefineField() {
-    $this->assertEqual(1, count(module_invoke(AddThis::MODULE_NAME, 'field_info')), t('AddThis-module should define a field.'));
+    $fieldInfo = module_invoke(AddThis::MODULE_NAME, 'field_info');
+    $this->assertTrue(is_array($fieldInfo), t('AddThis-module should define a field.'));
   }
 
   private function addThisShouldDefineBlock() {
-    $this->assertEqual(1, count(module_invoke(AddThis::MODULE_NAME, 'block_info')), t('AddThis-module should define a block.'));
+    $blockInfo = module_invoke(AddThis::MODULE_NAME, 'block_info');
+    $this->assertTrue(is_array($blockInfo), t('AddThis-module should define a block.'));
   }
 
   private function addThisShouldBeAbleToBeUsedAsField() {
-    $this->createAndLoginUser();
-
     $edit = array();
-    $label = $this->generateRandomLowercaseString();
+    $label = TestHelper::generateRandomLowercaseString();
     $edit["fields[_add_new_field][label]"] = $label;
     $edit["fields[_add_new_field][field_name]"] = $label;
     $edit["fields[_add_new_field][type]"] = 'addthis';
@@ -106,7 +107,8 @@ class AddThisTestCase extends DrupalWebTestCase {
   }
 
   private function addThisShouldBeAbleToBeUsedAsBlock() {
-    $this->assertTrue($this->stringContains($this->drupalGet('admin/structure/block'), 'An AddThis-block.'));
+    $this->drupalGet('admin/structure/block');
+    $this->assertRaw(t('An AddThis-block.'));
 
     $this->addThisBlockSettingsShouldBeAbleToBeSaved();
   }
@@ -122,7 +124,7 @@ class AddThisTestCase extends DrupalWebTestCase {
 
   private function addThisSystemSettingsShouldBeAbleToBeSaved() {
     $edit = array();
-    $profileId = $this->generateRandomLowercaseString();
+    $profileId = TestHelper::generateRandomLowercaseString();
     $edit[AddThis::PROFILE_ID_KEY] = $profileId;
 
     $this->drupalPost('admin/config/system/addthis', $edit, t('Save configuration'));
@@ -138,21 +140,12 @@ class AddThisTestCase extends DrupalWebTestCase {
   private function createAdminUser() {
     return $this->drupalCreateUser(
       array(
-        'access content',
         'administer addthis',
         'administer blocks',
         'administer content types',
         'administer nodes'
       )
     );
-  }
-
-  private function stringContains($string, $contains) {
-    return strpos($string, $contains) !== FALSE;
-  }
-
-  private function generateRandomLowercaseString() {
-    return drupal_strtolower($this->randomName());
   }
 }
 
@@ -167,30 +160,35 @@ class AddThisPermissionsTestCase extends DrupalWebTestCase {
 
   public function getInfo() {
     return array(
-      'name' => 'Permission tests for the AddThis-module.',
+      'name' => 'AddThis: Permission tests',
       'description' => 'Permission tests for the AddThis-module.',
       'group' => 'AddThis',
     );
   }
 
   public function testUserWithoutAdministerAddThisPermissionShouldNotBeAllowedToAccessAddThisSystemSettings() {
-    $this->assertTrue($this->stringContains($this->drupalGet('admin/config/system/addthis'), t('Access denied')));
+    $this->drupalGet('admin/config/system/addthis');
+    $this->assertRaw(t('Access denied'));
   }
 
   private function createAdminUserWithoutAddThisAdministrationPermission() {
-    return $this->drupalCreateUser(
-      array(
-        'administer content types',
-      )
-    );
+    return $this->drupalCreateUser(array('administer content types'));
   }
 
   private function createAndLoginUser() {
     $this->user = $this->createAdminUserWithoutAddThisAdministrationPermission();
+    $this->user->
     $this->drupalLogin($this->user);
   }
+}
 
-  private function stringContains($string, $contains) {
+class TestHelper {
+
+  public static function stringContains($string, $contains) {
     return strpos($string, $contains) !== FALSE;
+  }
+
+  public static function generateRandomLowercaseString() {
+    return drupal_strtolower(DrupalWebTestCase::randomName());
   }
 }
