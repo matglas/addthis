@@ -43,21 +43,27 @@ class AddThis {
         $markup =
           '<a class="addthis_button" href="'
           . self::getBookmarkUrl()
-          . '"><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0"/></a>'
+          . '"><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="'
+          . t('Bookmark and Share')
+          . '" style="border:0"/></a>'
           . self::getWidgetScriptElement();
         break;
       case self::WIDGET_TYPE_COMPACT_BUTTON:
         $markup =
           '<a class="addthis_button" href="'
           . self::getBookmarkUrl()
-          . '"><img src="http://s7.addthis.com/static/btn/sm-share-en.gif" width="83" height="16" alt="Bookmark and Share" style="border:0"/></a>'
+          . '"><img src="http://s7.addthis.com/static/btn/sm-share-en.gif" width="83" height="16" alt="'
+          . t('Bookmark and Share')
+          . '" style="border:0"/></a>'
           . self::getWidgetScriptElement();
         break;
       case self::WIDGET_TYPE_TOOLBOX:
         $markup =
           '<div class="addthis_toolbox addthis_default_style"><a href="'
           . self::getBookmarkUrl()
-          . '" class="addthis_button_compact">Share</a><span class="addthis_separator">|</span><a class="addthis_button_preferred_1"></a><a class="addthis_button_preferred_2"></a><a class="addthis_button_preferred_3"></a><a class="addthis_button_preferred_4"></a></div>'
+          . '" class="addthis_button_compact">'
+          . t('Share')
+          . '</a><span class="addthis_separator">|</span><a class="addthis_button_preferred_1"></a><a class="addthis_button_preferred_2"></a><a class="addthis_button_preferred_3"></a><a class="addthis_button_preferred_4"></a></div>'
           . self::getWidgetScriptElement();
         break;
       case self::WIDGET_TYPE_SHARECOUNT:

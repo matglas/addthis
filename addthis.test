@@ -177,7 +177,6 @@ class AddThisPermissionsTestCase extends DrupalWebTestCase {
 
   private function createAndLoginUser() {
     $this->user = $this->createAdminUserWithoutAddThisAdministrationPermission();
-    $this->user->
     $this->drupalLogin($this->user);
   }
 }
