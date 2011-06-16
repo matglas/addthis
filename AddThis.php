@@ -20,6 +20,7 @@ class AddThis {
   const PROFILE_ID_QUERY_PARAMETER = 'pubid';
   const SERVICES_CSS_URL = 'http://cache.addthiscdn.com/icons/v1/sprites/services.css';
   const SERVICES_JSON_URL = 'http://cache.addthiscdn.com/services/v1/sharing.en.json';
+  const TITLE_ATTRIBUTE = 'addthis:title';
   const WIDGET_JS_URL = 'http://s7.addthis.com/js/250/addthis_widget.js';
   const WIDGET_TYPE_DISABLED = 'disabled';
   const WIDGET_TYPE_COMPACT_BUTTON = 'compact_button';
@@ -41,11 +42,13 @@ class AddThis {
     return variable_get(self::BLOCK_WIDGET_TYPE_KEY, self::WIDGET_TYPE_COMPACT_BUTTON);
   }
 
-  public static function getWidgetMarkup($widgetType = '') {
+  public static function getWidgetMarkup($widgetType = '', $entity = NULL) {
     switch ($widgetType) {
       case self::WIDGET_TYPE_LARGE_BUTTON:
         $markup =
-          '<a class="addthis_button" href="'
+          '<a class="addthis_button" '
+          . self::getAddThisAttributesMarkup($entity)
+          . 'href="'
           . self::getBookmarkUrl()
           . '"><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="'
           . t('Bookmark and Share')
@@ -54,7 +57,9 @@ class AddThis {
         break;
       case self::WIDGET_TYPE_COMPACT_BUTTON:
         $markup =
-          '<a class="addthis_button" href="'
+          '<a class="addthis_button" '
+          . self::getAddThisAttributesMarkup($entity)
+          . 'href="'
           . self::getBookmarkUrl()
           . '"><img src="http://s7.addthis.com/static/btn/sm-share-en.gif" width="83" height="16" alt="'
           . t('Bookmark and Share')
@@ -65,14 +70,18 @@ class AddThis {
         $markup =
           '<div class="addthis_toolbox addthis_default_style"><a href="'
           . self::getBookmarkUrl()
-          . '" class="addthis_button_compact">'
+          . '" class="addthis_button_compact" '
+          . self::getAddThisAttributesMarkup($entity)
+          . '>'
           . t('Share')
           . '</a><span class="addthis_separator">|</span><a class="addthis_button_preferred_1"></a><a class="addthis_button_preferred_2"></a><a class="addthis_button_preferred_3"></a><a class="addthis_button_preferred_4"></a></div>'
           . self::getWidgetScriptElement();
         break;
       case self::WIDGET_TYPE_SHARECOUNT:
         $markup =
-          '<div class="addthis_toolbox addthis_default_style"><a class="addthis_counter"></a></div>'
+          '<div class="addthis_toolbox addthis_default_style"><a class="addthis_counter" '
+          . self::getAddThisAttributesMarkup($entity)
+          . '></a></div>'
           . self::getWidgetScriptElement();
         break;
       default:
@@ -136,6 +145,22 @@ class AddThis {
 
   private static function getProfileIdQueryParameterPrefixedWithHash() {
     return self::getProfileIdQueryParameter(self::HASH);
+  }
+
+  private static function getAddThisAttributesMarkup($entity) {
+    return self::getAddThisTitleAttributeMarkup($entity) . ' ';
+  }
+
+  private static function getAddThisTitleAttributeMarkup($entity) {
+    $titleAttribute = '';
+    if (is_object($entity)) {
+      $titleAttribute = self::getAttributeMarkup(self::TITLE_ATTRIBUTE, drupal_get_title() . ' - ' . $entity->title);
+    }
+    return $titleAttribute;
+  }
+
+  private static function getAttributeMarkup($name, $value) {
+    return $value != NULL ? $name . '="' . $value  . '"' : '';
   }
 
   private static function getWidgetScriptElement() {

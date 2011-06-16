@@ -160,7 +160,7 @@ function addthis_field_formatter_view($entity_type, $entity, $field, $instance, 
 
   foreach ($items as $delta => $item) {
     $widgetType = $item['value'];
-    $markup = AddThis::getWidgetMarkup($widgetType);
+    $markup = AddThis::getWidgetMarkup($widgetType, $entity);
     $element[$delta] = array('#markup' => $markup);
   }
 
