@@ -120,7 +120,7 @@ class AddThis {
     drupal_add_css(self::getAdminCssFilePath(), 'file');
   }
 
-  public static function getAdminCssFilePath() {
+  private static function getAdminCssFilePath() {
     return drupal_get_path('module', self::MODULE_NAME) . '/' . self::ADMIN_CSS_FILE;
   }
 
