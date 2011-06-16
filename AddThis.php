@@ -74,7 +74,19 @@ class AddThis {
           . self::getAddThisAttributesMarkup($entity)
           . '>'
           . t('Share')
-          . '</a><span class="addthis_separator">|</span><a class="addthis_button_preferred_1"></a><a class="addthis_button_preferred_2"></a><a class="addthis_button_preferred_3"></a><a class="addthis_button_preferred_4"></a></div>'
+          . '</a><span class="addthis_separator">|</span>' 
+          . '<a class="addthis_button_preferred_1" '
+          . self::getAddThisAttributesMarkup($entity)
+          . '></a>'
+          . '<a class="addthis_button_preferred_2" '
+          . self::getAddThisAttributesMarkup($entity)
+          . '></a>'
+          . '<a class="addthis_button_preferred_3" '
+          . self::getAddThisAttributesMarkup($entity)
+          . '></a>'
+          . '<a class="addthis_button_preferred_4" '
+          . self::getAddThisAttributesMarkup($entity)
+          . '></a></div>'
           . self::getWidgetScriptElement();
         break;
       case self::WIDGET_TYPE_SHARECOUNT:
@@ -152,15 +164,14 @@ class AddThis {
   }
 
   private static function getAddThisTitleAttributeMarkup($entity) {
+    module_load_include('php', self::MODULE_NAME, 'MarkupGenerator');
     $titleAttribute = '';
     if (is_object($entity)) {
-      $titleAttribute = self::getAttributeMarkup(self::TITLE_ATTRIBUTE, drupal_get_title() . ' - ' . $entity->title);
+      $titleAttribute = MarkupGenerator::generateAttribute(
+        self::TITLE_ATTRIBUTE, drupal_get_title() . ' - ' . $entity->title
+      );
     }
     return $titleAttribute;
-  }
-
-  private static function getAttributeMarkup($name, $value) {
-    return $value != NULL ? $name . '="' . $value  . '"' : '';
   }
 
   private static function getWidgetScriptElement() {
