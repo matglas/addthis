@@ -15,6 +15,7 @@ class AddThis {
   const BOOKMARK_URL = 'http://www.addthis.com/bookmark.php?v=250';
   const ENABLED_SERVICES_KEY = 'addthis_enabled_services';
   const HASH = '#';
+  const HREF = 'href';
   const MODULE_NAME = 'addthis';
   const PROFILE_ID_KEY = 'addthis_profile_id';
   const PROFILE_ID_QUERY_PARAMETER = 'pubid';
@@ -43,14 +44,14 @@ class AddThis {
   }
 
   public static function getWidgetMarkup($widgetType = '', $entity = NULL) {
+    module_load_include('php', self::MODULE_NAME, 'MarkupGenerator');
     switch ($widgetType) {
       case self::WIDGET_TYPE_LARGE_BUTTON:
         $markup =
           '<a class="addthis_button" '
           . self::getAddThisAttributesMarkup($entity)
-          . 'href="'
-          . self::getBookmarkUrl()
-          . '"><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="'
+          . MarkupGenerator::generateAttribute(self::HREF, self::getBookmarkUrl())
+          . '><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="'
           . t('Bookmark and Share')
           . '" style="border:0"/></a>'
           . self::getWidgetScriptElement();
@@ -59,18 +60,17 @@ class AddThis {
         $markup =
           '<a class="addthis_button" '
           . self::getAddThisAttributesMarkup($entity)
-          . 'href="'
-          . self::getBookmarkUrl()
-          . '"><img src="http://s7.addthis.com/static/btn/sm-share-en.gif" width="83" height="16" alt="'
+          . MarkupGenerator::generateAttribute(self::HREF, self::getBookmarkUrl())
+          . '><img src="http://s7.addthis.com/static/btn/sm-share-en.gif" width="83" height="16" alt="'
           . t('Bookmark and Share')
           . '" style="border:0"/></a>'
           . self::getWidgetScriptElement();
         break;
       case self::WIDGET_TYPE_TOOLBOX:
         $markup =
-          '<div class="addthis_toolbox addthis_default_style"><a href="'
-          . self::getBookmarkUrl()
-          . '" class="addthis_button_compact" '
+          '<div class="addthis_toolbox addthis_default_style"><a '
+          . MarkupGenerator::generateAttribute(self::HREF, self::getBookmarkUrl())
+          . ' class="addthis_button_compact" '
           . self::getAddThisAttributesMarkup($entity)
           . '>'
           . t('Share')
@@ -164,7 +164,6 @@ class AddThis {
   }
 
   private static function getAddThisTitleAttributeMarkup($entity) {
-    module_load_include('php', self::MODULE_NAME, 'MarkupGenerator');
     $titleAttribute = '';
     if (is_object($entity)) {
       $titleAttribute = MarkupGenerator::generateAttribute(
