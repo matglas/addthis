@@ -94,6 +94,11 @@ class AddThis {
     return self::getEnabledServices();
   }
 
+  public static function addStylesheets() {
+    drupal_add_css(self::SERVICES_CSS_URL, 'external');
+    drupal_add_css(self::getAdminCssFilePath(), 'file');
+  }
+
   public static function getAdminCssFilePath() {
     return drupal_get_path('module', self::MODULE_NAME) . '/' . self::ADMIN_CSS_FILE;
   }

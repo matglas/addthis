@@ -9,8 +9,7 @@
  * Implements hook_admin_settings_form().
  */
 function addthis_admin_settings_form($form_state) {
-  drupal_add_css(AddThis::SERVICES_CSS_URL, 'external');
-  drupal_add_css(AddThis::getAdminCssFilePath(), 'file');
+  AddThis::addStylesheets();
   $form[AddThis::PROFILE_ID_KEY] = array(
     '#type' => 'textfield',
     '#title' => t('AddThis Profile ID'),
