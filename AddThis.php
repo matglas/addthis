@@ -8,15 +8,19 @@
 
 class AddThis {
 
+  const ADMIN_CSS_FILE = 'addthis.admin.css';
   const AMP_ENTITY = '&amp;';
   const BLOCK_NAME = 'addthis_block';
-  const BOOKMARK_BASE_URL = 'http://www.addthis.com/bookmark.php?v=250';
+  const BLOCK_WIDGET_TYPE_KEY = 'addthis_block_widget_type';
+  const BOOKMARK_URL = 'http://www.addthis.com/bookmark.php?v=250';
+  const ENABLED_SERVICES_KEY = 'addthis_enabled_services';
   const HASH = '#';
   const MODULE_NAME = 'addthis';
   const PROFILE_ID_KEY = 'addthis_profile_id';
   const PROFILE_ID_QUERY_PARAMETER = 'pubid';
-  const WIDGET_BASE_URL = 'http://s7.addthis.com/js/250/addthis_widget.js';
-  const WIDGET_TYPE_KEY = 'addthis_block_widget_type';
+  const SERVICES_CSS_URL = 'http://cache.addthiscdn.com/icons/v1/sprites/services.css';
+  const SERVICES_JSON_URL = 'http://cache.addthiscdn.com/services/v1/sharing.en.json';
+  const WIDGET_JS_URL = 'http://s7.addthis.com/js/250/addthis_widget.js';
   const WIDGET_TYPE_DISABLED = 'disabled';
   const WIDGET_TYPE_COMPACT_BUTTON = 'compact_button';
   const WIDGET_TYPE_LARGE_BUTTON = 'large_button';
@@ -33,8 +37,8 @@ class AddThis {
     );
   }
 
-  public static function getWidgetType() {
-    return variable_get(self::WIDGET_TYPE_KEY, self::WIDGET_TYPE_COMPACT_BUTTON);
+  public static function getBlockWidgetType() {
+    return variable_get(self::BLOCK_WIDGET_TYPE_KEY, self::WIDGET_TYPE_COMPACT_BUTTON);
   }
 
   public static function getWidgetMarkup($widgetType = '') {
@@ -82,8 +86,38 @@ class AddThis {
     return variable_get(AddThis::PROFILE_ID_KEY);
   }
 
+  public static function getServiceOptions() {
+    return self::getServices();
+  }
+
+  public static function getEnabledServiceOptions() {
+    return self::getEnabledServices();
+  }
+
+  public static function getAdminCssFilePath() {
+    return drupal_get_path('module', self::MODULE_NAME) . '/' . self::ADMIN_CSS_FILE;
+  }
+
+  private static function getServices() {
+    module_load_include('php', self::MODULE_NAME, 'Json');
+    $rows = array();
+    $servicesJson = Json::request(self::SERVICES_JSON_URL);
+    if ($servicesJson != NULL) {
+      foreach ($servicesJson['data'] AS $service) {
+        $serviceCode = $service['code'];
+        $serviceName = $service['name'];
+        $rows[$serviceCode] = '<span class="addthis_service_icon icon_' . $serviceCode . '"></span> ' . $serviceName;
+      }
+    }
+    return $rows;
+  }
+
+  private static function getEnabledServices() {
+    return variable_get(self::ENABLED_SERVICES_KEY, array());
+  }
+
   private static function getBookmarkUrl() {
-    return self::BOOKMARK_BASE_URL . self::getProfileIdQueryParameterPrefixedWithAmp();
+    return self::BOOKMARK_URL . self::getProfileIdQueryParameterPrefixedWithAmp();
   }
 
   private static function getProfileIdQueryParameter($prefix) {
@@ -104,6 +138,6 @@ class AddThis {
   }
 
   private static function getWidgetUrl() {
-    return self::WIDGET_BASE_URL . self::getProfileIdQueryParameterPrefixedWithHash();
+    return self::WIDGET_JS_URL . self::getProfileIdQueryParameterPrefixedWithHash();
   }
 }

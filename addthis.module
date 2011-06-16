@@ -260,7 +260,7 @@ function addthis_block_info() {
  */
 function addthis_block_view($blockName = '') {
   if ($blockName == AddThis::BLOCK_NAME) {
-    $widgetType = AddThis::getWidgetType();
+    $widgetType = AddThis::getBlockWidgetType();
     $markup = AddThis::getWidgetMarkup($widgetType);
     return array(
       'subject' => '',
@@ -273,11 +273,11 @@ function addthis_block_view($blockName = '') {
  * Implements hook_block_configure().
  */
 function addthis_block_configure($delta = '') {
-  $form[AddThis::WIDGET_TYPE_KEY] = array(
+  $form[AddThis::BLOCK_WIDGET_TYPE_KEY] = array(
     '#type' => 'select',
     '#title' => t('AddThis widget type'),
     '#options' => AddThis::getWidgetTypes(),
-    '#default_value' => AddThis::getWidgetType(),
+    '#default_value' => AddThis::getBlockWidgetType(),
   );
   return $form;
 }
@@ -286,7 +286,7 @@ function addthis_block_configure($delta = '') {
  * Implements hook_block_save().
  */
 function addthis_block_save($delta = '', $edit = array()) {
-  variable_set(AddThis::WIDGET_TYPE_KEY, $edit[AddThis::WIDGET_TYPE_KEY]);
+  variable_set(AddThis::BLOCK_WIDGET_TYPE_KEY, $edit[AddThis::BLOCK_WIDGET_TYPE_KEY]);
 }
 
 /**

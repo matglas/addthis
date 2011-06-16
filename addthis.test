@@ -115,7 +115,7 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
   private function addThisBlockSettingsShouldBeAbleToBeSaved() {
     $edit = array();
-    $edit[AddThis::WIDGET_TYPE_KEY] = AddThis::WIDGET_TYPE_COMPACT_BUTTON;
+    $edit[AddThis::BLOCK_WIDGET_TYPE_KEY] = AddThis::WIDGET_TYPE_COMPACT_BUTTON;
 
     $this->drupalPost('admin/structure/block/manage/addthis/addthis_block/configure', $edit, t('Save block'));
 
