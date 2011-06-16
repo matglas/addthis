@@ -5,7 +5,7 @@
  * Defines simple AddThis field types.
  */
 
-module_load_include('php', 'addthis', 'AddThis');
+module_load_include('php', 'addthis', 'classes/AddThis');
 
 /**
  * Implements hook_help().
