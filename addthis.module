@@ -2,7 +2,8 @@
 
 /**
  * @file
- * Defines simple AddThis field types.
+ * Hook implementations for the AddThis-module. Most of the logic is defined
+ * in a separate AddThis-class to keep the .module-file clean.
  */
 
 module_load_include('php', 'addthis', 'classes/AddThis');
