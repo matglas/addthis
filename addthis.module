@@ -156,7 +156,6 @@ function addthis_field_formatter_settings_summary($field, $instance, $view_mode)
  * Implements hook_field_formatter_view().
  */
 function addthis_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-  AddThis::addConfigurationOptionsJs();
   $element = array();
 
   foreach ($items as $delta => $item) {
@@ -315,4 +314,11 @@ function addthis_permission() {
       'description' => t('Perform maintenance tasks for AddThis.'),
     ),
   );
+}
+
+/**
+ * Implements hook_page_alter().
+ */
+function addthis_page_alter(&$page) {
+  AddThis::addConfigurationOptionsJs();
 }
