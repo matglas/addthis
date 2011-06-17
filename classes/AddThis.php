@@ -184,7 +184,7 @@ class AddThis {
   }
 
   private static function getAddThisTitleAttributeMarkup($entity) {
-    return MarkupGenerator::generateAttribute(self::TITLE_ATTRIBUTE, drupal_get_title() . ' - ' . $entity->title);
+    return MarkupGenerator::generateAttribute(self::TITLE_ATTRIBUTE, drupal_get_title() . ' - ' . check_plain($entity->title));
   }
 
   private static function getWidgetScriptElement() {
