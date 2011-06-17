@@ -122,12 +122,7 @@ class AddThis {
 
   public static function addConfigurationOptionsJs() {
     $enabledServices = self::getServiceNamesAsCommaSeparatedString();
-    drupal_add_js("var addthis_config = {services_compact: '"
-                  . $enabledServices
-                  . "more', services_expanded: '"
-                  . $enabledServices
-                  . "more'}", 'inline'
-    );
+    drupal_add_js("var addthis_config = {services_compact: '" . $enabledServices . "more'}", 'inline');
   }
 
   private static function getServiceNamesAsCommaSeparatedString() {
