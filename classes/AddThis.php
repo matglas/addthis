@@ -160,17 +160,14 @@ class AddThis {
   }
 
   private static function getAddThisAttributesMarkup($entity) {
-    return self::getAddThisTitleAttributeMarkup($entity) . ' ';
+    if (is_object($entity)) {
+      return self::getAddThisTitleAttributeMarkup($entity) . ' ';
+    }
+    return '';
   }
 
   private static function getAddThisTitleAttributeMarkup($entity) {
-    $titleAttribute = '';
-    if (is_object($entity)) {
-      $titleAttribute = MarkupGenerator::generateAttribute(
-        self::TITLE_ATTRIBUTE, drupal_get_title() . ' - ' . $entity->title
-      );
-    }
-    return $titleAttribute;
+    return MarkupGenerator::generateAttribute(self::TITLE_ATTRIBUTE, drupal_get_title() . ' - ' . $entity->title);
   }
 
   private static function getWidgetScriptElement() {
