@@ -126,10 +126,24 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $edit = array();
     $profileId = TestHelper::generateRandomLowercaseString();
     $edit[AddThis::PROFILE_ID_KEY] = $profileId;
+    $serviceName = '2linkme';
+    $edit["addthis_enabled_services[$serviceName]"] = $serviceName;
 
     $this->drupalPost('admin/config/system/addthis', $edit, t('Save configuration'));
 
-    $this->assertText(t('The configuration options have been saved.'));
+    $this->assertText(t('The configuration options have been saved.'), 'AddThis system settings should be able to be saved.');
+
+    $this->addThisProfileIdShouldBeAbleToBeSaved($profileId);
+
+    $this->addThisEnabledServicesShouldBeAbleToBeSaved($serviceName);
+  }
+
+  private function addThisProfileIdShouldBeAbleToBeSaved($profileId) {
+    $this->assertFieldByName(AddThis::PROFILE_ID_KEY, $profileId, 'AddThis profile ID should be able to be saved.');
+  }
+
+  private function addThisEnabledServicesShouldBeAbleToBeSaved($serviceName) {
+    $this->assertFieldChecked('edit-addthis-enabled-services-' . $serviceName, 'AddThis enabled services should be able to be saved.');
   }
 
   private function createAndLoginUser() {

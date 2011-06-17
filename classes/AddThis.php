@@ -120,6 +120,27 @@ class AddThis {
     drupal_add_css(self::getAdminCssFilePath(), 'file');
   }
 
+  public static function addConfigurationOptionsJs() {
+    $enabledServices = self::getServiceNamesAsCommaSeparatedString();
+    drupal_add_js("var addthis_config = {services_compact: '"
+                  . $enabledServices
+                  . "more', services_expanded: '"
+                  . $enabledServices
+                  . "more'}", 'inline'
+    );
+  }
+
+  private static function getServiceNamesAsCommaSeparatedString() {
+    $enabledServiceNames = array_values(self::getEnabledServices());
+    $enabledServicesAsCommaSeparatedString = '';
+    foreach ($enabledServiceNames as $enabledServiceName) {
+      if ($enabledServiceName != '0') {
+        $enabledServicesAsCommaSeparatedString .= $enabledServiceName . ',';
+      }
+    }
+    return $enabledServicesAsCommaSeparatedString;
+  }
+
   private static function getAdminCssFilePath() {
     return drupal_get_path('module', self::MODULE_NAME) . '/' . self::ADMIN_CSS_FILE;
   }
@@ -131,8 +152,8 @@ class AddThis {
     $services = $json->decode(self::SERVICES_JSON_URL);
     if ($services != NULL) {
       foreach ($services['data'] AS $service) {
-        $serviceCode = $service['code'];
-        $serviceName = $service['name'];
+        $serviceCode = check_plain($service['code']);
+        $serviceName = check_plain($service['name']);
         $rows[$serviceCode] = '<span class="addthis_service_icon icon_' . $serviceCode . '"></span> ' . $serviceName;
       }
     }
