@@ -127,9 +127,10 @@ class AddThis {
   private static function getServices() {
     module_load_include('php', self::MODULE_NAME, 'classes/Json');
     $rows = array();
-    $servicesJson = Json::request(self::SERVICES_JSON_URL);
-    if ($servicesJson != NULL) {
-      foreach ($servicesJson['data'] AS $service) {
+    $json = new Json();
+    $services = $json->decode(self::SERVICES_JSON_URL);
+    if ($services != NULL) {
+      foreach ($services['data'] AS $service) {
         $serviceCode = $service['code'];
         $serviceName = $service['name'];
         $rows[$serviceCode] = '<span class="addthis_service_icon icon_' . $serviceCode . '"></span> ' . $serviceName;
