@@ -126,6 +126,8 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $edit = array();
     $profileId = TestHelper::generateRandomLowercaseString();
     $edit[AddThis::PROFILE_ID_KEY] = $profileId;
+    $servicesJsonUrl = AddThis::DEFAULT_SERVICES_JSON_URL;
+    $edit[AddThis::SERVICES_JSON_URL_KEY] = $servicesJsonUrl;
     $serviceName = '2linkme';
     $edit["addthis_enabled_services[$serviceName]"] = $serviceName;
 
@@ -135,11 +137,17 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
     $this->addThisProfileIdShouldBeAbleToBeSaved($profileId);
 
+    $this->addThisServicesJsonUrlShouldBeAbleToBeSaved($servicesJsonUrl);
+
     $this->addThisEnabledServicesShouldBeAbleToBeSaved($serviceName);
   }
 
   private function addThisProfileIdShouldBeAbleToBeSaved($profileId) {
     $this->assertFieldByName(AddThis::PROFILE_ID_KEY, $profileId, 'AddThis profile ID should be able to be saved.');
+  }
+
+  private function addThisServicesJsonUrlShouldBeAbleToBeSaved($servicesJsonUrl) {
+    $this->assertFieldByName(AddThis::SERVICES_JSON_URL_KEY, $servicesJsonUrl, 'AddThis services json URL should be able to be saved.');
   }
 
   private function addThisEnabledServicesShouldBeAbleToBeSaved($serviceName) {
