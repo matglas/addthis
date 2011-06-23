@@ -21,14 +21,14 @@ function addthis_admin_settings_form($form_state) {
     '#type' => 'textfield',
     '#title' => t('AddThis bookmark URL'),
     '#default_value' => AddThis::getBaseBookmarkUrl(),
-    '#required' => FALSE,
+    '#required' => TRUE,
     '#description' => t('AddThis bookmark URL.'),
   );
   $form[AddThis::SERVICES_JSON_URL_KEY] = array(
     '#type' => 'textfield',
     '#title' => t('AddThis services json URL'),
     '#default_value' => AddThis::getServicesJsonUrl(),
-    '#required' => FALSE,
+    '#required' => TRUE,
     '#description' => t('AddThis services json URL.'),
   );
   $form[AddThis::ENABLED_SERVICES_KEY] = array(
