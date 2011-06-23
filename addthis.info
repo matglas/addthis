@@ -7,3 +7,6 @@ dependencies[] = field
 files[] = addthis.module
 files[] = addthis.install
 files[] = addthis.test
+files[] = classes/AddThis.php
+files[] = classes/Json.php
+files[] = classes/MarkupGenerator.php

@@ -6,8 +6,6 @@
  * in a separate AddThis-class to keep the .module-file clean.
  */
 
-module_load_include('php', 'addthis', 'classes/AddThis');
-
 /**
  * Implements hook_help().
  */

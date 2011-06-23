@@ -44,7 +44,6 @@ class AddThis {
   }
 
   public static function getWidgetMarkup($widgetType = '', $entity = NULL) {
-    module_load_include('php', self::MODULE_NAME, 'classes/MarkupGenerator');
     switch ($widgetType) {
       case self::WIDGET_TYPE_LARGE_BUTTON:
         $markup =
@@ -141,7 +140,6 @@ class AddThis {
   }
 
   private static function getServices() {
-    module_load_include('php', self::MODULE_NAME, 'classes/Json');
     $rows = array();
     $json = new Json();
     $services = $json->decode(self::SERVICES_JSON_URL);
