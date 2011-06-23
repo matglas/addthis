@@ -12,7 +12,8 @@ class AddThis {
   const AMP_ENTITY = '&amp;';
   const BLOCK_NAME = 'addthis_block';
   const BLOCK_WIDGET_TYPE_KEY = 'addthis_block_widget_type';
-  const BOOKMARK_URL = 'http://www.addthis.com/bookmark.php?v=250';
+  const DEFAULT_BOOKMARK_URL = 'http://www.addthis.com/bookmark.php?v=250';
+  const BOOKMARK_URL_KEY = 'addthis_bookmark_url';
   const ENABLED_SERVICES_KEY = 'addthis_enabled_services';
   const HASH = '#';
   const HREF = 'href';
@@ -50,7 +51,7 @@ class AddThis {
         $markup =
           '<a class="addthis_button" '
           . self::getAddThisAttributesMarkup($entity)
-          . MarkupGenerator::generateAttribute(self::HREF, self::getBookmarkUrl())
+          . MarkupGenerator::generateAttribute(self::HREF, self::getFullBookmarkUrl())
           . '><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="'
           . t('Bookmark and Share')
           . '" style="border:0"/></a>'
@@ -60,7 +61,7 @@ class AddThis {
         $markup =
           '<a class="addthis_button" '
           . self::getAddThisAttributesMarkup($entity)
-          . MarkupGenerator::generateAttribute(self::HREF, self::getBookmarkUrl())
+          . MarkupGenerator::generateAttribute(self::HREF, self::getFullBookmarkUrl())
           . '><img src="http://s7.addthis.com/static/btn/sm-share-en.gif" width="83" height="16" alt="'
           . t('Bookmark and Share')
           . '" style="border:0"/></a>'
@@ -69,7 +70,7 @@ class AddThis {
       case self::WIDGET_TYPE_TOOLBOX:
         $markup =
           '<div class="addthis_toolbox addthis_default_style"><a '
-          . MarkupGenerator::generateAttribute(self::HREF, self::getBookmarkUrl())
+          . MarkupGenerator::generateAttribute(self::HREF, self::getFullBookmarkUrl())
           . ' class="addthis_button_compact" '
           . self::getAddThisAttributesMarkup($entity)
           . '>'
@@ -162,8 +163,12 @@ class AddThis {
     return variable_get(self::ENABLED_SERVICES_KEY, array());
   }
 
-  private static function getBookmarkUrl() {
-    return self::BOOKMARK_URL . self::getProfileIdQueryParameterPrefixedWithAmp();
+  public static function getBaseBookmarkUrl() {
+    return variable_get(self::BOOKMARK_URL_KEY, self::DEFAULT_BOOKMARK_URL);
+  }
+
+  private static function getFullBookmarkUrl() {
+    return self::getBaseBookmarkUrl() . self::getProfileIdQueryParameterPrefixedWithAmp();
   }
 
   private static function getProfileIdQueryParameter($prefix) {
