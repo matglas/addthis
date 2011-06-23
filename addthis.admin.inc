@@ -17,6 +17,13 @@ function addthis_admin_settings_form($form_state) {
     '#required' => FALSE,
     '#description' => t('Profile ID at <a href="http://addthis.com/" target="_blank">AddThis.com</a>. Required for statistics.'),
   );
+  $form[AddThis::SERVICES_JSON_URL_KEY] = array(
+    '#type' => 'textfield',
+    '#title' => t('AddThis services json URL'),
+    '#default_value' => AddThis::getServicesJsonUrl(),
+    '#required' => FALSE,
+    '#description' => t('AddThis services json URL.'),
+  );
   $form[AddThis::ENABLED_SERVICES_KEY] = array(
     '#type' => 'checkboxes',
     '#title' => t('Enabled services'),

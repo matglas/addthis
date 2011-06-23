@@ -20,7 +20,8 @@ class AddThis {
   const PROFILE_ID_KEY = 'addthis_profile_id';
   const PROFILE_ID_QUERY_PARAMETER = 'pubid';
   const SERVICES_CSS_URL = 'http://cache.addthiscdn.com/icons/v1/sprites/services.css';
-  const SERVICES_JSON_URL = 'http://cache.addthiscdn.com/services/v1/sharing.en.json';
+  const DEFAULT_SERVICES_JSON_URL = 'http://cache.addthiscdn.com/services/v1/sharing.en.json';
+  const SERVICES_JSON_URL_KEY = 'addthis_services_json_url';
   const TITLE_ATTRIBUTE = 'addthis:title';
   const WIDGET_JS_URL = 'http://s7.addthis.com/js/250/addthis_widget.js';
   const WIDGET_TYPE_DISABLED = 'disabled';
@@ -106,6 +107,10 @@ class AddThis {
     return variable_get(AddThis::PROFILE_ID_KEY);
   }
 
+  public static function getServicesJsonUrl() {
+    return variable_get(AddThis::SERVICES_JSON_URL_KEY, self::DEFAULT_SERVICES_JSON_URL);
+  }
+
   public static function getServiceOptions() {
     return self::getServices();
   }
@@ -142,7 +147,7 @@ class AddThis {
   private static function getServices() {
     $rows = array();
     $json = new Json();
-    $services = $json->decode(self::SERVICES_JSON_URL);
+    $services = $json->decode(self::getServicesJsonUrl());
     if ($services != NULL) {
       foreach ($services['data'] AS $service) {
         $serviceCode = check_plain($service['code']);

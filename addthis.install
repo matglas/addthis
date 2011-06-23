@@ -37,4 +37,5 @@ function addthis_uninstall() {
   variable_del(AddThis::BLOCK_WIDGET_TYPE_KEY);
   variable_del(AddThis::ENABLED_SERVICES_KEY);
   variable_del(AddThis::PROFILE_ID_KEY);
+  variable_del(AddThis::SERVICES_JSON_URL_KEY);
 }
