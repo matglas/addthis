@@ -47,8 +47,6 @@ class AddThis {
   const WIDGET_TYPE_SHARECOUNT = 'sharecount';
 
   // Markup constants
-  const AMP_ENTITY = '&amp;';
-  const HASH = '#';
   const HREF = 'href';
 
   public static function getWidgetTypes() {
@@ -127,15 +125,15 @@ class AddThis {
   }
 
   public static function getProfileId() {
-    return variable_get(AddThis::PROFILE_ID_KEY);
+    return check_plain(variable_get(AddThis::PROFILE_ID_KEY));
   }
 
   public static function getServicesCssUrl() {
-    return variable_get(AddThis::SERVICES_CSS_URL_KEY, self::DEFAULT_SERVICES_CSS_URL);
+    return check_url(variable_get(AddThis::SERVICES_CSS_URL_KEY, self::DEFAULT_SERVICES_CSS_URL));
   }
 
   public static function getServicesJsonUrl() {
-    return variable_get(AddThis::SERVICES_JSON_URL_KEY, self::DEFAULT_SERVICES_JSON_URL);
+    return check_url(variable_get(AddThis::SERVICES_JSON_URL_KEY, self::DEFAULT_SERVICES_JSON_URL));
   }
 
   public static function getServiceOptions() {
@@ -165,11 +163,11 @@ class AddThis {
   }
 
   public static function getUiHeaderColor() {
-    return variable_get(self::UI_HEADER_COLOR_KEY);
+    return check_plain(variable_get(self::UI_HEADER_COLOR_KEY));
   }
 
   public static function getUiHeaderBackgroundColor() {
-    return variable_get(self::UI_HEADER_BACKGROUND_COLOR_KEY);
+    return check_plain(variable_get(self::UI_HEADER_BACKGROUND_COLOR_KEY));
   }
 
   private static function getUiHeaderColorConfigurationOptions() {
@@ -223,15 +221,15 @@ class AddThis {
   }
 
   public static function getBaseBookmarkUrl() {
-    return variable_get(self::BOOKMARK_URL_KEY, self::DEFAULT_BOOKMARK_URL);
+    return check_url(variable_get(self::BOOKMARK_URL_KEY, self::DEFAULT_BOOKMARK_URL));
   }
 
   private static function getFullBookmarkUrl() {
-    return self::getBaseBookmarkUrl() . self::getProfileIdQueryParameterPrefixedWithAmp();
+    return check_url(self::getBaseBookmarkUrl() . self::getProfileIdQueryParameterPrefixedWithAmp());
   }
 
   public static function getBaseWidgetJsUrl() {
-    return variable_get(self::WIDGET_JS_URL_KEY, self::DEFAULT_WIDGET_JS_URL);
+    return check_url(variable_get(self::WIDGET_JS_URL_KEY, self::DEFAULT_WIDGET_JS_URL));
   }
 
   private static function getProfileIdQueryParameter($prefix) {
@@ -240,11 +238,11 @@ class AddThis {
   }
 
   private static function getProfileIdQueryParameterPrefixedWithAmp() {
-    return self::getProfileIdQueryParameter(self::AMP_ENTITY);
+    return self::getProfileIdQueryParameter('&');
   }
 
   private static function getProfileIdQueryParameterPrefixedWithHash() {
-    return self::getProfileIdQueryParameter(self::HASH);
+    return self::getProfileIdQueryParameter('#');
   }
 
   private static function getAddThisAttributesMarkup($entity) {
@@ -263,6 +261,6 @@ class AddThis {
   }
 
   private static function getWidgetUrl() {
-    return self::getBaseWidgetJsUrl() . self::getProfileIdQueryParameterPrefixedWithHash();
+    return check_url(self::getBaseWidgetJsUrl() . self::getProfileIdQueryParameterPrefixedWithHash());
   }
 }
