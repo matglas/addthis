@@ -136,6 +136,8 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
     $widgetJsUrl = AddThis::DEFAULT_WIDGET_JS_URL;
     $edit[AddThis::WIDGET_JS_URL_KEY] = $widgetJsUrl;
+
+    $edit[AddThis::LARGE_ICONS_KEY] = TRUE;
     
     $serviceName = '2linkme';
     $edit["addthis_enabled_services[$serviceName]"] = $serviceName;
@@ -151,6 +153,8 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $this->addThisServicesJsonUrlShouldBeAbleToBeSaved($servicesJsonUrl);
 
     $this->addThisWidgetJsUrlShouldBeAbleToBeSaved($widgetJsUrl);
+
+    $this->addThisLargeToolboxIconsSettingShouldBeAbleToBeSaved();
 
     $this->addThisEnabledServicesShouldBeAbleToBeSaved($serviceName);
   }
@@ -169,6 +173,10 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
   private function addThisWidgetJsUrlShouldBeAbleToBeSaved($widgetJsUrl) {
     $this->assertFieldByName(AddThis::WIDGET_JS_URL_KEY, $widgetJsUrl, 'AddThis javascript widget URL should be able to be saved.');
+  }
+
+  private function addThisLargeToolboxIconsSettingShouldBeAbleToBeSaved() {
+    $this->assertFieldChecked('edit-addthis-large-icons', 'AddThis large toolbox icons setting should be able to be saved.');
   }
 
   private function addThisEnabledServicesShouldBeAbleToBeSaved($serviceName) {

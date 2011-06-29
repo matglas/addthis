@@ -24,6 +24,7 @@ class AddThis {
   const PROFILE_ID_KEY = 'addthis_profile_id';
   const SERVICES_CSS_URL_KEY = 'addthis_services_css_url';
   const SERVICES_JSON_URL_KEY = 'addthis_services_json_url';
+  const LARGE_ICONS_KEY = 'addthis_large_icons';
   const WIDGET_JS_URL_KEY = 'addthis_widget_js_url';
 
   // External resources
@@ -86,7 +87,9 @@ class AddThis {
         break;
       case self::WIDGET_TYPE_TOOLBOX:
         $markup =
-          '<div class="addthis_toolbox addthis_default_style"><a '
+          '<div class="addthis_toolbox addthis_default_style'
+          . self::getLargeButtonsClass()
+          . '"><a '
           . MarkupGenerator::generateAttribute(self::HREF, self::getFullBookmarkUrl())
           . ' class="addthis_button_compact" '
           . self::getAddThisAttributesMarkup($entity)
@@ -149,6 +152,14 @@ class AddThis {
   public static function addConfigurationOptionsJs() {
     $enabledServices = self::getServiceNamesAsCommaSeparatedString();
     drupal_add_js("var addthis_config = {services_compact: '" . $enabledServices . "more'}", 'inline');
+  }
+
+  public static function areLargeIconsEnabled() {
+    return variable_get(self::LARGE_ICONS_KEY, FALSE);
+  }
+
+  private static function getLargeButtonsClass() {
+    return self::areLargeIconsEnabled() ? ' addthis_32x32_style ' : '';
   }
 
   private static function getServiceNamesAsCommaSeparatedString() {

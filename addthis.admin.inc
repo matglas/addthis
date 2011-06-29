@@ -45,6 +45,13 @@ function addthis_admin_settings_form($form_state) {
     '#required' => TRUE,
     '#description' => t('AddThis javascript widget URL.'),
   );
+  $form[AddThis::LARGE_ICONS_KEY] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use large toolbox icons'),
+    '#default_value' => AddThis::areLargeIconsEnabled(),
+    '#required' => FALSE,
+    '#description' => t('Use large 32x32 pixel toolbox icons instead of smaller 16x16 pixel icons.'),
+  );
   $form[AddThis::ENABLED_SERVICES_KEY] = array(
     '#type' => 'checkboxes',
     '#title' => t('Enabled services'),
