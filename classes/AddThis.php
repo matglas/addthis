@@ -31,8 +31,8 @@ class AddThis {
 
   // External resources
   const DEFAULT_BOOKMARK_URL = 'http://www.addthis.com/bookmark.php?v=250';
-  const DEFAULT_SERVICES_JSON_URL = 'http://cache.addthiscdn.com/services/v1/sharing.en.json';
   const DEFAULT_SERVICES_CSS_URL = 'http://cache.addthiscdn.com/icons/v1/sprites/services.css';
+  const DEFAULT_SERVICES_JSON_URL = 'http://cache.addthiscdn.com/services/v1/sharing.en.json';
   const DEFAULT_WIDGET_JS_URL = 'http://s7.addthis.com/js/250/addthis_widget.js';
 
   // Internal resources
@@ -43,11 +43,8 @@ class AddThis {
   const WIDGET_TYPE_COMPACT_BUTTON = 'compact_button';
   const WIDGET_TYPE_DISABLED = 'disabled';
   const WIDGET_TYPE_LARGE_BUTTON = 'large_button';
-  const WIDGET_TYPE_TOOLBOX = 'toolbox';
   const WIDGET_TYPE_SHARECOUNT = 'sharecount';
-
-  // Markup constants
-  const HREF = 'href';
+  const WIDGET_TYPE_TOOLBOX = 'toolbox';
 
   public static function getWidgetTypes() {
     return array(
@@ -64,12 +61,13 @@ class AddThis {
   }
 
   public static function getWidgetMarkup($widgetType = '', $entity = NULL) {
+    $href = 'href';
     switch ($widgetType) {
       case self::WIDGET_TYPE_LARGE_BUTTON:
         $markup =
           '<a class="addthis_button" '
           . self::getAddThisAttributesMarkup($entity)
-          . MarkupGenerator::generateAttribute(self::HREF, self::getFullBookmarkUrl())
+          . MarkupGenerator::generateAttribute($href, self::getFullBookmarkUrl())
           . '><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="'
           . t('Bookmark and Share')
           . '" style="border:0"/></a>'
@@ -79,7 +77,7 @@ class AddThis {
         $markup =
           '<a class="addthis_button" '
           . self::getAddThisAttributesMarkup($entity)
-          . MarkupGenerator::generateAttribute(self::HREF, self::getFullBookmarkUrl())
+          . MarkupGenerator::generateAttribute($href, self::getFullBookmarkUrl())
           . '><img src="http://s7.addthis.com/static/btn/sm-share-en.gif" width="83" height="16" alt="'
           . t('Bookmark and Share')
           . '" style="border:0"/></a>'
@@ -90,7 +88,7 @@ class AddThis {
           '<div class="addthis_toolbox addthis_default_style'
           . self::getLargeButtonsClass()
           . '"><a '
-          . MarkupGenerator::generateAttribute(self::HREF, self::getFullBookmarkUrl())
+          . MarkupGenerator::generateAttribute($href, self::getFullBookmarkUrl())
           . ' class="addthis_button_compact" '
           . self::getAddThisAttributesMarkup($entity)
           . '>'
