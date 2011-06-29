@@ -23,8 +23,6 @@ function addthis_help($path, $arg) {
  *
  * Field settings:
  *   - max_length: the maximum length for a varchar field.
- * Instance settings:
- *   - addthis_processing: whether addthis input filters should be used.
  */
 function addthis_field_info() {
   return array(
@@ -32,9 +30,9 @@ function addthis_field_info() {
       'label' => t('Addthis'),
       'description' => t('This field stores addthis settings in the database.'),
       'settings' => array('max_length' => 255),
-      'instance_settings' => array('addthis_processing' => 0),
-      'default_widget' => 'addthis_addthisfield',
-      'default_formatter' => 'addthis_default',
+      'instance_settings' => array(),
+      'default_widget' => 'addthis_button',
+      'default_formatter' => AddThis::DEFAULT_FORMATTER,
     ),
   );
 }
@@ -45,10 +43,10 @@ function addthis_field_info() {
 function addthis_field_settings_form($field, $instance, $has_data) {
   $settings = $field['settings'];
 
-  $form['addthis_style'] = array(
+  $form[AddThis::STYLE_KEY] = array(
     '#type' => 'select',
     '#title' => t('Select default style'),
-    '#default_value' => isset($settings['addthis_style']) ? $settings['addthis_style'] : '',
+    '#default_value' => isset($settings[AddThis::STYLE_KEY]) ? $settings[AddThis::STYLE_KEY] : '',
     '#options' => Addthis::getWidgetTypes(),
   );
 
@@ -67,7 +65,7 @@ function addthis_field_is_empty($item, $field) {
  */
 function addthis_field_formatter_info() {
   return array(
-    'addthis_default' => array(
+    AddThis::DEFAULT_FORMATTER => array(
       'label' => t('Default'),
       'field types' => array('addthis'),
     ),
@@ -104,19 +102,13 @@ function addthis_field_widget_info() {
  * Implements hook_field_widget_form().
  */
 function addthis_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-  $main_widget = array();
 
-  switch ($instance['widget']['type']) {
-    case 'addthis_button':
-      $main_widget = $element + array(
-        '#type' => 'select',
-        '#options' => AddThis::getWidgetTypes(),
-        '#default_value' => isset($items[$delta]) ? $items[$delta] : $field['settings']['addthis_style'],
-      );
-      break;
-  }
-
-  if ($main_widget) {
+  if ($instance['widget']['type'] == 'addthis_button') {
+    $main_widget = $element + array(
+      '#type' => 'select',
+      '#options' => AddThis::getWidgetTypes(),
+      '#default_value' => isset($items[$delta]) ? $items[$delta] : $field['settings'][AddThis::STYLE_KEY],
+    );
     $element['value'] = $main_widget;
   }
 
@@ -208,7 +200,7 @@ function addthis_menu() {
     'page arguments' => array('addthis_admin_settings_form'),
     'access arguments' => array('administer addthis'),
     'type' => MENU_NORMAL_ITEM,
-    'file' => 'addthis.admin.inc',
+    'file' => AddThis::ADMIN_INCLUDE_FILE,
   );
   return $menuItems;
 }

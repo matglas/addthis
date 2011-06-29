@@ -8,28 +8,43 @@
 
 class AddThis {
 
-  const ADMIN_CSS_FILE = 'addthis.admin.css';
-  const AMP_ENTITY = '&amp;';
   const BLOCK_NAME = 'addthis_block';
+  const DEFAULT_FORMATTER = 'addthis_default';
+  const MODULE_NAME = 'addthis';
+  const STYLE_KEY = 'addthis_style';
+
+  // AddThis attribute and parameter names (as defined in AddThis APIs)
+  const PROFILE_ID_QUERY_PARAMETER = 'pubid';
+  const TITLE_ATTRIBUTE = 'addthis:title';
+
+  // Persistent variable keys
   const BLOCK_WIDGET_TYPE_KEY = 'addthis_block_widget_type';
-  const DEFAULT_BOOKMARK_URL = 'http://www.addthis.com/bookmark.php?v=250';
   const BOOKMARK_URL_KEY = 'addthis_bookmark_url';
   const ENABLED_SERVICES_KEY = 'addthis_enabled_services';
-  const HASH = '#';
-  const HREF = 'href';
-  const MODULE_NAME = 'addthis';
   const PROFILE_ID_KEY = 'addthis_profile_id';
-  const PROFILE_ID_QUERY_PARAMETER = 'pubid';
-  const SERVICES_CSS_URL = 'http://cache.addthiscdn.com/icons/v1/sprites/services.css';
-  const DEFAULT_SERVICES_JSON_URL = 'http://cache.addthiscdn.com/services/v1/sharing.en.json';
   const SERVICES_JSON_URL_KEY = 'addthis_services_json_url';
-  const TITLE_ATTRIBUTE = 'addthis:title';
+
+  // External resources
+  const DEFAULT_BOOKMARK_URL = 'http://www.addthis.com/bookmark.php?v=250';
+  const DEFAULT_SERVICES_JSON_URL = 'http://cache.addthiscdn.com/services/v1/sharing.en.json';
+  const SERVICES_CSS_URL = 'http://cache.addthiscdn.com/icons/v1/sprites/services.css';
   const WIDGET_JS_URL = 'http://s7.addthis.com/js/250/addthis_widget.js';
-  const WIDGET_TYPE_DISABLED = 'disabled';
+
+  // Internal resources
+  const ADMIN_CSS_FILE = 'addthis.admin.css';
+  const ADMIN_INCLUDE_FILE = 'addthis.admin.inc';
+
+  // Widget types
   const WIDGET_TYPE_COMPACT_BUTTON = 'compact_button';
+  const WIDGET_TYPE_DISABLED = 'disabled';
   const WIDGET_TYPE_LARGE_BUTTON = 'large_button';
   const WIDGET_TYPE_TOOLBOX = 'toolbox';
   const WIDGET_TYPE_SHARECOUNT = 'sharecount';
+
+  // Markup constants
+  const AMP_ENTITY = '&amp;';
+  const HASH = '#';
+  const HREF = 'href';
 
   public static function getWidgetTypes() {
     return array(
