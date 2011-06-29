@@ -24,12 +24,26 @@ function addthis_admin_settings_form($form_state) {
     '#required' => TRUE,
     '#description' => t('AddThis bookmark URL.'),
   );
+  $form[AddThis::SERVICES_CSS_URL_KEY] = array(
+    '#type' => 'textfield',
+    '#title' => t('AddThis services stylesheet URL'),
+    '#default_value' => AddThis::getServicesCssUrl(),
+    '#required' => TRUE,
+    '#description' => t('AddThis services stylesheet URL.'),
+  );
   $form[AddThis::SERVICES_JSON_URL_KEY] = array(
     '#type' => 'textfield',
     '#title' => t('AddThis services json URL'),
     '#default_value' => AddThis::getServicesJsonUrl(),
     '#required' => TRUE,
     '#description' => t('AddThis services json URL.'),
+  );
+  $form[AddThis::WIDGET_JS_URL_KEY] = array(
+    '#type' => 'textfield',
+    '#title' => t('AddThis javascript widget URL'),
+    '#default_value' => AddThis::getBaseWidgetJsUrl(),
+    '#required' => TRUE,
+    '#description' => t('AddThis javascript widget URL.'),
   );
   $form[AddThis::ENABLED_SERVICES_KEY] = array(
     '#type' => 'checkboxes',

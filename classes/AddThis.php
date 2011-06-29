@@ -22,13 +22,15 @@ class AddThis {
   const BOOKMARK_URL_KEY = 'addthis_bookmark_url';
   const ENABLED_SERVICES_KEY = 'addthis_enabled_services';
   const PROFILE_ID_KEY = 'addthis_profile_id';
+  const SERVICES_CSS_URL_KEY = 'addthis_services_css_url';
   const SERVICES_JSON_URL_KEY = 'addthis_services_json_url';
+  const WIDGET_JS_URL_KEY = 'addthis_widget_js_url';
 
   // External resources
   const DEFAULT_BOOKMARK_URL = 'http://www.addthis.com/bookmark.php?v=250';
   const DEFAULT_SERVICES_JSON_URL = 'http://cache.addthiscdn.com/services/v1/sharing.en.json';
-  const SERVICES_CSS_URL = 'http://cache.addthiscdn.com/icons/v1/sprites/services.css';
-  const WIDGET_JS_URL = 'http://s7.addthis.com/js/250/addthis_widget.js';
+  const DEFAULT_SERVICES_CSS_URL = 'http://cache.addthiscdn.com/icons/v1/sprites/services.css';
+  const DEFAULT_WIDGET_JS_URL = 'http://s7.addthis.com/js/250/addthis_widget.js';
 
   // Internal resources
   const ADMIN_CSS_FILE = 'addthis.admin.css';
@@ -123,6 +125,10 @@ class AddThis {
     return variable_get(AddThis::PROFILE_ID_KEY);
   }
 
+  public static function getServicesCssUrl() {
+    return variable_get(AddThis::SERVICES_CSS_URL_KEY, self::DEFAULT_SERVICES_CSS_URL);
+  }
+
   public static function getServicesJsonUrl() {
     return variable_get(AddThis::SERVICES_JSON_URL_KEY, self::DEFAULT_SERVICES_JSON_URL);
   }
@@ -136,7 +142,7 @@ class AddThis {
   }
 
   public static function addStylesheets() {
-    drupal_add_css(self::SERVICES_CSS_URL, 'external');
+    drupal_add_css(self::getServicesCssUrl(), 'external');
     drupal_add_css(self::getAdminCssFilePath(), 'file');
   }
 
@@ -186,6 +192,10 @@ class AddThis {
     return self::getBaseBookmarkUrl() . self::getProfileIdQueryParameterPrefixedWithAmp();
   }
 
+  public static function getBaseWidgetJsUrl() {
+    return variable_get(self::WIDGET_JS_URL_KEY, self::DEFAULT_WIDGET_JS_URL);
+  }
+
   private static function getProfileIdQueryParameter($prefix) {
     $profileId = self::getProfileId();
     return $profileId != NULL ? $prefix . self::PROFILE_ID_QUERY_PARAMETER . '=' . $profileId : '';
@@ -215,6 +225,6 @@ class AddThis {
   }
 
   private static function getWidgetUrl() {
-    return self::WIDGET_JS_URL . self::getProfileIdQueryParameterPrefixedWithHash();
+    return self::getBaseWidgetJsUrl() . self::getProfileIdQueryParameterPrefixedWithHash();
   }
 }

@@ -124,10 +124,19 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
   private function addThisSystemSettingsShouldBeAbleToBeSaved() {
     $edit = array();
+
     $profileId = TestHelper::generateRandomLowercaseString();
     $edit[AddThis::PROFILE_ID_KEY] = $profileId;
+
+    $servicesCssUrl = AddThis::DEFAULT_SERVICES_CSS_URL;
+    $edit[AddThis::SERVICES_CSS_URL_KEY] = $servicesCssUrl;
+
     $servicesJsonUrl = AddThis::DEFAULT_SERVICES_JSON_URL;
     $edit[AddThis::SERVICES_JSON_URL_KEY] = $servicesJsonUrl;
+
+    $widgetJsUrl = AddThis::DEFAULT_WIDGET_JS_URL;
+    $edit[AddThis::WIDGET_JS_URL_KEY] = $widgetJsUrl;
+    
     $serviceName = '2linkme';
     $edit["addthis_enabled_services[$serviceName]"] = $serviceName;
 
@@ -137,7 +146,11 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
     $this->addThisProfileIdShouldBeAbleToBeSaved($profileId);
 
+    $this->addThisServicesCssUrlShouldBeAbleToBeSaved($servicesCssUrl);
+
     $this->addThisServicesJsonUrlShouldBeAbleToBeSaved($servicesJsonUrl);
+
+    $this->addThisWidgetJsUrlShouldBeAbleToBeSaved($widgetJsUrl);
 
     $this->addThisEnabledServicesShouldBeAbleToBeSaved($serviceName);
   }
@@ -146,8 +159,16 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $this->assertFieldByName(AddThis::PROFILE_ID_KEY, $profileId, 'AddThis profile ID should be able to be saved.');
   }
 
+  private function addThisServicesCssUrlShouldBeAbleToBeSaved($servicesCssUrl) {
+    $this->assertFieldByName(AddThis::SERVICES_CSS_URL_KEY, $servicesCssUrl, 'AddThis services stylesheet URL should be able to be saved.');
+  }
+
   private function addThisServicesJsonUrlShouldBeAbleToBeSaved($servicesJsonUrl) {
     $this->assertFieldByName(AddThis::SERVICES_JSON_URL_KEY, $servicesJsonUrl, 'AddThis services json URL should be able to be saved.');
+  }
+
+  private function addThisWidgetJsUrlShouldBeAbleToBeSaved($widgetJsUrl) {
+    $this->assertFieldByName(AddThis::WIDGET_JS_URL_KEY, $widgetJsUrl, 'AddThis javascript widget URL should be able to be saved.');
   }
 
   private function addThisEnabledServicesShouldBeAbleToBeSaved($serviceName) {

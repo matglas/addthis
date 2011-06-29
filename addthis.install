@@ -35,5 +35,7 @@ function addthis_uninstall() {
   variable_del(AddThis::BOOKMARK_URL_KEY);
   variable_del(AddThis::ENABLED_SERVICES_KEY);
   variable_del(AddThis::PROFILE_ID_KEY);
+  variable_del(AddThis::SERVICES_CSS_URL_KEY);
   variable_del(AddThis::SERVICES_JSON_URL_KEY);
+  variable_del(AddThis::WIDGET_JS_URL_KEY);
 }
