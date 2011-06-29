@@ -137,6 +137,12 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $widgetJsUrl = AddThis::DEFAULT_WIDGET_JS_URL;
     $edit[AddThis::WIDGET_JS_URL_KEY] = $widgetJsUrl;
 
+    $uiHeaderBackgroundColor = '#000000';
+    $edit[AddThis::UI_HEADER_BACKGROUND_COLOR_KEY] = $uiHeaderBackgroundColor;
+
+    $uiHeaderColor = '#ffffff';
+    $edit[AddThis::UI_HEADER_COLOR_KEY] = $uiHeaderColor;
+
     $edit[AddThis::LARGE_ICONS_KEY] = TRUE;
     
     $serviceName = '2linkme';
@@ -153,6 +159,10 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $this->addThisServicesJsonUrlShouldBeAbleToBeSaved($servicesJsonUrl);
 
     $this->addThisWidgetJsUrlShouldBeAbleToBeSaved($widgetJsUrl);
+
+    $this->addThisUiHeaderBackgroundColorShouldBeAbleToBeSaved($uiHeaderBackgroundColor);
+
+    $this->addThisUiHeaderColorShouldBeAbleToBeSaved($uiHeaderColor);
 
     $this->addThisLargeToolboxIconsSettingShouldBeAbleToBeSaved();
 
@@ -177,6 +187,14 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
   private function addThisLargeToolboxIconsSettingShouldBeAbleToBeSaved() {
     $this->assertFieldChecked('edit-addthis-large-icons', 'AddThis large toolbox icons setting should be able to be saved.');
+  }
+
+  private function addThisUiHeaderColorShouldBeAbleToBeSaved($uiHeaderColor) {
+    $this->assertFieldByName(AddThis::UI_HEADER_COLOR_KEY, $uiHeaderColor, 'AddThis UI header color should be able to be saved.');
+  }
+
+  private function addThisUiHeaderBackgroundColorShouldBeAbleToBeSaved($uiHeaderBackgroundColor) {
+    $this->assertFieldByName(AddThis::UI_HEADER_BACKGROUND_COLOR_KEY, $uiHeaderBackgroundColor, 'AddThis UI header background color should be able to be saved.');
   }
 
   private function addThisEnabledServicesShouldBeAbleToBeSaved($serviceName) {

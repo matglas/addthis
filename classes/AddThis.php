@@ -21,10 +21,12 @@ class AddThis {
   const BLOCK_WIDGET_TYPE_KEY = 'addthis_block_widget_type';
   const BOOKMARK_URL_KEY = 'addthis_bookmark_url';
   const ENABLED_SERVICES_KEY = 'addthis_enabled_services';
+  const LARGE_ICONS_KEY = 'addthis_large_icons';
   const PROFILE_ID_KEY = 'addthis_profile_id';
   const SERVICES_CSS_URL_KEY = 'addthis_services_css_url';
   const SERVICES_JSON_URL_KEY = 'addthis_services_json_url';
-  const LARGE_ICONS_KEY = 'addthis_large_icons';
+  const UI_HEADER_BACKGROUND_COLOR_KEY = 'addthis_ui_header_background_color';
+  const UI_HEADER_COLOR_KEY = 'addthis_ui_header_color';
   const WIDGET_JS_URL_KEY = 'addthis_widget_js_url';
 
   // External resources
@@ -151,11 +153,36 @@ class AddThis {
 
   public static function addConfigurationOptionsJs() {
     $enabledServices = self::getServiceNamesAsCommaSeparatedString();
-    drupal_add_js("var addthis_config = {services_compact: '" . $enabledServices . "more'}", 'inline');
+    drupal_add_js(
+      "var addthis_config = {services_compact: '" . $enabledServices . "more'"
+      . self::getUiHeaderColorConfigurationOptions()
+      . '}', 'inline'
+    );
   }
 
   public static function areLargeIconsEnabled() {
     return variable_get(self::LARGE_ICONS_KEY, FALSE);
+  }
+
+  public static function getUiHeaderColor() {
+    return variable_get(self::UI_HEADER_COLOR_KEY);
+  }
+
+  public static function getUiHeaderBackgroundColor() {
+    return variable_get(self::UI_HEADER_BACKGROUND_COLOR_KEY);
+  }
+
+  private static function getUiHeaderColorConfigurationOptions() {
+    $configurationOptions = ',';
+    $uiHeaderColor = self::getUiHeaderColor();
+    $uiHeaderBackgroundColor = self::getUiHeaderBackgroundColor();
+    if ($uiHeaderColor != NULL) {
+      $configurationOptions .= "ui_header_color: '$uiHeaderColor'";
+    }
+    if ($uiHeaderBackgroundColor != NULL) {
+      $configurationOptions .= ", ui_header_background: '$uiHeaderBackgroundColor'";
+    }
+    return $configurationOptions;
   }
 
   private static function getLargeButtonsClass() {
