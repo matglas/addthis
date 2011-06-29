@@ -23,7 +23,7 @@ function addthis_admin_settings_form($form_state) {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
-  $form['visual_settings_fieldset'][AddThis::LARGE_ICONS_KEY] = array(
+  $form['visual_settings_fieldset'][AddThis::LARGE_ICONS_ENABLED_KEY] = array(
     '#type' => 'checkbox',
     '#title' => t('Use large toolbox icons'),
     '#default_value' => AddThis::areLargeIconsEnabled(),
@@ -91,6 +91,27 @@ function addthis_admin_settings_form($form_state) {
     '#default_value' => AddThis::getEnabledServiceOptions(),
     '#required' => FALSE,
     '#description' => t('Check enabled services.'),
+  );
+  $form['advanced_settings_fieldset'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Advanced settings'),
+    '#access' => user_access(AddThis::PERMISSION_ADMINISTER_ADVANCED_ADDTHIS),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['advanced_settings_fieldset'][AddThis::CUSTOM_CONFIGURATION_CODE_ENABLED_KEY] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use custom AddThis configuration code'),
+    '#default_value' => AddThis::isCustomConfigurationCodeEnabled(),
+    '#required' => FALSE,
+    '#description' => t('Use custom AddThis configuration code. If checked, custom configuration will be used instead of other configuration settings provided in AddThis administration user interface. Note that the Profile ID (pubid) will not be overwritten by custom configuration code.'),
+  );
+  $form['advanced_settings_fieldset'][AddThis::CUSTOM_CONFIGURATION_CODE_KEY] = array(
+    '#type' => 'textarea',
+    '#title' => t('AddThis custom configuration code'),
+    '#default_value' => AddThis::getCustomConfigurationCode(),
+    '#required' => FALSE,
+    '#description' => t('AddThis custom configuration code. See format at <a href="http://addthis.com/" target="_blank">AddThis.com</a>'),
   );
   return system_settings_form($form);
 }

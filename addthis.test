@@ -143,7 +143,7 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $uiHeaderColor = '#ffffff';
     $edit[AddThis::UI_HEADER_COLOR_KEY] = $uiHeaderColor;
 
-    $edit[AddThis::LARGE_ICONS_KEY] = TRUE;
+    $edit[AddThis::LARGE_ICONS_ENABLED_KEY] = TRUE;
     
     $serviceName = '2linkme';
     $edit["addthis_enabled_services[$serviceName]"] = $serviceName;
@@ -186,7 +186,7 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
   }
 
   private function addThisLargeToolboxIconsSettingShouldBeAbleToBeSaved() {
-    $this->assertFieldChecked('edit-addthis-large-icons', 'AddThis large toolbox icons setting should be able to be saved.');
+    $this->assertFieldChecked('edit-addthis-large-icons-enabled', 'AddThis large toolbox icons setting should be able to be saved.');
   }
 
   private function addThisUiHeaderColorShouldBeAbleToBeSaved($uiHeaderColor) {
@@ -209,7 +209,8 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
   private function createAdminUser() {
     return $this->drupalCreateUser(
       array(
-        'administer addthis',
+        AddThis::PERMISSION_ADMINISTER_ADDTHIS,
+        AddThis::PERMISSION_ADMINISTER_ADVANCED_ADDTHIS,
         'administer blocks',
         'administer content types',
         'administer nodes'
@@ -224,7 +225,6 @@ class AddThisPermissionsTestCase extends DrupalWebTestCase {
 
   public function setUp() {
     parent::setUp(AddThis::MODULE_NAME);
-    $this->createAndLoginUser();
   }
 
   public function getInfo() {
@@ -236,17 +236,23 @@ class AddThisPermissionsTestCase extends DrupalWebTestCase {
   }
 
   public function testUserWithoutAdministerAddThisPermissionShouldNotBeAllowedToAccessAddThisSystemSettings() {
+    $this->drupalLogin($this->createAdminUserWithoutAddThisAdministrationPermission());
     $this->drupalGet('admin/config/system/addthis');
-    $this->assertRaw(t('Access denied'));
+    $this->assertRaw(t('Access denied', 'A user without administer addthis permission should not be able to access AddThis system settings.'));
+  }
+
+  public function testUserWithoutAdministerAdvancedAddThisPermissionShouldNotBeAllowedToAccessAdvancedAddThisSystemSettings() {
+    $this->drupalLogin($this->createAdminUserWithoutAdvancedAddThisAdministrationPermission());
+    $this->drupalGet('admin/config/system/addthis');
+    $this->assertNoRaw(t('Advanced settings', 'A user without administer advanced addthis permission should not be able to access advanced AddThis system settings.'));
   }
 
   private function createAdminUserWithoutAddThisAdministrationPermission() {
     return $this->drupalCreateUser(array('administer content types'));
   }
 
-  private function createAndLoginUser() {
-    $this->user = $this->createAdminUserWithoutAddThisAdministrationPermission();
-    $this->drupalLogin($this->user);
+  private function createAdminUserWithoutAdvancedAddThisAdministrationPermission() {
+    return $this->drupalCreateUser(array('administer content types', AddThis::PERMISSION_ADMINISTER_ADDTHIS));
   }
 }
 

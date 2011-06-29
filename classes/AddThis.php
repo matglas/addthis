@@ -9,8 +9,11 @@
 class AddThis {
 
   const BLOCK_NAME = 'addthis_block';
+  const DEFAULT_CUSTOM_CONFIGURATION_CODE = 'var addthis_config = {}';
   const DEFAULT_FORMATTER = 'addthis_default';
   const MODULE_NAME = 'addthis';
+  const PERMISSION_ADMINISTER_ADDTHIS = 'administer addthis';
+  const PERMISSION_ADMINISTER_ADVANCED_ADDTHIS = 'administer advanced addthis';
   const STYLE_KEY = 'addthis_style';
 
   // AddThis attribute and parameter names (as defined in AddThis APIs)
@@ -20,8 +23,10 @@ class AddThis {
   // Persistent variable keys
   const BLOCK_WIDGET_TYPE_KEY = 'addthis_block_widget_type';
   const BOOKMARK_URL_KEY = 'addthis_bookmark_url';
+  const CUSTOM_CONFIGURATION_CODE_ENABLED_KEY = 'addthis_custom_configuration_code_enabled';
+  const CUSTOM_CONFIGURATION_CODE_KEY = 'addthis_custom_configuration_code';
   const ENABLED_SERVICES_KEY = 'addthis_enabled_services';
-  const LARGE_ICONS_KEY = 'addthis_large_icons';
+  const LARGE_ICONS_ENABLED_KEY = 'addthis_large_icons_enabled';
   const PROFILE_ID_KEY = 'addthis_profile_id';
   const SERVICES_CSS_URL_KEY = 'addthis_services_css_url';
   const SERVICES_JSON_URL_KEY = 'addthis_services_json_url';
@@ -148,16 +153,20 @@ class AddThis {
   }
 
   public static function addConfigurationOptionsJs() {
-    $enabledServices = self::getServiceNamesAsCommaSeparatedString();
-    drupal_add_js(
-      "var addthis_config = {services_compact: '" . $enabledServices . "more'"
-      . self::getUiHeaderColorConfigurationOptions()
-      . '}', 'inline'
-    );
+    if (self::isCustomConfigurationCodeEnabled()) {
+      $javascript = self::getCustomConfigurationCode();
+    } else {
+      $enabledServices = self::getServiceNamesAsCommaSeparatedString();
+      $javascript =
+        "var addthis_config = {services_compact: '" . $enabledServices . "more'"
+        . self::getUiHeaderColorConfigurationOptions()
+        . '}';
+    }
+    drupal_add_js($javascript, 'inline');
   }
 
   public static function areLargeIconsEnabled() {
-    return variable_get(self::LARGE_ICONS_KEY, FALSE);
+    return variable_get(self::LARGE_ICONS_ENABLED_KEY, FALSE);
   }
 
   public static function getUiHeaderColor() {
@@ -166,6 +175,14 @@ class AddThis {
 
   public static function getUiHeaderBackgroundColor() {
     return check_plain(variable_get(self::UI_HEADER_BACKGROUND_COLOR_KEY));
+  }
+
+  public static function getCustomConfigurationCode() {
+    return variable_get(self::CUSTOM_CONFIGURATION_CODE_KEY, self::DEFAULT_CUSTOM_CONFIGURATION_CODE);
+  }
+
+  public static function isCustomConfigurationCodeEnabled() {
+    return variable_get(self::CUSTOM_CONFIGURATION_CODE_ENABLED_KEY, FALSE);
   }
 
   private static function getUiHeaderColorConfigurationOptions() {
