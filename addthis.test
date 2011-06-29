@@ -144,6 +144,11 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $edit[AddThis::UI_HEADER_COLOR_KEY] = $uiHeaderColor;
 
     $edit[AddThis::LARGE_ICONS_ENABLED_KEY] = TRUE;
+
+    $edit[AddThis::CUSTOM_CONFIGURATION_CODE_ENABLED_KEY] = TRUE;
+
+    $customConfigurationCode = TestHelper::generateRandomLowercaseString();
+    $edit[AddThis::CUSTOM_CONFIGURATION_CODE_KEY] = $customConfigurationCode;
     
     $serviceName = '2linkme';
     $edit["addthis_enabled_services[$serviceName]"] = $serviceName;
@@ -167,6 +172,8 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $this->addThisLargeToolboxIconsSettingShouldBeAbleToBeSaved();
 
     $this->addThisEnabledServicesShouldBeAbleToBeSaved($serviceName);
+
+    $this->addThisCustomConfigurationCodeEnabledSettingShouldBeAbleToBeSaved();
   }
 
   private function addThisProfileIdShouldBeAbleToBeSaved($profileId) {
@@ -187,6 +194,14 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
   private function addThisLargeToolboxIconsSettingShouldBeAbleToBeSaved() {
     $this->assertFieldChecked('edit-addthis-large-icons-enabled', 'AddThis large toolbox icons setting should be able to be saved.');
+  }
+
+  private function addThisCustomConfigurationCodeEnabledSettingShouldBeAbleToBeSaved() {
+    $this->assertFieldChecked('edit-addthis-custom-configuration-code-enabled', 'AddThis custom configuration code enabled setting should be able to be saved.');
+  }
+
+  private function addThisCustomConfigurationCodeShouldBeAbleToBeSaved($customConfigurationCode) {
+    $this->assertFieldByName(AddThis::CUSTOM_CONFIGURATION_CODE_KEY, $customConfigurationCode, 'AddThis custom configuration code should be able to be saved.');
   }
 
   private function addThisUiHeaderColorShouldBeAbleToBeSaved($uiHeaderColor) {
@@ -221,8 +236,6 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
 class AddThisPermissionsTestCase extends DrupalWebTestCase {
 
-  private $user;
-
   public function setUp() {
     parent::setUp(AddThis::MODULE_NAME);
   }
@@ -238,13 +251,13 @@ class AddThisPermissionsTestCase extends DrupalWebTestCase {
   public function testUserWithoutAdministerAddThisPermissionShouldNotBeAllowedToAccessAddThisSystemSettings() {
     $this->drupalLogin($this->createAdminUserWithoutAddThisAdministrationPermission());
     $this->drupalGet('admin/config/system/addthis');
-    $this->assertRaw(t('Access denied', 'A user without administer addthis permission should not be able to access AddThis system settings.'));
+    $this->assertRaw(t('Access denied'), 'A user without administer addthis permission should not be able to access AddThis system settings.');
   }
 
   public function testUserWithoutAdministerAdvancedAddThisPermissionShouldNotBeAllowedToAccessAdvancedAddThisSystemSettings() {
     $this->drupalLogin($this->createAdminUserWithoutAdvancedAddThisAdministrationPermission());
     $this->drupalGet('admin/config/system/addthis');
-    $this->assertNoRaw(t('Advanced settings', 'A user without administer advanced addthis permission should not be able to access advanced AddThis system settings.'));
+    $this->assertNoRaw(t('Advanced settings'), 'A user without administer advanced addthis permission should not be able to access advanced AddThis system settings.');
   }
 
   private function createAdminUserWithoutAddThisAdministrationPermission() {
