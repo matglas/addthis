@@ -10,7 +10,7 @@ class AddThis {
 
   const BLOCK_NAME = 'addthis_block';
   const DEFAULT_CUSTOM_CONFIGURATION_CODE = 'var addthis_config = {}';
-  const DEFAULT_FORMATTER = 'addthis_default';
+  const DEFAULT_FORMATTER = 'addthis_default_formatter';
   const MODULE_NAME = 'addthis';
   const PERMISSION_ADMINISTER_ADDTHIS = 'administer addthis';
   const PERMISSION_ADMINISTER_ADVANCED_ADDTHIS = 'administer advanced addthis';
