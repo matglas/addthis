@@ -33,7 +33,6 @@ function addthis_field_info() {
       'instance_settings' => array(),
       'default_widget' => 'addthis_button',
       'default_formatter' => AddThis::DEFAULT_FORMATTER,
-      'translatable' => FALSE,
     ),
   );
 }
