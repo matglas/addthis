@@ -27,12 +27,13 @@ function addthis_help($path, $arg) {
 function addthis_field_info() {
   return array(
     'addthis' => array(
-      'label' => t('Addthis'),
+      'label' => t('AddThis'),
       'description' => t('This field stores addthis settings in the database.'),
       'settings' => array('max_length' => 255),
       'instance_settings' => array(),
       'default_widget' => 'addthis_button',
       'default_formatter' => AddThis::DEFAULT_FORMATTER,
+      'cardinality' => 1,
     ),
   );
 }
