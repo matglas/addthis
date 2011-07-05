@@ -63,6 +63,10 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
     $this->assertText($label, 'AddThis-module should be able to be added as a field.');
 
+    $this->addThisShouldNotHaveConfigurableFieldLevelSettings($label);
+
+    $this->drupalPost(NULL, array(), t('Save field settings'));
+
     $this->addThisShouldProvideWidgetTypeCompactButton();
 
     $this->addThisShouldProvideWidgetTypeDisabled();
@@ -73,7 +77,12 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
     $this->addThisShouldProvideWidgetTypeToolbox();
 
-    $this->addThisFieldSettingsShouldBeAbleToBeSaved($label);
+    $this->addThisFieldInstanceSettingsShouldBeAbleToBeSaved($label);
+  }
+
+  private function addThisShouldNotHaveConfigurableFieldLevelSettings($label) {
+    $this->assertText(t("@name has no field settings.", array('@name' => $label)),
+                     'AddThis-module should not have configurable field level settings.');
   }
 
   private function addThisShouldProvideWidgetTypeCompactButton() {
@@ -96,19 +105,19 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $this->assertText('Toolbox', 'AddThis-module should provide widget type "Toolbox"');
   }
 
-  private function addThisFieldSettingsShouldBeAbleToBeSaved($label) {
+  private function addThisFieldInstanceSettingsShouldBeAbleToBeSaved($label) {
     $edit = array();
-    $edit["field[settings][addthis_style]"] = AddThis::WIDGET_TYPE_LARGE_BUTTON;
+    $edit['field_' . $label . '[und][0][value]'] = AddThis::WIDGET_TYPE_LARGE_BUTTON;
 
-    $this->drupalPost(NULL, $edit, t('Save field settings'));
+    $this->drupalPost(NULL, $edit, t('Save settings'));
 
-    $this->assertText(t("Updated field @name field settings.", array('@name' => $label)),
-                      'AddThis-module field settings should be able to be saved.');
+    $this->assertText(t("Saved @name configuration.", array('@name' => $label)),
+                      'AddThis-module field instance settings should be able to be saved.');
   }
 
   private function addThisShouldBeAbleToBeUsedAsBlock() {
     $this->drupalGet('admin/structure/block');
-    $this->assertRaw(t('An AddThis-block.'));
+    $this->assertRaw(t('An AddThis-block.'), 'AddThis should be able to be used as a block.');
 
     $this->addThisBlockSettingsShouldBeAbleToBeSaved();
   }
@@ -119,7 +128,7 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
     $this->drupalPost('admin/structure/block/manage/addthis/addthis_block/configure', $edit, t('Save block'));
 
-    $this->assertText(t('The block configuration has been saved.'));
+    $this->assertText(t('The block configuration has been saved.'), 'AddThis block settings should be able to be saved.');
   }
 
   private function addThisSystemSettingsShouldBeAbleToBeSaved() {
@@ -181,39 +190,48 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
   }
 
   private function addThisServicesCssUrlShouldBeAbleToBeSaved($servicesCssUrl) {
-    $this->assertFieldByName(AddThis::SERVICES_CSS_URL_KEY, $servicesCssUrl, 'AddThis services stylesheet URL should be able to be saved.');
+    $this->assertFieldByName(AddThis::SERVICES_CSS_URL_KEY, $servicesCssUrl,
+                             'AddThis services stylesheet URL should be able to be saved.');
   }
 
   private function addThisServicesJsonUrlShouldBeAbleToBeSaved($servicesJsonUrl) {
-    $this->assertFieldByName(AddThis::SERVICES_JSON_URL_KEY, $servicesJsonUrl, 'AddThis services json URL should be able to be saved.');
+    $this->assertFieldByName(AddThis::SERVICES_JSON_URL_KEY, $servicesJsonUrl,
+                             'AddThis services json URL should be able to be saved.');
   }
 
   private function addThisWidgetJsUrlShouldBeAbleToBeSaved($widgetJsUrl) {
-    $this->assertFieldByName(AddThis::WIDGET_JS_URL_KEY, $widgetJsUrl, 'AddThis javascript widget URL should be able to be saved.');
+    $this->assertFieldByName(AddThis::WIDGET_JS_URL_KEY, $widgetJsUrl,
+                             'AddThis javascript widget URL should be able to be saved.');
   }
 
   private function addThisLargeToolboxIconsSettingShouldBeAbleToBeSaved() {
-    $this->assertFieldChecked('edit-addthis-large-icons-enabled', 'AddThis large toolbox icons setting should be able to be saved.');
+    $this->assertFieldChecked('edit-addthis-large-icons-enabled',
+                              'AddThis large toolbox icons setting should be able to be saved.');
   }
 
   private function addThisCustomConfigurationCodeEnabledSettingShouldBeAbleToBeSaved() {
-    $this->assertFieldChecked('edit-addthis-custom-configuration-code-enabled', 'AddThis custom configuration code enabled setting should be able to be saved.');
+    $this->assertFieldChecked('edit-addthis-custom-configuration-code-enabled',
+                              'AddThis custom configuration code enabled setting should be able to be saved.');
   }
 
   private function addThisCustomConfigurationCodeShouldBeAbleToBeSaved($customConfigurationCode) {
-    $this->assertFieldByName(AddThis::CUSTOM_CONFIGURATION_CODE_KEY, $customConfigurationCode, 'AddThis custom configuration code should be able to be saved.');
+    $this->assertFieldByName(AddThis::CUSTOM_CONFIGURATION_CODE_KEY, $customConfigurationCode,
+                             'AddThis custom configuration code should be able to be saved.');
   }
 
   private function addThisUiHeaderColorShouldBeAbleToBeSaved($uiHeaderColor) {
-    $this->assertFieldByName(AddThis::UI_HEADER_COLOR_KEY, $uiHeaderColor, 'AddThis UI header color should be able to be saved.');
+    $this->assertFieldByName(AddThis::UI_HEADER_COLOR_KEY, $uiHeaderColor,
+                             'AddThis UI header color should be able to be saved.');
   }
 
   private function addThisUiHeaderBackgroundColorShouldBeAbleToBeSaved($uiHeaderBackgroundColor) {
-    $this->assertFieldByName(AddThis::UI_HEADER_BACKGROUND_COLOR_KEY, $uiHeaderBackgroundColor, 'AddThis UI header background color should be able to be saved.');
+    $this->assertFieldByName(AddThis::UI_HEADER_BACKGROUND_COLOR_KEY, $uiHeaderBackgroundColor,
+                             'AddThis UI header background color should be able to be saved.');
   }
 
   private function addThisEnabledServicesShouldBeAbleToBeSaved($serviceName) {
-    $this->assertFieldChecked('edit-addthis-enabled-services-' . $serviceName, 'AddThis enabled services should be able to be saved.');
+    $this->assertFieldChecked('edit-addthis-enabled-services-' . $serviceName,
+                              'AddThis enabled services should be able to be saved.');
   }
 
   private function createAndLoginUser() {
@@ -251,13 +269,15 @@ class AddThisPermissionsTestCase extends DrupalWebTestCase {
   public function testUserWithoutAdministerAddThisPermissionShouldNotBeAllowedToAccessAddThisSystemSettings() {
     $this->drupalLogin($this->createAdminUserWithoutAddThisAdministrationPermission());
     $this->drupalGet('admin/config/system/addthis');
-    $this->assertRaw(t('Access denied'), 'A user without administer addthis permission should not be able to access AddThis system settings.');
+    $this->assertRaw(t('Access denied'),
+                     'A user without administer addthis permission should not be able to access AddThis system settings.');
   }
 
   public function testUserWithoutAdministerAdvancedAddThisPermissionShouldNotBeAllowedToAccessAdvancedAddThisSystemSettings() {
     $this->drupalLogin($this->createAdminUserWithoutAdvancedAddThisAdministrationPermission());
     $this->drupalGet('admin/config/system/addthis');
-    $this->assertNoRaw(t('Advanced settings'), 'A user without administer advanced addthis permission should not be able to access advanced AddThis system settings.');
+    $this->assertNoRaw(t('Advanced settings'),
+                       'A user without administer advanced addthis permission should not be able to access advanced AddThis system settings.');
   }
 
   private function createAdminUserWithoutAddThisAdministrationPermission() {

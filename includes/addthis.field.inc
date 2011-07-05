@@ -10,6 +10,9 @@
  *
  * Field settings:
  *   - max_length: the maximum length for a varchar field.
+ *
+ * Instance settings:
+ *   - AddThis::STYLE_KEY: The style of AddThis widget to render for this field.
  */
 function addthis_field_info() {
   return array(
@@ -17,7 +20,7 @@ function addthis_field_info() {
       'label' => t('AddThis'),
       'description' => t('This field stores addthis settings in the database.'),
       'settings' => array('max_length' => 255),
-      'instance_settings' => array(),
+      'instance_settings' => array(AddThis::STYLE_KEY => AddThis::WIDGET_TYPE_COMPACT_BUTTON),
       'default_widget' => 'addthis_button',
       'default_formatter' => AddThis::DEFAULT_FORMATTER,
     ),
@@ -25,10 +28,10 @@ function addthis_field_info() {
 }
 
 /**
- * Implements hook_field_settings_form().
+ * Implements hook_field_instance_settings_form().
  */
-function addthis_field_settings_form($field, $instance, $has_data) {
-  $settings = $field['settings'];
+function addthis_field_instance_settings_form($field, $instance) {
+  $settings = $instance['settings'];
 
   $form[AddThis::STYLE_KEY] = array(
     '#type' => 'select',
@@ -94,7 +97,7 @@ function addthis_field_widget_form(&$form, &$form_state, $field, $instance, $lan
     $main_widget = $element + array(
       '#type' => 'select',
       '#options' => AddThis::getWidgetTypes(),
-      '#default_value' => isset($items[$delta]) ? $items[$delta] : $field['settings'][AddThis::STYLE_KEY],
+      '#default_value' => isset($items[$delta]) ? $items[$delta] : $instance['settings'][AddThis::STYLE_KEY],
     );
     $element['value'] = $main_widget;
   }
