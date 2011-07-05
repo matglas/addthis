@@ -28,22 +28,6 @@ function addthis_field_info() {
 }
 
 /**
- * Implements hook_field_instance_settings_form().
- */
-function addthis_field_instance_settings_form($field, $instance) {
-  $settings = $instance['settings'];
-
-  $form[AddThis::STYLE_KEY] = array(
-    '#type' => 'select',
-    '#title' => t('Select default style'),
-    '#default_value' => isset($settings[AddThis::STYLE_KEY]) ? $settings[AddThis::STYLE_KEY] : '',
-    '#options' => Addthis::getWidgetTypes(),
-  );
-
-  return $form;
-}
-
-/**
  * Implements hook_field_is_empty().
  */
 function addthis_field_is_empty($item, $field) {
