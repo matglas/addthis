@@ -6,6 +6,9 @@
  * in a separate AddThis-class to keep the .module-file clean.
  */
 
+module_load_include('inc', AddThis::MODULE_NAME, 'includes/addthis.block');
+module_load_include('inc', AddThis::MODULE_NAME, 'includes/addthis.field');
+
 /**
  * Implements hook_help().
  */
@@ -17,117 +20,6 @@ function addthis_help($path, $arg) {
       return $output;
   }
 }
-
-/**
- * Implements hook_field_info().
- *
- * Field settings:
- *   - max_length: the maximum length for a varchar field.
- */
-function addthis_field_info() {
-  return array(
-    'addthis' => array(
-      'label' => t('AddThis'),
-      'description' => t('This field stores addthis settings in the database.'),
-      'settings' => array('max_length' => 255),
-      'instance_settings' => array(),
-      'default_widget' => 'addthis_button',
-      'default_formatter' => AddThis::DEFAULT_FORMATTER,
-    ),
-  );
-}
-
-/**
- * Implements hook_field_settings_form().
- */
-function addthis_field_settings_form($field, $instance, $has_data) {
-  $settings = $field['settings'];
-
-  $form[AddThis::STYLE_KEY] = array(
-    '#type' => 'select',
-    '#title' => t('Select default style'),
-    '#default_value' => isset($settings[AddThis::STYLE_KEY]) ? $settings[AddThis::STYLE_KEY] : '',
-    '#options' => Addthis::getWidgetTypes(),
-  );
-
-  return $form;
-}
-
-/**
- * Implements hook_field_is_empty().
- */
-function addthis_field_is_empty($item, $field) {
-  return empty($item['value']) && (string) $item['value'] !== '0';
-}
-
-/**
- * Implements hook_field_formatter_info().
- */
-function addthis_field_formatter_info() {
-  return array(
-    AddThis::DEFAULT_FORMATTER => array(
-      'label' => t('Default'),
-      'field types' => array('addthis'),
-    ),
-  );
-}
-
-/**
- * Implements hook_field_formatter_view().
- */
-function addthis_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-  $element = array();
-
-  foreach ($items as $delta => $item) {
-    $widgetType = $item['value'];
-    $markup = AddThis::getWidgetMarkup($widgetType, $entity);
-    $element[$delta] = array('#markup' => $markup);
-  }
-  return $element;
-}
-
-/**
- * Implements hook_field_widget_info().
- */
-function addthis_field_widget_info() {
-  return array(
-    'addthis_button' => array(
-      'label' => t('AddThis button'),
-      'field types' => array('addthis'),
-    ),
-  );
-}
-
-/**
- * Implements hook_field_widget_form().
- */
-function addthis_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-
-  if ($instance['widget']['type'] == 'addthis_button') {
-    $main_widget = $element + array(
-      '#type' => 'select',
-      '#options' => AddThis::getWidgetTypes(),
-      '#default_value' => isset($items[$delta]) ? $items[$delta] : $field['settings'][AddThis::STYLE_KEY],
-    );
-    $element['value'] = $main_widget;
-  }
-
-  return $element;
-}
-
-/**
- * Implements hook_field_widget_error().
- */
-function addthis_field_widget_error($element, $error, $form, &$form_state) {
-  switch ($error['error']) {
-    default:
-      $error_element = $element[$element['#columns'][0]];
-      break;
-  }
-
-  form_error($error_element, $error['message']);
-}
-
 
 /**
  * Implements hook_filter_format_update().
@@ -143,51 +35,6 @@ function addthis_filter_format_disable($format) {
   field_cache_clear();
 }
 
-/**
- * Implements hook_block_info().
- */
-function addthis_block_info() {
-  $blockInfo = array();
-  $blockInfo[AddThis::BLOCK_NAME] = array(
-    'info' => t('An AddThis-block.'),
-    'cache' => DRUPAL_NO_CACHE,
-  );
-  return $blockInfo;
-}
-
-/**
- * Implements hook_block_view().
- */
-function addthis_block_view($blockName = '') {
-  if ($blockName == AddThis::BLOCK_NAME) {
-    $widgetType = AddThis::getBlockWidgetType();
-    $markup = AddThis::getWidgetMarkup($widgetType);
-    return array(
-      'subject' => '',
-      'content' => $markup,
-    );
-  }
-}
-
-/**
- * Implements hook_block_configure().
- */
-function addthis_block_configure($delta = '') {
-  $form[AddThis::BLOCK_WIDGET_TYPE_KEY] = array(
-    '#type' => 'select',
-    '#title' => t('AddThis widget type'),
-    '#options' => AddThis::getWidgetTypes(),
-    '#default_value' => AddThis::getBlockWidgetType(),
-  );
-  return $form;
-}
-
-/**
- * Implements hook_block_save().
- */
-function addthis_block_save($delta = '', $edit = array()) {
-  variable_set(AddThis::BLOCK_WIDGET_TYPE_KEY, $edit[AddThis::BLOCK_WIDGET_TYPE_KEY]);
-}
 
 /**
  * Implements hook_menu().

@@ -42,7 +42,7 @@ class AddThis {
 
   // Internal resources
   const ADMIN_CSS_FILE = 'addthis.admin.css';
-  const ADMIN_INCLUDE_FILE = 'addthis.admin.inc';
+  const ADMIN_INCLUDE_FILE = 'includes/addthis.admin.inc';
 
   // Widget types
   const WIDGET_TYPE_COMPACT_BUTTON = 'compact_button';
