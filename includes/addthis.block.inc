@@ -22,8 +22,8 @@ function addthis_block_info() {
  */
 function addthis_block_view($blockName = '') {
   if ($blockName == AddThis::BLOCK_NAME) {
-    $widgetType = AddThis::getBlockWidgetType();
-    $markup = AddThis::getWidgetMarkup($widgetType);
+    $widgetType = AddThis::getInstance()->getBlockWidgetType();
+    $markup = AddThis::getInstance()->getWidgetMarkup($widgetType);
     return array(
       'subject' => '',
       'content' => $markup,
@@ -38,8 +38,8 @@ function addthis_block_configure($delta = '') {
   $form[AddThis::BLOCK_WIDGET_TYPE_KEY] = array(
     '#type' => 'select',
     '#title' => t('AddThis widget type'),
-    '#options' => AddThis::getWidgetTypes(),
-    '#default_value' => AddThis::getBlockWidgetType(),
+    '#options' => AddThis::getInstance()->getWidgetTypes(),
+    '#default_value' => AddThis::getInstance()->getBlockWidgetType(),
   );
   return $form;
 }

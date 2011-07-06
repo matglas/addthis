@@ -53,7 +53,21 @@ class AddThis {
   const WIDGET_TYPE_SHARECOUNT = 'sharecount';
   const WIDGET_TYPE_TOOLBOX = 'toolbox';
 
-  public static function getWidgetTypes() {
+  private static $instance;
+
+  private function __construct() {
+    // Private constructor
+  }
+
+  public static function getInstance() {
+    if (!isset(self::$instance)) {
+      $class = __CLASS__;
+      self::$instance = new $class;
+    }
+    return self::$instance;
+  }
+
+  public function getWidgetTypes() {
     return array(
       self::WIDGET_TYPE_DISABLED => t('Disabled'),
       self::WIDGET_TYPE_COMPACT_BUTTON => t('Compact button'),
@@ -63,11 +77,11 @@ class AddThis {
     );
   }
 
-  public static function getBlockWidgetType() {
+  public function getBlockWidgetType() {
     return variable_get(self::BLOCK_WIDGET_TYPE_KEY, self::WIDGET_TYPE_COMPACT_BUTTON);
   }
 
-  public static function getWidgetMarkup($widgetType = '', $entity = NULL) {
+  public function getWidgetMarkup($widgetType = '', $entity = NULL) {
     $href = 'href';
     switch ($widgetType) {
       case self::WIDGET_TYPE_LARGE_BUTTON:
@@ -129,32 +143,32 @@ class AddThis {
     return $markup;
   }
 
-  public static function getProfileId() {
+  public function getProfileId() {
     return check_plain(variable_get(AddThis::PROFILE_ID_KEY));
   }
 
-  public static function getServicesCssUrl() {
+  public function getServicesCssUrl() {
     return check_url(variable_get(AddThis::SERVICES_CSS_URL_KEY, self::DEFAULT_SERVICES_CSS_URL));
   }
 
-  public static function getServicesJsonUrl() {
+  public function getServicesJsonUrl() {
     return check_url(variable_get(AddThis::SERVICES_JSON_URL_KEY, self::DEFAULT_SERVICES_JSON_URL));
   }
 
-  public static function getServiceOptions() {
+  public function getServiceOptions() {
     return self::getServices();
   }
 
-  public static function getEnabledServiceOptions() {
+  public function getEnabledServiceOptions() {
     return self::getEnabledServices();
   }
 
-  public static function addStylesheets() {
+  public function addStylesheets() {
     drupal_add_css(self::getServicesCssUrl(), 'external');
     drupal_add_css(self::getAdminCssFilePath(), 'file');
   }
 
-  public static function addConfigurationOptionsJs() {
+  public function addConfigurationOptionsJs() {
     if (self::isCustomConfigurationCodeEnabled()) {
       $javascript = self::getCustomConfigurationCode();
     } else {
@@ -167,27 +181,35 @@ class AddThis {
     drupal_add_js($javascript, 'inline');
   }
 
-  public static function areLargeIconsEnabled() {
+  public function areLargeIconsEnabled() {
     return variable_get(self::LARGE_ICONS_ENABLED_KEY, FALSE);
   }
 
-  public static function getUiHeaderColor() {
+  public function getUiHeaderColor() {
     return check_plain(variable_get(self::UI_HEADER_COLOR_KEY));
   }
 
-  public static function getUiHeaderBackgroundColor() {
+  public function getUiHeaderBackgroundColor() {
     return check_plain(variable_get(self::UI_HEADER_BACKGROUND_COLOR_KEY));
   }
 
-  public static function getCustomConfigurationCode() {
+  public function getCustomConfigurationCode() {
     return variable_get(self::CUSTOM_CONFIGURATION_CODE_KEY, self::DEFAULT_CUSTOM_CONFIGURATION_CODE);
   }
 
-  public static function isCustomConfigurationCodeEnabled() {
+  public function isCustomConfigurationCodeEnabled() {
     return variable_get(self::CUSTOM_CONFIGURATION_CODE_ENABLED_KEY, FALSE);
   }
 
-  private static function getUiHeaderColorConfigurationOptions() {
+  public function getBaseWidgetJsUrl() {
+    return check_url(variable_get(self::WIDGET_JS_URL_KEY, self::DEFAULT_WIDGET_JS_URL));
+  }
+
+  public function getBaseBookmarkUrl() {
+    return check_url(variable_get(self::BOOKMARK_URL_KEY, self::DEFAULT_BOOKMARK_URL));
+  }
+
+  private function getUiHeaderColorConfigurationOptions() {
     $configurationOptions = ',';
     $uiHeaderColor = self::getUiHeaderColor();
     $uiHeaderBackgroundColor = self::getUiHeaderBackgroundColor();
@@ -200,11 +222,11 @@ class AddThis {
     return $configurationOptions;
   }
 
-  private static function getLargeButtonsClass() {
+  private function getLargeButtonsClass() {
     return self::areLargeIconsEnabled() ? ' addthis_32x32_style ' : '';
   }
 
-  private static function getServiceNamesAsCommaSeparatedString() {
+  private function getServiceNamesAsCommaSeparatedString() {
     $enabledServiceNames = array_values(self::getEnabledServices());
     $enabledServicesAsCommaSeparatedString = '';
     foreach ($enabledServiceNames as $enabledServiceName) {
@@ -215,11 +237,11 @@ class AddThis {
     return $enabledServicesAsCommaSeparatedString;
   }
 
-  private static function getAdminCssFilePath() {
+  private function getAdminCssFilePath() {
     return drupal_get_path('module', self::MODULE_NAME) . '/' . self::ADMIN_CSS_FILE;
   }
 
-  private static function getServices() {
+  private function getServices() {
     $rows = array();
     $json = new Json();
     $services = $json->decode(self::getServicesJsonUrl());
@@ -233,51 +255,43 @@ class AddThis {
     return $rows;
   }
 
-  private static function getEnabledServices() {
+  private function getEnabledServices() {
     return variable_get(self::ENABLED_SERVICES_KEY, array());
   }
 
-  public static function getBaseBookmarkUrl() {
-    return check_url(variable_get(self::BOOKMARK_URL_KEY, self::DEFAULT_BOOKMARK_URL));
-  }
-
-  private static function getFullBookmarkUrl() {
+  private function getFullBookmarkUrl() {
     return check_url(self::getBaseBookmarkUrl() . self::getProfileIdQueryParameterPrefixedWithAmp());
   }
 
-  public static function getBaseWidgetJsUrl() {
-    return check_url(variable_get(self::WIDGET_JS_URL_KEY, self::DEFAULT_WIDGET_JS_URL));
-  }
-
-  private static function getProfileIdQueryParameter($prefix) {
+  private function getProfileIdQueryParameter($prefix) {
     $profileId = self::getProfileId();
     return $profileId != NULL ? $prefix . self::PROFILE_ID_QUERY_PARAMETER . '=' . $profileId : '';
   }
 
-  private static function getProfileIdQueryParameterPrefixedWithAmp() {
+  private function getProfileIdQueryParameterPrefixedWithAmp() {
     return self::getProfileIdQueryParameter('&');
   }
 
-  private static function getProfileIdQueryParameterPrefixedWithHash() {
+  private function getProfileIdQueryParameterPrefixedWithHash() {
     return self::getProfileIdQueryParameter('#');
   }
 
-  private static function getAddThisAttributesMarkup($entity) {
+  private function getAddThisAttributesMarkup($entity) {
     if (is_object($entity)) {
       return self::getAddThisTitleAttributeMarkup($entity) . ' ';
     }
     return '';
   }
 
-  private static function getAddThisTitleAttributeMarkup($entity) {
+  private function getAddThisTitleAttributeMarkup($entity) {
     return MarkupGenerator::generateAttribute(self::TITLE_ATTRIBUTE, drupal_get_title() . ' - ' . check_plain($entity->title));
   }
 
-  private static function getWidgetScriptElement() {
+  private function getWidgetScriptElement() {
     return '<script type="text/javascript" src="' . self::getWidgetUrl() . '"></script>';
   }
 
-  private static function getWidgetUrl() {
+  private function getWidgetUrl() {
     return check_url(self::getBaseWidgetJsUrl() . self::getProfileIdQueryParameterPrefixedWithHash());
   }
 }

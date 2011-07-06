@@ -54,7 +54,7 @@ function addthis_field_formatter_view($entity_type, $entity, $field, $instance, 
 
   foreach ($items as $delta => $item) {
     $widgetType = $item['value'];
-    $markup = AddThis::getWidgetMarkup($widgetType, $entity);
+    $markup = AddThis::getInstance()->getWidgetMarkup($widgetType, $entity);
     $element[$delta] = array('#markup' => $markup);
   }
   return $element;
@@ -80,7 +80,7 @@ function addthis_field_widget_form(&$form, &$form_state, $field, $instance, $lan
   if ($instance['widget']['type'] == AddThis::WIDGET_TYPE) {
     $main_widget = $element + array(
       '#type' => 'select',
-      '#options' => AddThis::getWidgetTypes(),
+      '#options' => AddThis::getInstance()->getWidgetTypes(),
       '#default_value' => isset($items[$delta]) ? $items[$delta] : $instance['settings'][AddThis::STYLE_KEY],
     );
     $element['value'] = $main_widget;

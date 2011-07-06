@@ -72,5 +72,5 @@ function addthis_permission() {
  * Implements hook_page_alter().
  */
 function addthis_page_alter(&$page) {
-  AddThis::addConfigurationOptionsJs();
+  AddThis::getInstance()->addConfigurationOptionsJs();
 }
