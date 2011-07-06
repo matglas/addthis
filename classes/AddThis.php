@@ -55,8 +55,13 @@ class AddThis {
 
   private static $instance;
 
+  private $json;
+  private $markupGenerator;
+
+  // Private constructor
   private function __construct() {
-    // Private constructor
+    $this->json = new Json();
+    $this->markupGenerator = new MarkupGenerator();
   }
 
   public static function getInstance() {
@@ -87,8 +92,8 @@ class AddThis {
       case self::WIDGET_TYPE_LARGE_BUTTON:
         $markup =
           '<a class="addthis_button" '
-          . self::getAddThisAttributesMarkup($entity)
-          . MarkupGenerator::generateAttribute($href, self::getFullBookmarkUrl())
+          . $this->getAddThisAttributesMarkup($entity)
+          . $this->markupGenerator->generateAttribute($href, self::getFullBookmarkUrl())
           . '><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="'
           . t('Bookmark and Share')
           . '" style="border:0"/></a>'
@@ -98,43 +103,43 @@ class AddThis {
         $markup =
           '<a class="addthis_button" '
           . self::getAddThisAttributesMarkup($entity)
-          . MarkupGenerator::generateAttribute($href, self::getFullBookmarkUrl())
+          . $this->markupGenerator->generateAttribute($href, $this->getFullBookmarkUrl())
           . '><img src="http://s7.addthis.com/static/btn/sm-share-en.gif" width="83" height="16" alt="'
           . t('Bookmark and Share')
           . '" style="border:0"/></a>'
-          . self::getWidgetScriptElement();
+          . $this->getWidgetScriptElement();
         break;
       case self::WIDGET_TYPE_TOOLBOX:
         $markup =
           '<div class="addthis_toolbox addthis_default_style'
-          . self::getLargeButtonsClass()
+          . $this->getLargeButtonsClass()
           . '"><a '
-          . MarkupGenerator::generateAttribute($href, self::getFullBookmarkUrl())
+          . $this->markupGenerator->generateAttribute($href, $this->getFullBookmarkUrl())
           . ' class="addthis_button_compact" '
-          . self::getAddThisAttributesMarkup($entity)
+          . $this->getAddThisAttributesMarkup($entity)
           . '>'
           . t('Share')
           . '</a><span class="addthis_separator">|</span>' 
           . '<a class="addthis_button_preferred_1" '
-          . self::getAddThisAttributesMarkup($entity)
+          . $this->getAddThisAttributesMarkup($entity)
           . '></a>'
           . '<a class="addthis_button_preferred_2" '
-          . self::getAddThisAttributesMarkup($entity)
+          . $this->getAddThisAttributesMarkup($entity)
           . '></a>'
           . '<a class="addthis_button_preferred_3" '
-          . self::getAddThisAttributesMarkup($entity)
+          . $this->getAddThisAttributesMarkup($entity)
           . '></a>'
           . '<a class="addthis_button_preferred_4" '
-          . self::getAddThisAttributesMarkup($entity)
+          . $this->getAddThisAttributesMarkup($entity)
           . '></a></div>'
-          . self::getWidgetScriptElement();
+          . $this->getWidgetScriptElement();
         break;
       case self::WIDGET_TYPE_SHARECOUNT:
         $markup =
           '<div class="addthis_toolbox addthis_default_style"><a class="addthis_counter" '
-          . self::getAddThisAttributesMarkup($entity)
+          . $this->getAddThisAttributesMarkup($entity)
           . '></a></div>'
-          . self::getWidgetScriptElement();
+          . $this->getWidgetScriptElement();
         break;
       default:
         $markup = '';
@@ -156,26 +161,26 @@ class AddThis {
   }
 
   public function getServiceOptions() {
-    return self::getServices();
+    return $this->getServices();
   }
 
   public function getEnabledServiceOptions() {
-    return self::getEnabledServices();
+    return $this->getEnabledServices();
   }
 
   public function addStylesheets() {
-    drupal_add_css(self::getServicesCssUrl(), 'external');
-    drupal_add_css(self::getAdminCssFilePath(), 'file');
+    drupal_add_css($this->getServicesCssUrl(), 'external');
+    drupal_add_css($this->getAdminCssFilePath(), 'file');
   }
 
   public function addConfigurationOptionsJs() {
-    if (self::isCustomConfigurationCodeEnabled()) {
-      $javascript = self::getCustomConfigurationCode();
+    if ($this->isCustomConfigurationCodeEnabled()) {
+      $javascript = $this->getCustomConfigurationCode();
     } else {
-      $enabledServices = self::getServiceNamesAsCommaSeparatedString();
+      $enabledServices = $this->getServiceNamesAsCommaSeparatedString();
       $javascript =
         "var addthis_config = {services_compact: '" . $enabledServices . "more'"
-        . self::getUiHeaderColorConfigurationOptions()
+        . $this->getUiHeaderColorConfigurationOptions()
         . '}';
     }
     drupal_add_js($javascript, 'inline');
@@ -211,8 +216,8 @@ class AddThis {
 
   private function getUiHeaderColorConfigurationOptions() {
     $configurationOptions = ',';
-    $uiHeaderColor = self::getUiHeaderColor();
-    $uiHeaderBackgroundColor = self::getUiHeaderBackgroundColor();
+    $uiHeaderColor = $this->getUiHeaderColor();
+    $uiHeaderBackgroundColor = $this->getUiHeaderBackgroundColor();
     if ($uiHeaderColor != NULL) {
       $configurationOptions .= "ui_header_color: '$uiHeaderColor'";
     }
@@ -223,11 +228,11 @@ class AddThis {
   }
 
   private function getLargeButtonsClass() {
-    return self::areLargeIconsEnabled() ? ' addthis_32x32_style ' : '';
+    return $this->areLargeIconsEnabled() ? ' addthis_32x32_style ' : '';
   }
 
   private function getServiceNamesAsCommaSeparatedString() {
-    $enabledServiceNames = array_values(self::getEnabledServices());
+    $enabledServiceNames = array_values($this->getEnabledServices());
     $enabledServicesAsCommaSeparatedString = '';
     foreach ($enabledServiceNames as $enabledServiceName) {
       if ($enabledServiceName != '0') {
@@ -243,8 +248,7 @@ class AddThis {
 
   private function getServices() {
     $rows = array();
-    $json = new Json();
-    $services = $json->decode(self::getServicesJsonUrl());
+    $services = $this->json->decode($this->getServicesJsonUrl());
     if ($services != NULL) {
       foreach ($services['data'] AS $service) {
         $serviceCode = check_plain($service['code']);
@@ -260,38 +264,40 @@ class AddThis {
   }
 
   private function getFullBookmarkUrl() {
-    return check_url(self::getBaseBookmarkUrl() . self::getProfileIdQueryParameterPrefixedWithAmp());
+    return check_url($this->getBaseBookmarkUrl() . $this->getProfileIdQueryParameterPrefixedWithAmp());
   }
 
   private function getProfileIdQueryParameter($prefix) {
-    $profileId = self::getProfileId();
-    return $profileId != NULL ? $prefix . self::PROFILE_ID_QUERY_PARAMETER . '=' . $profileId : '';
+    $profileId = $this->getProfileId();
+    return $profileId != NULL ? $prefix . $this->PROFILE_ID_QUERY_PARAMETER . '=' . $profileId : '';
   }
 
   private function getProfileIdQueryParameterPrefixedWithAmp() {
-    return self::getProfileIdQueryParameter('&');
+    return $this->getProfileIdQueryParameter('&');
   }
 
   private function getProfileIdQueryParameterPrefixedWithHash() {
-    return self::getProfileIdQueryParameter('#');
+    return $this->getProfileIdQueryParameter('#');
   }
 
   private function getAddThisAttributesMarkup($entity) {
     if (is_object($entity)) {
-      return self::getAddThisTitleAttributeMarkup($entity) . ' ';
+      return $this->getAddThisTitleAttributeMarkup($entity) . ' ';
     }
     return '';
   }
 
   private function getAddThisTitleAttributeMarkup($entity) {
-    return MarkupGenerator::generateAttribute(self::TITLE_ATTRIBUTE, drupal_get_title() . ' - ' . check_plain($entity->title));
+    return $this->markupGenerator->generateAttribute(
+      self::TITLE_ATTRIBUTE, drupal_get_title() . ' - ' . check_plain($entity->title)
+    );
   }
 
   private function getWidgetScriptElement() {
-    return '<script type="text/javascript" src="' . self::getWidgetUrl() . '"></script>';
+    return '<script type="text/javascript" src="' . $this->getWidgetUrl() . '"></script>';
   }
 
   private function getWidgetUrl() {
-    return check_url(self::getBaseWidgetJsUrl() . self::getProfileIdQueryParameterPrefixedWithHash());
+    return check_url($this->getBaseWidgetJsUrl() . $this->getProfileIdQueryParameterPrefixedWithHash());
   }
 }

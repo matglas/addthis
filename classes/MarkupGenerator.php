@@ -8,7 +8,7 @@
  
 class MarkupGenerator {
 
-  public static function generateAttribute($name, $value) {
+  public function generateAttribute($name, $value) {
     return $name != NULL && $value != NULL ? check_plain($name) . '="' . $value  . '"' : '';
   }
 }
