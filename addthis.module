@@ -6,8 +6,8 @@
  * in a separate AddThis-class to keep the .module-file clean.
  */
 
-module_load_include('inc', AddThis::MODULE_NAME, 'includes/addthis.block');
-module_load_include('inc', AddThis::MODULE_NAME, 'includes/addthis.field');
+module_load_include('inc', 'addthis', 'includes/addthis.block');
+module_load_include('inc', 'addthis', 'includes/addthis.field');
 
 /**
  * Implements hook_help().
