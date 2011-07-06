@@ -10,7 +10,7 @@
  */
 function addthis_field_schema($field) {
   $schema = array();
-  if ($field['type'] == 'addthis') {
+  if ($field['type'] == AddThis::FIELD_TYPE) {
     $columns = array(
       'value' => array(
         'type' => 'varchar',

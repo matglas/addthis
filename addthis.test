@@ -56,8 +56,8 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $label = TestHelper::generateRandomLowercaseString();
     $edit["fields[_add_new_field][label]"] = $label;
     $edit["fields[_add_new_field][field_name]"] = $label;
-    $edit["fields[_add_new_field][type]"] = 'addthis';
-    $edit["fields[_add_new_field][widget_type]"] = 'addthis_button';
+    $edit["fields[_add_new_field][type]"] = AddThis::FIELD_TYPE;
+    $edit["fields[_add_new_field][widget_type]"] = AddThis::WIDGET_TYPE;
 
     $this->drupalPost('admin/structure/types/manage/article/fields', $edit, t('Save'));
 

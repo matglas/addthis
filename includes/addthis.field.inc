@@ -16,12 +16,12 @@
  */
 function addthis_field_info() {
   return array(
-    'addthis' => array(
+    AddThis::FIELD_TYPE => array(
       'label' => t('AddThis'),
       'description' => t('This field stores addthis settings in the database.'),
       'settings' => array('max_length' => 255),
       'instance_settings' => array(AddThis::STYLE_KEY => AddThis::WIDGET_TYPE_COMPACT_BUTTON),
-      'default_widget' => 'addthis_button',
+      'default_widget' => AddThis::WIDGET_TYPE,
       'default_formatter' => AddThis::DEFAULT_FORMATTER,
     ),
   );
@@ -41,7 +41,7 @@ function addthis_field_formatter_info() {
   return array(
     AddThis::DEFAULT_FORMATTER => array(
       'label' => t('Default'),
-      'field types' => array('addthis'),
+      'field types' => array(AddThis::FIELD_TYPE),
     ),
   );
 }
@@ -65,9 +65,9 @@ function addthis_field_formatter_view($entity_type, $entity, $field, $instance, 
  */
 function addthis_field_widget_info() {
   return array(
-    'addthis_button' => array(
+    AddThis::WIDGET_TYPE => array(
       'label' => t('AddThis button'),
-      'field types' => array('addthis'),
+      'field types' => array(AddThis::FIELD_TYPE),
     ),
   );
 }
@@ -77,7 +77,7 @@ function addthis_field_widget_info() {
  */
 function addthis_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
 
-  if ($instance['widget']['type'] == 'addthis_button') {
+  if ($instance['widget']['type'] == AddThis::WIDGET_TYPE) {
     $main_widget = $element + array(
       '#type' => 'select',
       '#options' => AddThis::getWidgetTypes(),

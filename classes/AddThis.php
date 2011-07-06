@@ -11,10 +11,12 @@ class AddThis {
   const BLOCK_NAME = 'addthis_block';
   const DEFAULT_CUSTOM_CONFIGURATION_CODE = 'var addthis_config = {}';
   const DEFAULT_FORMATTER = 'addthis_default_formatter';
+  const FIELD_TYPE = 'addthis';
   const MODULE_NAME = 'addthis';
   const PERMISSION_ADMINISTER_ADDTHIS = 'administer addthis';
   const PERMISSION_ADMINISTER_ADVANCED_ADDTHIS = 'administer advanced addthis';
   const STYLE_KEY = 'addthis_style';
+  const WIDGET_TYPE = 'addthis_button_widget';
 
   // AddThis attribute and parameter names (as defined in AddThis APIs)
   const PROFILE_ID_QUERY_PARAMETER = 'pubid';
