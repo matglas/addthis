@@ -118,8 +118,7 @@ class AddThis {
           . ' class="addthis_button_compact" '
           . $this->getAddThisAttributesMarkup($entity)
           . '>'
-          . t('Share')
-          . '</a><span class="addthis_separator">|</span>' 
+          . '</a>'
           . '<a class="addthis_button_preferred_1" '
           . $this->getAddThisAttributesMarkup($entity)
           . '></a>'
