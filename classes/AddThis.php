@@ -117,8 +117,8 @@ class AddThis {
           . $this->markupGenerator->generateAttribute($href, $this->getFullBookmarkUrl())
           . ' class="addthis_button_compact" '
           . $this->getAddThisAttributesMarkup($entity)
-          . '>'
-          . '</a>'
+          . '></a>'
+          . '<a class="addthis_button_facebook_like"></a>'
           . '<a class="addthis_button_preferred_1" '
           . $this->getAddThisAttributesMarkup($entity)
           . '></a>'
