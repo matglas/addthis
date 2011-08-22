@@ -55,21 +55,31 @@ class AddThis {
 
   private static $instance;
 
+  /* @var Json */
   private $json;
+
+  /* @var MarkupGenerator */
   private $markupGenerator;
 
-  // Private constructor
-  private function __construct() {
-    $this->json = new Json();
-    $this->markupGenerator = new MarkupGenerator();
-  }
-
+  /**
+   * @return AddThis
+   */
   public static function getInstance() {
     if (!isset(self::$instance)) {
-      $class = __CLASS__;
-      self::$instance = new $class;
+      $addThis = new AddThis();
+      $addThis->setJson(new Json());
+      $addThis->setMarkupGenerator(new MarkupGenerator());
+      self::$instance = $addThis;
     }
     return self::$instance;
+  }
+
+  public function setJson(Json $json) {
+    $this->json = $json;
+  }
+
+  public function setMarkupGenerator(MarkupGenerator $markupGenerator) {
+    $this->markupGenerator = $markupGenerator;
   }
 
   public function getWidgetTypes() {
@@ -87,62 +97,15 @@ class AddThis {
   }
 
   public function getWidgetMarkup($widgetType = '', $entity = NULL) {
-    $href = 'href';
-    switch ($widgetType) {
-      case self::WIDGET_TYPE_LARGE_BUTTON:
-        $markup =
-          '<a class="addthis_button" '
-          . $this->getAddThisAttributesMarkup($entity)
-          . $this->markupGenerator->generateAttribute($href, self::getFullBookmarkUrl())
-          . '><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="'
-          . t('Bookmark and Share')
-          . '" style="border:0"/></a>'
-          . self::getWidgetScriptElement();
-        break;
-      case self::WIDGET_TYPE_COMPACT_BUTTON:
-        $markup =
-          '<a class="addthis_button" '
-          . self::getAddThisAttributesMarkup($entity)
-          . $this->markupGenerator->generateAttribute($href, $this->getFullBookmarkUrl())
-          . '><img src="http://s7.addthis.com/static/btn/sm-share-en.gif" width="83" height="16" alt="'
-          . t('Bookmark and Share')
-          . '" style="border:0"/></a>'
-          . $this->getWidgetScriptElement();
-        break;
-      case self::WIDGET_TYPE_TOOLBOX:
-        $markup =
-          '<div class="addthis_toolbox addthis_default_style'
-          . $this->getLargeButtonsClass()
-          . '"><a '
-          . $this->markupGenerator->generateAttribute($href, $this->getFullBookmarkUrl())
-          . ' class="addthis_button_compact" '
-          . $this->getAddThisAttributesMarkup($entity)
-          . '></a>'
-          //. '<a class="addthis_button_facebook_like"></a>'
-          . '<a class="addthis_button_preferred_1" '
-          . $this->getAddThisAttributesMarkup($entity)
-          . '></a>'
-          . '<a class="addthis_button_preferred_2" '
-          . $this->getAddThisAttributesMarkup($entity)
-          . '></a>'
-          . '<a class="addthis_button_preferred_3" '
-          . $this->getAddThisAttributesMarkup($entity)
-          . '></a>'
-          . '<a class="addthis_button_preferred_4" '
-          . $this->getAddThisAttributesMarkup($entity)
-          . '></a></div>'
-          . $this->getWidgetScriptElement();
-        break;
-      case self::WIDGET_TYPE_SHARECOUNT:
-        $markup =
-          '<div class="addthis_toolbox addthis_default_style"><a class="addthis_counter" '
-          . $this->getAddThisAttributesMarkup($entity)
-          . '></a></div>'
-          . $this->getWidgetScriptElement();
-        break;
-      default:
-        $markup = '';
-        break;
+    $markup = '';
+    if (self::WIDGET_TYPE_LARGE_BUTTON == $widgetType) {
+      $markup = $this->getLargeButtonWidgetMarkup($entity);
+    } elseif (self::WIDGET_TYPE_COMPACT_BUTTON == $widgetType) {
+      $markup = $this->getCompactButtonWidgetMarkup($entity);
+    } elseif (self::WIDGET_TYPE_TOOLBOX == $widgetType) {
+      $markup = $this->getToolboxWidgetMarkup($entity);
+    } elseif (self::WIDGET_TYPE_SHARECOUNT == $widgetType) {
+      $markup = $this->getSharecountWidgetMarkup($entity);
     }
     return $markup;
   }
@@ -159,12 +122,21 @@ class AddThis {
     return check_url(variable_get(AddThis::SERVICES_JSON_URL_KEY, self::DEFAULT_SERVICES_JSON_URL));
   }
 
-  public function getServiceOptions() {
-    return $this->getServices();
+  public function getServices() {
+    $rows = array();
+    $services = $this->json->decode($this->getServicesJsonUrl());
+    if ($services != NULL) {
+      foreach ($services['data'] AS $service) {
+        $serviceCode = check_plain($service['code']);
+        $serviceName = check_plain($service['name']);
+        $rows[$serviceCode] = '<span class="addthis_service_icon icon_' . $serviceCode . '"></span> ' . $serviceName;
+      }
+    }
+    return $rows;
   }
 
-  public function getEnabledServiceOptions() {
-    return $this->getEnabledServices();
+  public function getEnabledServices() {
+    return variable_get(self::ENABLED_SERVICES_KEY, array());
   }
 
   public function addStylesheets() {
@@ -177,16 +149,15 @@ class AddThis {
       $javascript = $this->getCustomConfigurationCode();
     } else {
       $enabledServices = $this->getServiceNamesAsCommaSeparatedString();
-      $javascript =
-        "var addthis_config = {services_compact: '" . $enabledServices . "more'"
-        . $this->getUiHeaderColorConfigurationOptions()
-        . '}';
+      $javascript = "var addthis_config = {services_compact: '" . $enabledServices . "more'"
+                    . $this->getUiHeaderColorConfigurationOptions()
+                    . '}';
     }
     drupal_add_js($javascript, 'inline');
   }
 
   public function areLargeIconsEnabled() {
-    return variable_get(self::LARGE_ICONS_ENABLED_KEY, FALSE);
+    return variable_get(self::LARGE_ICONS_ENABLED_KEY, TRUE);
   }
 
   public function getUiHeaderColor() {
@@ -211,6 +182,74 @@ class AddThis {
 
   public function getBaseBookmarkUrl() {
     return check_url(variable_get(self::BOOKMARK_URL_KEY, self::DEFAULT_BOOKMARK_URL));
+  }
+
+  private function getLargeButtonWidgetMarkup($entity) {
+    return '<a class="addthis_button" '
+           . $this->getAddThisAttributesMarkup($entity)
+           . $this->markupGenerator->generateAttribute('href', self::getFullBookmarkUrl())
+           . '><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="'
+           . t('Bookmark and Share')
+           . '" style="border:0"/></a>'
+           . self::getWidgetScriptElement();
+  }
+
+  private function getCompactButtonWidgetMarkup($entity) {
+    return '<a class="addthis_button" '
+           . self::getAddThisAttributesMarkup($entity)
+           . $this->markupGenerator->generateAttribute('href', $this->getFullBookmarkUrl())
+           . '><img src="http://s7.addthis.com/static/btn/sm-share-en.gif" width="83" height="16" alt="'
+           . t('Bookmark and Share')
+           . '" style="border:0"/></a>'
+           . $this->getWidgetScriptElement();
+  }
+
+  private function getToolboxWidgetMarkup($entity) {
+    return '<div class="addthis_toolbox addthis_default_style'
+           . $this->getLargeButtonsClass()
+           . '"><a '
+           . $this->markupGenerator->generateAttribute('href', $this->getFullBookmarkUrl())
+           . ' class="addthis_button_compact" '
+           . $this->getAddThisAttributesMarkup($entity)
+           . '></a>'
+           //. '<a class="addthis_button_facebook_like"></a>'
+           . '<a class="addthis_button_preferred_1" '
+           . $this->getAddThisAttributesMarkup($entity)
+           . '></a>'
+           . '<a class="addthis_button_preferred_2" '
+           . $this->getAddThisAttributesMarkup($entity)
+           . '></a>'
+           . '<a class="addthis_button_preferred_3" '
+           . $this->getAddThisAttributesMarkup($entity)
+           . '></a>'
+           . '<a class="addthis_button_preferred_4" '
+           . $this->getAddThisAttributesMarkup($entity)
+           . '></a></div>'
+           . $this->getWidgetScriptElement();
+  }
+
+  private function getSharecountWidgetMarkup($entity) {
+    return '<div class="addthis_toolbox addthis_default_style"><a class="addthis_counter" '
+           . $this->getAddThisAttributesMarkup($entity)
+           . '></a></div>'
+           . $this->getWidgetScriptElement();
+  }
+
+  private function getAddThisAttributesMarkup($entity) {
+    if (is_object($entity)) {
+      return $this->getAddThisTitleAttributeMarkup($entity) . ' ';
+    }
+    return '';
+  }
+
+  private function getAddThisTitleAttributeMarkup($entity) {
+    return $this->markupGenerator->generateAttribute(
+      self::TITLE_ATTRIBUTE, drupal_get_title() . ' - ' . check_plain($entity->title)
+    );
+  }
+
+  private function getWidgetScriptElement() {
+    return '<script type="text/javascript" src="' . $this->getWidgetUrl() . '"></script>';
   }
 
   private function getUiHeaderColorConfigurationOptions() {
@@ -245,30 +284,13 @@ class AddThis {
     return drupal_get_path('module', self::MODULE_NAME) . '/' . self::ADMIN_CSS_FILE;
   }
 
-  private function getServices() {
-    $rows = array();
-    $services = $this->json->decode($this->getServicesJsonUrl());
-    if ($services != NULL) {
-      foreach ($services['data'] AS $service) {
-        $serviceCode = check_plain($service['code']);
-        $serviceName = check_plain($service['name']);
-        $rows[$serviceCode] = '<span class="addthis_service_icon icon_' . $serviceCode . '"></span> ' . $serviceName;
-      }
-    }
-    return $rows;
-  }
-
-  private function getEnabledServices() {
-    return variable_get(self::ENABLED_SERVICES_KEY, array());
-  }
-
   private function getFullBookmarkUrl() {
     return check_url($this->getBaseBookmarkUrl() . $this->getProfileIdQueryParameterPrefixedWithAmp());
   }
 
   private function getProfileIdQueryParameter($prefix) {
     $profileId = $this->getProfileId();
-    return $profileId != NULL ? $prefix . $this->PROFILE_ID_QUERY_PARAMETER . '=' . $profileId : '';
+    return $profileId != NULL ? $prefix . self::PROFILE_ID_QUERY_PARAMETER . '=' . $profileId : '';
   }
 
   private function getProfileIdQueryParameterPrefixedWithAmp() {
@@ -277,23 +299,6 @@ class AddThis {
 
   private function getProfileIdQueryParameterPrefixedWithHash() {
     return $this->getProfileIdQueryParameter('#');
-  }
-
-  private function getAddThisAttributesMarkup($entity) {
-    if (is_object($entity)) {
-      return $this->getAddThisTitleAttributeMarkup($entity) . ' ';
-    }
-    return '';
-  }
-
-  private function getAddThisTitleAttributeMarkup($entity) {
-    return $this->markupGenerator->generateAttribute(
-      self::TITLE_ATTRIBUTE, drupal_get_title() . ' - ' . check_plain($entity->title)
-    );
-  }
-
-  private function getWidgetScriptElement() {
-    return '<script type="text/javascript" src="' . $this->getWidgetUrl() . '"></script>';
   }
 
   private function getWidgetUrl() {

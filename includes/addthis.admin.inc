@@ -25,24 +25,21 @@ function addthis_admin_settings_form($form_state) {
   );
   $form['visual_settings_fieldset'][AddThis::LARGE_ICONS_ENABLED_KEY] = array(
     '#type' => 'checkbox',
-    '#title' => t('Use large toolbox icons'),
+    '#title' => t('Use large 32x32 pixel toolbox icons instead of smaller 16x16 pixel icons'),
     '#default_value' => AddThis::getInstance()->areLargeIconsEnabled(),
     '#required' => FALSE,
-    '#description' => t('Use large 32x32 pixel toolbox icons instead of smaller 16x16 pixel icons.'),
   );
   $form['visual_settings_fieldset'][AddThis::UI_HEADER_COLOR_KEY] = array(
     '#type' => 'textfield',
-    '#title' => t('AddThis user interface header text color'),
+    '#title' => t('AddThis user interface header text color (like #ffffff)'),
     '#default_value' => AddThis::getInstance()->getUiHeaderColor(),
     '#required' => FALSE,
-    '#description' => t('AddThis user interface header text color (like #ffffff).'),
   );
   $form['visual_settings_fieldset'][AddThis::UI_HEADER_BACKGROUND_COLOR_KEY] = array(
     '#type' => 'textfield',
-    '#title' => t('AddThis user interface header background color'),
+    '#title' => t('AddThis user interface header background color (like #000000)'),
     '#default_value' => AddThis::getInstance()->getUiHeaderBackgroundColor(),
     '#required' => FALSE,
-    '#description' => t('AddThis user interface header background color (like #000000).'),
   );
   $form['service_urls_fieldset'] = array(
     '#type' => 'fieldset',
@@ -55,28 +52,24 @@ function addthis_admin_settings_form($form_state) {
     '#title' => t('AddThis bookmark URL'),
     '#default_value' => AddThis::getInstance()->getBaseBookmarkUrl(),
     '#required' => TRUE,
-    '#description' => t('AddThis bookmark URL.'),
   );
   $form['service_urls_fieldset'][AddThis::SERVICES_CSS_URL_KEY] = array(
     '#type' => 'textfield',
     '#title' => t('AddThis services stylesheet URL'),
     '#default_value' => AddThis::getInstance()->getServicesCssUrl(),
     '#required' => TRUE,
-    '#description' => t('AddThis services stylesheet URL.'),
   );
   $form['service_urls_fieldset'][AddThis::SERVICES_JSON_URL_KEY] = array(
     '#type' => 'textfield',
     '#title' => t('AddThis services json URL'),
     '#default_value' => AddThis::getInstance()->getServicesJsonUrl(),
     '#required' => TRUE,
-    '#description' => t('AddThis services json URL.'),
   );
   $form['service_urls_fieldset'][AddThis::WIDGET_JS_URL_KEY] = array(
     '#type' => 'textfield',
     '#title' => t('AddThis javascript widget URL'),
     '#default_value' => AddThis::getInstance()->getBaseWidgetJsUrl(),
     '#required' => TRUE,
-    '#description' => t('AddThis javascript widget URL.'),
   );
   $form['enabled_services_fieldset'] = array(
     '#type' => 'fieldset',
@@ -87,10 +80,9 @@ function addthis_admin_settings_form($form_state) {
   $form['enabled_services_fieldset'][AddThis::ENABLED_SERVICES_KEY] = array(
     '#type' => 'checkboxes',
     '#title' => t('Enabled services'),
-    '#options' => AddThis::getInstance()->getServiceOptions(),
-    '#default_value' => AddThis::getInstance()->getEnabledServiceOptions(),
+    '#options' => AddThis::getInstance()->getServices(),
+    '#default_value' => AddThis::getInstance()->getEnabledServices(),
     '#required' => FALSE,
-    '#description' => t('Check enabled services.'),
   );
   $form['advanced_settings_fieldset'] = array(
     '#type' => 'fieldset',
