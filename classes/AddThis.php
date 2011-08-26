@@ -26,6 +26,7 @@ class AddThis {
   // Persistent variable keys
   const BLOCK_WIDGET_TYPE_KEY = 'addthis_block_widget_type';
   const BOOKMARK_URL_KEY = 'addthis_bookmark_url';
+  const CO_BRAND_KEY = 'addthis_co_brand';
   const CUSTOM_CONFIGURATION_CODE_ENABLED_KEY = 'addthis_custom_configuration_code_enabled';
   const CUSTOM_CONFIGURATION_CODE_KEY = 'addthis_custom_configuration_code';
   const ENABLED_SERVICES_KEY = 'addthis_enabled_services';
@@ -192,6 +193,10 @@ class AddThis {
 
   public function getNumberOfPreferredServices() {
     return variable_get(self::NUMBER_OF_PREFERRED_SERVICES_KEY, self::DEFAULT_NUMBER_OF_PREFERRED_SERVICES);
+  }
+
+  public function getCoBrand() {
+    return variable_get(self::CO_BRAND_KEY);
   }
 
   private function getLargeButtonWidgetMarkup($entity) {

@@ -49,6 +49,13 @@ function addthis_admin_settings_form($form_state) {
     '#default_value' => AddThis::getInstance()->getUiHeaderBackgroundColor(),
     '#required' => FALSE,
   );
+  $form['visual_settings_fieldset'][AddThis::CO_BRAND_KEY] = array(
+    '#type' => 'textfield',
+    '#title' => t('Additional branding message to be rendered in the upper-right-hand corner of the menus'),
+    '#default_value' => AddThis::getInstance()->getCoBrand(),
+    '#required' => FALSE,
+    '#maxlength' => 15,
+  );
   $form['service_urls_fieldset'] = array(
     '#type' => 'fieldset',
     '#title' => t('Service URLs'),
