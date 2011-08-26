@@ -205,26 +205,18 @@ class AddThis {
   }
 
   private function getToolboxWidgetMarkup($entity) {
-    return '<div class="addthis_toolbox addthis_default_style'
+    return '<div class="addthis_toolbox addthis_default_style '
            . $this->getLargeButtonsClass()
-           . '"><a '
+           . '" '
+           . $this->getAddThisAttributesMarkup($entity)
+           . '><a '
            . $this->markupGenerator->generateAttribute('href', $this->getFullBookmarkUrl())
-           . ' class="addthis_button_compact" '
-           . $this->getAddThisAttributesMarkup($entity)
-           . '></a>'
-           //. '<a class="addthis_button_facebook_like"></a>'
-           . '<a class="addthis_button_preferred_1" '
-           . $this->getAddThisAttributesMarkup($entity)
-           . '></a>'
-           . '<a class="addthis_button_preferred_2" '
-           . $this->getAddThisAttributesMarkup($entity)
-           . '></a>'
-           . '<a class="addthis_button_preferred_3" '
-           . $this->getAddThisAttributesMarkup($entity)
-           . '></a>'
-           . '<a class="addthis_button_preferred_4" '
-           . $this->getAddThisAttributesMarkup($entity)
-           . '></a></div>'
+           . ' class="addthis_button_compact"></a>'
+           . '<a class="addthis_button_preferred_1"></a>'
+           . '<a class="addthis_button_preferred_2"></a>'
+           . '<a class="addthis_button_preferred_3"></a>'
+           . '<a class="addthis_button_preferred_4"></a>'
+           . '</div>'
            . $this->getWidgetScriptElement();
   }
 
