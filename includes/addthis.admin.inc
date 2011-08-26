@@ -104,7 +104,7 @@ function addthis_admin_settings_form($form_state) {
     '#title' => t('Use custom AddThis configuration code'),
     '#default_value' => AddThis::getInstance()->isCustomConfigurationCodeEnabled(),
     '#required' => FALSE,
-    '#description' => t('Use custom AddThis configuration code. If checked, custom configuration will be used instead of other configuration settings provided in AddThis administration user interface. Note that the Profile ID (pubid) will not be overwritten by custom configuration code.'),
+    '#description' => t('Use custom AddThis configuration code. If checked, custom configuration will be used instead of other configuration settings provided in AddThis administration user interface.'),
   );
   $form['advanced_settings_fieldset'][AddThis::CUSTOM_CONFIGURATION_CODE_KEY] = array(
     '#type' => 'textarea',
