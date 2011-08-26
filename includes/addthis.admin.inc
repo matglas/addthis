@@ -29,6 +29,14 @@ function addthis_admin_settings_form($form_state) {
     '#default_value' => AddThis::getInstance()->areLargeIconsEnabled(),
     '#required' => FALSE,
   );
+  $form['visual_settings_fieldset'][AddThis::NUMBER_OF_PREFERRED_SERVICES_KEY] = array(
+    '#type' => 'textfield',
+    '#title' => t('Number of preferred service icons displayed when using the toolbox widget'),
+    '#default_value' => AddThis::getInstance()->getNumberOfPreferredServices(),
+    '#required' => FALSE,
+    '#size' => 1,
+    '#maxlength' => 1,
+  );
   $form['visual_settings_fieldset'][AddThis::UI_HEADER_COLOR_KEY] = array(
     '#type' => 'textfield',
     '#title' => t('AddThis user interface header text color (like #ffffff)'),

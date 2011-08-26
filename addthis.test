@@ -154,6 +154,9 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
     $edit[AddThis::LARGE_ICONS_ENABLED_KEY] = TRUE;
 
+    $numberOfPreferredServices = 5;
+    $edit[AddThis::NUMBER_OF_PREFERRED_SERVICES_KEY] = $numberOfPreferredServices;
+
     $edit[AddThis::CUSTOM_CONFIGURATION_CODE_ENABLED_KEY] = TRUE;
 
     $customConfigurationCode = TestHelper::generateRandomLowercaseString();
@@ -179,6 +182,8 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $this->addThisUiHeaderColorShouldBeAbleToBeSaved($uiHeaderColor);
 
     $this->addThisLargeToolboxIconsSettingShouldBeAbleToBeSaved();
+
+    $this->addThisNumberOfPreferredServicesShouldBeAbleToBeSaved($numberOfPreferredServices);
 
     $this->addThisEnabledServicesShouldBeAbleToBeSaved($serviceName);
 
@@ -207,6 +212,11 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
   private function addThisLargeToolboxIconsSettingShouldBeAbleToBeSaved() {
     $this->assertFieldChecked('edit-addthis-large-icons-enabled',
                               'AddThis large toolbox icons setting should be able to be saved.');
+  }
+
+  private function addThisNumberOfPreferredServicesShouldBeAbleToBeSaved($numberOfPreferredServices) {
+    $this->assertFieldByName(AddThis::NUMBER_OF_PREFERRED_SERVICES_KEY, $numberOfPreferredServices,
+                             'The number of preferred services should be able to be saved.');
   }
 
   private function addThisCustomConfigurationCodeEnabledSettingShouldBeAbleToBeSaved() {

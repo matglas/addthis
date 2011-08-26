@@ -11,6 +11,7 @@ class AddThis {
   const BLOCK_NAME = 'addthis_block';
   const DEFAULT_CUSTOM_CONFIGURATION_CODE = 'var addthis_config = {}';
   const DEFAULT_FORMATTER = 'addthis_default_formatter';
+  const DEFAULT_NUMBER_OF_PREFERRED_SERVICES = 4;
   const FIELD_TYPE = 'addthis';
   const MODULE_NAME = 'addthis';
   const PERMISSION_ADMINISTER_ADDTHIS = 'administer addthis';
@@ -29,6 +30,7 @@ class AddThis {
   const CUSTOM_CONFIGURATION_CODE_KEY = 'addthis_custom_configuration_code';
   const ENABLED_SERVICES_KEY = 'addthis_enabled_services';
   const LARGE_ICONS_ENABLED_KEY = 'addthis_large_icons_enabled';
+  const NUMBER_OF_PREFERRED_SERVICES_KEY = 'addthis_number_of_preferred_services';
   const PROFILE_ID_KEY = 'addthis_profile_id';
   const SERVICES_CSS_URL_KEY = 'addthis_services_css_url';
   const SERVICES_JSON_URL_KEY = 'addthis_services_json_url';
@@ -184,6 +186,10 @@ class AddThis {
     return check_url(variable_get(self::BOOKMARK_URL_KEY, self::DEFAULT_BOOKMARK_URL));
   }
 
+  public function getNumberOfPreferredServices() {
+    return variable_get(self::NUMBER_OF_PREFERRED_SERVICES_KEY, self::DEFAULT_NUMBER_OF_PREFERRED_SERVICES);
+  }
+
   private function getLargeButtonWidgetMarkup($entity) {
     return '<a class="addthis_button" '
            . $this->getAddThisAttributesMarkup($entity)
@@ -205,19 +211,23 @@ class AddThis {
   }
 
   private function getToolboxWidgetMarkup($entity) {
-    return '<div class="addthis_toolbox addthis_default_style '
+    $markup = '<div class="addthis_toolbox addthis_default_style '
            . $this->getLargeButtonsClass()
            . '" '
            . $this->getAddThisAttributesMarkup($entity)
            . '><a '
            . $this->markupGenerator->generateAttribute('href', $this->getFullBookmarkUrl())
-           . ' class="addthis_button_compact"></a>'
-           . '<a class="addthis_button_preferred_1"></a>'
-           . '<a class="addthis_button_preferred_2"></a>'
-           . '<a class="addthis_button_preferred_3"></a>'
-           . '<a class="addthis_button_preferred_4"></a>'
-           . '</div>'
-           . $this->getWidgetScriptElement();
+           . ' class="addthis_button_compact"></a>';
+
+    $numberOfPreferredServices = self::getNumberOfPreferredServices();
+
+    for ($i = 1; $i <= $numberOfPreferredServices; $i++) {
+      $markup .= "<a class=\"addthis_button_preferred_$i\"></a>";
+    }
+
+    $markup .= '</div>' . $this->getWidgetScriptElement();
+
+    return $markup;
   }
 
   private function getSharecountWidgetMarkup($entity) {
