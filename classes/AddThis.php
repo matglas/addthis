@@ -146,6 +146,10 @@ class AddThis {
     drupal_add_css($this->getAdminCssFilePath(), 'file');
   }
 
+  public function addWidgetJs() {
+    drupal_add_js(self::getWidgetUrl(), array('type' => 'external', 'scope' => 'footer'));
+  }
+
   public function addConfigurationOptionsJs() {
     if ($this->isCustomConfigurationCodeEnabled()) {
       $javascript = $this->getCustomConfigurationCode();
@@ -155,7 +159,7 @@ class AddThis {
                     . $this->getUiHeaderColorConfigurationOptions()
                     . '}';
     }
-    drupal_add_js($javascript, 'inline');
+    drupal_add_js($javascript, array('type' => 'inline'));
   }
 
   public function areLargeIconsEnabled() {
@@ -196,8 +200,7 @@ class AddThis {
            . $this->markupGenerator->generateAttribute('href', self::getFullBookmarkUrl())
            . '><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="'
            . t('Bookmark and Share')
-           . '" style="border:0"/></a>'
-           . self::getWidgetScriptElement();
+           . '" style="border:0"/></a>';
   }
 
   private function getCompactButtonWidgetMarkup($entity) {
@@ -206,8 +209,7 @@ class AddThis {
            . $this->markupGenerator->generateAttribute('href', $this->getFullBookmarkUrl())
            . '><img src="http://s7.addthis.com/static/btn/sm-share-en.gif" width="83" height="16" alt="'
            . t('Bookmark and Share')
-           . '" style="border:0"/></a>'
-           . $this->getWidgetScriptElement();
+           . '" style="border:0"/></a>';
   }
 
   private function getToolboxWidgetMarkup($entity) {
@@ -225,7 +227,7 @@ class AddThis {
       $markup .= "<a class=\"addthis_button_preferred_$i\"></a>";
     }
 
-    $markup .= '</div>' . $this->getWidgetScriptElement();
+    $markup .= '</div>';
 
     return $markup;
   }
@@ -233,8 +235,7 @@ class AddThis {
   private function getSharecountWidgetMarkup($entity) {
     return '<div class="addthis_toolbox addthis_default_style"><a class="addthis_counter" '
            . $this->getAddThisAttributesMarkup($entity)
-           . '></a></div>'
-           . $this->getWidgetScriptElement();
+           . '></a></div>';
   }
 
   private function getAddThisAttributesMarkup($entity) {
@@ -248,10 +249,6 @@ class AddThis {
     return $this->markupGenerator->generateAttribute(
       self::TITLE_ATTRIBUTE, drupal_get_title() . ' - ' . check_plain($entity->title)
     );
-  }
-
-  private function getWidgetScriptElement() {
-    return '<script type="text/javascript" src="' . $this->getWidgetUrl() . '"></script>';
   }
 
   private function getUiHeaderColorConfigurationOptions() {
