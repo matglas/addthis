@@ -152,6 +152,9 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $uiHeaderColor = '#ffffff';
     $edit[AddThis::UI_HEADER_COLOR_KEY] = $uiHeaderColor;
 
+    $coBrand = TestHelper::generateRandomLowercaseString();
+    $edit[AddThis::CO_BRAND_KEY] = $coBrand;
+
     $edit[AddThis::LARGE_ICONS_ENABLED_KEY] = TRUE;
 
     $numberOfPreferredServices = 5;
@@ -180,6 +183,8 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $this->addThisUiHeaderBackgroundColorShouldBeAbleToBeSaved($uiHeaderBackgroundColor);
 
     $this->addThisUiHeaderColorShouldBeAbleToBeSaved($uiHeaderColor);
+
+    $this->addThisCoBrandShouldBeAbleToBeSaved($coBrand);
 
     $this->addThisLargeToolboxIconsSettingShouldBeAbleToBeSaved();
 
@@ -237,6 +242,11 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
   private function addThisUiHeaderBackgroundColorShouldBeAbleToBeSaved($uiHeaderBackgroundColor) {
     $this->assertFieldByName(AddThis::UI_HEADER_BACKGROUND_COLOR_KEY, $uiHeaderBackgroundColor,
                              'AddThis UI header background color should be able to be saved.');
+  }
+
+  private function addThisCoBrandShouldBeAbleToBeSaved($coBrand) {
+    $this->assertFieldByName(AddThis::CO_BRAND_KEY, $coBrand,
+                             'AddThis co-brand should be able to be saved.');
   }
 
   private function addThisEnabledServicesShouldBeAbleToBeSaved($serviceName) {

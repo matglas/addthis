@@ -58,6 +58,9 @@ class AddThis {
 
   private static $instance;
 
+  /* @var AddThisConfigurationGenerator */
+  private $addThisConfigurationGenerator;
+
   /* @var Json */
   private $json;
 
@@ -70,11 +73,16 @@ class AddThis {
   public static function getInstance() {
     if (!isset(self::$instance)) {
       $addThis = new AddThis();
+      $addThis->setAddThisConfigurationGenerator(new AddThisConfigurationGenerator());
       $addThis->setJson(new Json());
       $addThis->setMarkupGenerator(new MarkupGenerator());
       self::$instance = $addThis;
     }
     return self::$instance;
+  }
+
+  public function setAddThisConfigurationGenerator(AddThisConfigurationGenerator $addThisConfigurationGenerator) {
+    $this->addThisConfigurationGenerator = $addThisConfigurationGenerator;
   }
 
   public function setJson(Json $json) {
@@ -128,7 +136,7 @@ class AddThis {
   public function getServices() {
     $rows = array();
     $services = $this->json->decode($this->getServicesJsonUrl());
-    if ($services != NULL) {
+    if (!empty($services)) {
       foreach ($services['data'] AS $service) {
         $serviceCode = check_plain($service['code']);
         $serviceName = check_plain($service['name']);
@@ -157,8 +165,11 @@ class AddThis {
     } else {
       $enabledServices = $this->getServiceNamesAsCommaSeparatedString();
       $javascript = "var addthis_config = {services_compact: '" . $enabledServices . "more'"
-                    . $this->getUiHeaderColorConfigurationOptions()
-                    . '}';
+        . $this->addThisConfigurationGenerator->generate('ui_header_color', $this->getUiHeaderColor())
+        . $this->addThisConfigurationGenerator->generate('ui_header_backround', $this->getUiHeaderBackgroundColor())
+        . $this->addThisConfigurationGenerator->generate('ui_cobrand', $this->getCoBrand())
+        . '}'
+      ;
     }
     drupal_add_js($javascript, array('type' => 'inline'));
   }
@@ -256,19 +267,6 @@ class AddThis {
     );
   }
 
-  private function getUiHeaderColorConfigurationOptions() {
-    $configurationOptions = ',';
-    $uiHeaderColor = $this->getUiHeaderColor();
-    $uiHeaderBackgroundColor = $this->getUiHeaderBackgroundColor();
-    if ($uiHeaderColor != NULL) {
-      $configurationOptions .= "ui_header_color: '$uiHeaderColor'";
-    }
-    if ($uiHeaderBackgroundColor != NULL) {
-      $configurationOptions .= ", ui_header_background: '$uiHeaderBackgroundColor'";
-    }
-    return $configurationOptions;
-  }
-
   private function getLargeButtonsClass() {
     return $this->areLargeIconsEnabled() ? ' addthis_32x32_style ' : '';
   }
@@ -294,7 +292,7 @@ class AddThis {
 
   private function getProfileIdQueryParameter($prefix) {
     $profileId = $this->getProfileId();
-    return $profileId != NULL ? $prefix . self::PROFILE_ID_QUERY_PARAMETER . '=' . $profileId : '';
+    return !empty($profileId) ? $prefix . self::PROFILE_ID_QUERY_PARAMETER . '=' . $profileId : '';
   }
 
   private function getProfileIdQueryParameterPrefixedWithAmp() {

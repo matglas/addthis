@@ -52,6 +52,7 @@ function addthis_admin_settings_form($form_state) {
   $form['visual_settings_fieldset'][AddThis::CO_BRAND_KEY] = array(
     '#type' => 'textfield',
     '#title' => t('Additional branding message to be rendered in the upper-right-hand corner of the menus'),
+    '#description' => t('Should be less than 15 characters in most cases to render properly.'),
     '#default_value' => AddThis::getInstance()->getCoBrand(),
     '#required' => FALSE,
     '#maxlength' => 15,
