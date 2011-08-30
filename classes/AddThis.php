@@ -166,14 +166,15 @@ class AddThis {
     if ($this->isCustomConfigurationCodeEnabled()) {
       $javascript = $this->getCustomConfigurationCode();
     } else {
-      $enabledServices = $this->getServiceNamesAsCommaSeparatedString();
-      $javascript = "var addthis_config = {services_compact: '" . $enabledServices . "more'"
+      $enabledServices = $this->getServiceNamesAsCommaSeparatedString() . 'more';
+      $javascript = 'var addthis_config = {'
+        . $this->addThisConfigurationGenerator->generate('services_compact', $enabledServices)
         . $this->addThisConfigurationGenerator->generate('ui_header_color', $this->getUiHeaderColor())
         . $this->addThisConfigurationGenerator->generate('ui_header_background', $this->getUiHeaderBackgroundColor())
         . $this->addThisConfigurationGenerator->generate('ui_cobrand', $this->getCoBrand())
         . $this->addThisConfigurationGenerator->generate('ui_508_compliant', $this->get508Compliant())
         . $this->addThisConfigurationGenerator->generate('data_track_clickback', $this->isClickbackTrackingEnabled())
-        . $this->addThisConfigurationGenerator->generate('ui_use_addressbook', $this->isAddressbookEnabled())
+        . $this->addThisConfigurationGenerator->generateWithoutTrailingComma('ui_use_addressbook', $this->isAddressbookEnabled())
         . '}'
       ;
     }
