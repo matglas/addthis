@@ -31,6 +31,7 @@ function addthis_field_schema($field) {
  * Implements hook_uninstall().
  */
 function addthis_uninstall() {
+  variable_del(AddThis::ADDRESSBOOK_ENABLED_KEY);
   variable_del(AddThis::BLOCK_WIDGET_TYPE_KEY);
   variable_del(AddThis::BOOKMARK_URL_KEY);
   variable_del(AddThis::CLICKBACK_TRACKING_ENABLED_KEY);

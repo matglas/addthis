@@ -24,6 +24,7 @@ class AddThis {
   const TITLE_ATTRIBUTE = 'addthis:title';
 
   // Persistent variable keys
+  const ADDRESSBOOK_ENABLED_KEY = 'addthis_addressbook_enabled';
   const BLOCK_WIDGET_TYPE_KEY = 'addthis_block_widget_type';
   const BOOKMARK_URL_KEY = 'addthis_bookmark_url';
   const CLICKBACK_TRACKING_ENABLED_KEY = 'addthis_clickback_tracking_enabled';
@@ -172,6 +173,7 @@ class AddThis {
         . $this->addThisConfigurationGenerator->generate('ui_cobrand', $this->getCoBrand())
         . $this->addThisConfigurationGenerator->generate('ui_508_compliant', $this->get508Compliant())
         . $this->addThisConfigurationGenerator->generate('data_track_clickback', $this->isClickbackTrackingEnabled())
+        . $this->addThisConfigurationGenerator->generate('ui_use_addressbook', $this->isAddressbookEnabled())
         . '}'
       ;
     }
@@ -220,6 +222,10 @@ class AddThis {
 
   public function isClickbackTrackingEnabled() {
     return variable_get(self::CLICKBACK_TRACKING_ENABLED_KEY, FALSE);
+  }
+
+  public function isAddressbookEnabled() {
+    return variable_get(self::ADDRESSBOOK_ENABLED_KEY, FALSE);
   }
 
   private function getLargeButtonWidgetMarkup($entity) {

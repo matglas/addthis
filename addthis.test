@@ -161,6 +161,8 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
     $edit[AddThis::CLICKBACK_TRACKING_ENABLED_KEY] = TRUE;
 
+    $edit[AddThis::ADDRESSBOOK_ENABLED_KEY] = TRUE;
+
     $numberOfPreferredServices = 5;
     $edit[AddThis::NUMBER_OF_PREFERRED_SERVICES_KEY] = $numberOfPreferredServices;
 
@@ -194,7 +196,7 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
     $this->addThis508CompliantSettingShouldBeAbleToBeSaved();
 
-    $this->addThisClickbackTrackingSettingShouldBeAbleToBeSaved();
+    $this->addThisClickbackTrackingEnabledSettingShouldBeAbleToBeSaved();
 
     $this->addThisNumberOfPreferredServicesShouldBeAbleToBeSaved($numberOfPreferredServices);
 
@@ -232,9 +234,14 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
                               'AddThis 508 compliant setting should be able to be saved.');
   }
 
-  private function addThisClickbackTrackingSettingShouldBeAbleToBeSaved() {
+  private function addThisClickbackTrackingEnabledSettingShouldBeAbleToBeSaved() {
     $this->assertFieldChecked('edit-addthis-clickback-tracking-enabled',
-                              'AddThis clickback tracking setting should be able to be saved.');
+                              'AddThis clickback tracking enabled setting should be able to be saved.');
+  }
+
+  private function addThisAddressbookEnabledSettingShouldBeAbleToBeSaved() {
+    $this->assertFieldChecked('edit-addthis-addressbook-enabled',
+                              'AddThis addressbook enabled setting should be able to be saved.');
   }
 
   private function addThisNumberOfPreferredServicesShouldBeAbleToBeSaved($numberOfPreferredServices) {
