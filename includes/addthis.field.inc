@@ -20,9 +20,11 @@ function addthis_field_info() {
       'label' => t('AddThis'),
       'description' => t('This field stores addthis settings in the database.'),
       'settings' => array('max_length' => 255),
-      'instance_settings' => array(AddThis::STYLE_KEY => AddThis::WIDGET_TYPE_COMPACT_BUTTON),
+      'instance_settings' => array(
+        AddThis::STYLE_KEY => AddThis::WIDGET_TYPE_COMPACT_BUTTON
+       ),
       'default_widget' => AddThis::WIDGET_TYPE,
-      'default_formatter' => AddThis::DEFAULT_FORMATTER,
+      'default_formatter' => AddThis::WIDGET_TYPE_DISABLED,
     ),
   );
 }
@@ -38,26 +40,45 @@ function addthis_field_is_empty($item, $field) {
  * Implements hook_field_formatter_info().
  */
 function addthis_field_formatter_info() {
-  return array(
-    AddThis::DEFAULT_FORMATTER => array(
-      'label' => t('Default'),
-      'field types' => array(AddThis::FIELD_TYPE),
-    ),
-  );
+  $formatters = array();
+
+  // Create a formatter element for all the default style types we have.
+  foreach (AddThis::getInstance()->getWidgetTypes() as $key => $label) {
+    $formatters[$key] = array(
+      'label' => $label,
+      'field types' => array(AddThis::FIELD_TYPE)
+    );
+  }
+
+  return $formatters;
 }
 
 /**
  * Implements hook_field_formatter_view().
  */
 function addthis_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  // @todo Write explaining comments
   $element = array();
-
-  foreach ($items as $delta => $item) {
-    $widgetType = $item['value'];
-    $markup = AddThis::getInstance()->getWidgetMarkup($widgetType, $entity);
-    $element[$delta] = array('#markup' => $markup);
-  }
+  $widgetType = $display['type'];
+  $markup = AddThis::getInstance()->getWidgetMarkup($widgetType, $entity);
+  // @todo check for index 0 and add markup.
+  $element[0] = array('#markup' => $markup);
   return $element;
+}
+
+/**
+ * Implements hook_field_presave().
+ */
+function addthis_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  // @todo Write explaining comments
+  if (count($items) == 0) {
+    $items += array(array('value' => AddThis::WIDGET_TYPE_DISABLED));
+  }
+  else {
+    foreach ($items as $delta => $value) {
+      $items[$delta]['value'] = AddThis::WIDGET_TYPE_DISABLED;
+    }
+  }
 }
 
 /**
@@ -77,11 +98,10 @@ function addthis_field_widget_info() {
  */
 function addthis_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
 
+  // @todo Write explaining comments
   if ($instance['widget']['type'] == AddThis::WIDGET_TYPE) {
     $main_widget = $element + array(
-      '#type' => 'select',
-      '#options' => AddThis::getInstance()->getWidgetTypes(),
-      '#default_value' => isset($items[$delta]) ? $items[$delta] : $instance['settings'][AddThis::STYLE_KEY],
+      '#access' => FALSE,
     );
     $element['value'] = $main_widget;
   }

@@ -65,7 +65,7 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
     $this->addThisShouldNotHaveConfigurableFieldLevelSettings($label);
 
-    $this->drupalPost(NULL, array(), t('Save field settings'));
+    $this->drupalGet('admin/structure/types/manage/article/display');
 
     $this->addThisShouldProvideWidgetTypeCompactButton();
 
@@ -76,8 +76,6 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $this->addThisShouldProvideWidgetTypeSharecount();
 
     $this->addThisShouldProvideWidgetTypeToolbox();
-
-    $this->addThisFieldInstanceSettingsShouldBeAbleToBeSaved($label);
   }
 
   private function addThisShouldNotHaveConfigurableFieldLevelSettings($label) {
@@ -103,16 +101,6 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
   private function addThisShouldProvideWidgetTypeToolbox() {
     $this->assertText('Toolbox', 'AddThis-module should provide widget type "Toolbox"');
-  }
-
-  private function addThisFieldInstanceSettingsShouldBeAbleToBeSaved($label) {
-    $edit = array();
-    $edit['field_' . $label . '[und][0][value]'] = AddThis::WIDGET_TYPE_LARGE_BUTTON;
-
-    $this->drupalPost(NULL, $edit, t('Save settings'));
-
-    $this->assertText(t("Saved @name configuration.", array('@name' => $label)),
-                      'AddThis-module field instance settings should be able to be saved.');
   }
 
   private function addThisShouldBeAbleToBeUsedAsBlock() {

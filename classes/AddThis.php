@@ -169,7 +169,7 @@ class AddThis {
       $enabledServices = $this->getServiceNamesAsCommaSeparatedString();
       $javascript = "var addthis_config = {services_compact: '" . $enabledServices . "more'"
         . $this->addThisConfigurationGenerator->generate('ui_header_color', $this->getUiHeaderColor())
-        . $this->addThisConfigurationGenerator->generate('ui_header_backround', $this->getUiHeaderBackgroundColor())
+        . $this->addThisConfigurationGenerator->generate('ui_header_background', $this->getUiHeaderBackgroundColor())
         . $this->addThisConfigurationGenerator->generate('ui_cobrand', $this->getCoBrand())
         . $this->addThisConfigurationGenerator->generate('ui_508_compliant', $this->get508Compliant())
         . $this->addThisConfigurationGenerator->generate('data_track_clickback', $this->isClickbackTrackingEnabled())

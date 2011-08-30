@@ -75,3 +75,21 @@ function addthis_page_alter(&$page) {
   AddThis::getInstance()->addWidgetJs();
   AddThis::getInstance()->addConfigurationOptionsJs();
 }
+
+/**
+ * Implements hook_form_alter().
+ */
+function addthis_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'field_ui_field_edit_form' &&
+      $form['#field']['type'] == AddThis::FIELD_TYPE &&
+      $form['#field']['type'] == AddThis::MODULE_NAME)
+  {
+    // We hide the instance fieldset because we don't hold any value's per instance.
+    // I know this is a dirty hack to hide it but I'm not aware that there is a way to
+    // disable instance value's in the field API.
+    $form['field']['#access'] = FALSE;
+    $form['instance']['required']['#access'] = FALSE;
+    $form['instance']['description']['#access'] = FALSE;
+    $form['instance']['default_value_widget']['#access'] = FALSE;
+  }
+}
