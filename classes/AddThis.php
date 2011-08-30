@@ -27,6 +27,7 @@ class AddThis {
   const BLOCK_WIDGET_TYPE_KEY = 'addthis_block_widget_type';
   const BOOKMARK_URL_KEY = 'addthis_bookmark_url';
   const CO_BRAND_KEY = 'addthis_co_brand';
+  const COMPLIANT_508_KEY = 'addthis_508_compliant';
   const CUSTOM_CONFIGURATION_CODE_ENABLED_KEY = 'addthis_custom_configuration_code_enabled';
   const CUSTOM_CONFIGURATION_CODE_KEY = 'addthis_custom_configuration_code';
   const ENABLED_SERVICES_KEY = 'addthis_enabled_services';
@@ -168,6 +169,7 @@ class AddThis {
         . $this->addThisConfigurationGenerator->generate('ui_header_color', $this->getUiHeaderColor())
         . $this->addThisConfigurationGenerator->generate('ui_header_backround', $this->getUiHeaderBackgroundColor())
         . $this->addThisConfigurationGenerator->generate('ui_cobrand', $this->getCoBrand())
+        . $this->addThisConfigurationGenerator->generate('ui_508_compliant', $this->get508Compliant())
         . '}'
       ;
     }
@@ -208,6 +210,10 @@ class AddThis {
 
   public function getCoBrand() {
     return variable_get(self::CO_BRAND_KEY);
+  }
+
+  public function get508Compliant() {
+    return variable_get(self::COMPLIANT_508_KEY, FALSE);
   }
 
   private function getLargeButtonWidgetMarkup($entity) {

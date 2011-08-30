@@ -57,6 +57,19 @@ function addthis_admin_settings_form($form_state) {
     '#required' => FALSE,
     '#maxlength' => 15,
   );
+  $form['accessibility_fieldset'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Accessibility'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['accessibility_fieldset'][AddThis::COMPLIANT_508_KEY] = array(
+    '#type' => 'checkbox',
+    '#title' => t('508 compliant'),
+    '#description' => 'If checked, clicking the AddThis button will open a new window to a page that is keyboard navigable.',
+    '#default_value' => AddThis::getInstance()->get508Compliant(),
+    '#required' => FALSE,
+  );
   $form['service_urls_fieldset'] = array(
     '#type' => 'fieldset',
     '#title' => t('Service URLs'),

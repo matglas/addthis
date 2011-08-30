@@ -157,6 +157,8 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
     $edit[AddThis::LARGE_ICONS_ENABLED_KEY] = TRUE;
 
+    $edit[AddThis::COMPLIANT_508_KEY] = TRUE;
+
     $numberOfPreferredServices = 5;
     $edit[AddThis::NUMBER_OF_PREFERRED_SERVICES_KEY] = $numberOfPreferredServices;
 
@@ -188,6 +190,8 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
     $this->addThisLargeToolboxIconsSettingShouldBeAbleToBeSaved();
 
+    $this->addThis508CompliantSettingShouldBeAbleToBeSaved();
+
     $this->addThisNumberOfPreferredServicesShouldBeAbleToBeSaved($numberOfPreferredServices);
 
     $this->addThisEnabledServicesShouldBeAbleToBeSaved($serviceName);
@@ -217,6 +221,11 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
   private function addThisLargeToolboxIconsSettingShouldBeAbleToBeSaved() {
     $this->assertFieldChecked('edit-addthis-large-icons-enabled',
                               'AddThis large toolbox icons setting should be able to be saved.');
+  }
+
+  private function addThis508CompliantSettingShouldBeAbleToBeSaved() {
+    $this->assertFieldChecked('edit-addthis-508-compliant',
+                              'AddThis 508 compliant setting should be able to be saved.');
   }
 
   private function addThisNumberOfPreferredServicesShouldBeAbleToBeSaved($numberOfPreferredServices) {
