@@ -26,6 +26,7 @@ class AddThis {
   // Persistent variable keys
   const BLOCK_WIDGET_TYPE_KEY = 'addthis_block_widget_type';
   const BOOKMARK_URL_KEY = 'addthis_bookmark_url';
+  const CLICKBACK_TRACKING_ENABLED_KEY = 'addthis_clickback_tracking_enabled';
   const CO_BRAND_KEY = 'addthis_co_brand';
   const COMPLIANT_508_KEY = 'addthis_508_compliant';
   const CUSTOM_CONFIGURATION_CODE_ENABLED_KEY = 'addthis_custom_configuration_code_enabled';
@@ -36,7 +37,6 @@ class AddThis {
   const PROFILE_ID_KEY = 'addthis_profile_id';
   const SERVICES_CSS_URL_KEY = 'addthis_services_css_url';
   const SERVICES_JSON_URL_KEY = 'addthis_services_json_url';
-  const TRACK_CLICKBACK = 'addthis_track_clickback';
   const UI_HEADER_BACKGROUND_COLOR_KEY = 'addthis_ui_header_background_color';
   const UI_HEADER_COLOR_KEY = 'addthis_ui_header_color';
   const WIDGET_JS_URL_KEY = 'addthis_widget_js_url';
@@ -219,7 +219,7 @@ class AddThis {
   }
 
   public function isClickbackTrackingEnabled() {
-    return variable_get(self::TRACK_CLICKBACK, FALSE);
+    return variable_get(self::CLICKBACK_TRACKING_ENABLED_KEY, FALSE);
   }
 
   private function getLargeButtonWidgetMarkup($entity) {

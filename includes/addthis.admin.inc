@@ -77,7 +77,7 @@ function addthis_admin_settings_form($form_state) {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
-  $form['data_tracking_fieldset'][AddThis::TRACK_CLICKBACK] = array(
+  $form['data_tracking_fieldset'][AddThis::CLICKBACK_TRACKING_ENABLED_KEY] = array(
     '#type' => 'checkbox',
     '#title' => t('Track clickback'),
     '#description' => 'Check to allow AddThis to append a variable to your URLs upon sharing. AddThis will use this to track how many people come back to your content via links shared with AddThis. Highly recommended. Always global.',

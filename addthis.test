@@ -159,7 +159,7 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
     $edit[AddThis::COMPLIANT_508_KEY] = TRUE;
 
-    $edit[AddThis::TRACK_CLICKBACK] = TRUE;
+    $edit[AddThis::CLICKBACK_TRACKING_ENABLED_KEY] = TRUE;
 
     $numberOfPreferredServices = 5;
     $edit[AddThis::NUMBER_OF_PREFERRED_SERVICES_KEY] = $numberOfPreferredServices;
@@ -233,7 +233,7 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
   }
 
   private function addThisClickbackTrackingSettingShouldBeAbleToBeSaved() {
-    $this->assertFieldChecked('edit-addthis-track-clickback',
+    $this->assertFieldChecked('edit-addthis-clickback-tracking-enabled',
                               'AddThis clickback tracking setting should be able to be saved.');
   }
 
