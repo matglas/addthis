@@ -70,6 +70,20 @@ function addthis_admin_settings_form($form_state) {
     '#default_value' => AddThis::getInstance()->get508Compliant(),
     '#required' => FALSE,
   );
+
+  $form['data_tracking_fieldset'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Data tracking'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['data_tracking_fieldset'][AddThis::TRACK_CLICKBACK] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Track clickback'),
+    '#description' => 'Check to allow AddThis to append a variable to your URLs upon sharing. AddThis will use this to track how many people come back to your content via links shared with AddThis. Highly recommended. Always global.',
+    '#default_value' => AddThis::getInstance()->isClickbackTrackingEnabled(),
+    '#required' => FALSE,
+  );
   $form['service_urls_fieldset'] = array(
     '#type' => 'fieldset',
     '#title' => t('Service URLs'),

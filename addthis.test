@@ -159,6 +159,8 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
     $edit[AddThis::COMPLIANT_508_KEY] = TRUE;
 
+    $edit[AddThis::TRACK_CLICKBACK] = TRUE;
+
     $numberOfPreferredServices = 5;
     $edit[AddThis::NUMBER_OF_PREFERRED_SERVICES_KEY] = $numberOfPreferredServices;
 
@@ -191,6 +193,8 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $this->addThisLargeToolboxIconsSettingShouldBeAbleToBeSaved();
 
     $this->addThis508CompliantSettingShouldBeAbleToBeSaved();
+
+    $this->addThisClickbackTrackingSettingShouldBeAbleToBeSaved();
 
     $this->addThisNumberOfPreferredServicesShouldBeAbleToBeSaved($numberOfPreferredServices);
 
@@ -226,6 +230,11 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
   private function addThis508CompliantSettingShouldBeAbleToBeSaved() {
     $this->assertFieldChecked('edit-addthis-508-compliant',
                               'AddThis 508 compliant setting should be able to be saved.');
+  }
+
+  private function addThisClickbackTrackingSettingShouldBeAbleToBeSaved() {
+    $this->assertFieldChecked('edit-addthis-track-clickback',
+                              'AddThis clickback tracking setting should be able to be saved.');
   }
 
   private function addThisNumberOfPreferredServicesShouldBeAbleToBeSaved($numberOfPreferredServices) {

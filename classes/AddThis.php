@@ -36,6 +36,7 @@ class AddThis {
   const PROFILE_ID_KEY = 'addthis_profile_id';
   const SERVICES_CSS_URL_KEY = 'addthis_services_css_url';
   const SERVICES_JSON_URL_KEY = 'addthis_services_json_url';
+  const TRACK_CLICKBACK = 'addthis_track_clickback';
   const UI_HEADER_BACKGROUND_COLOR_KEY = 'addthis_ui_header_background_color';
   const UI_HEADER_COLOR_KEY = 'addthis_ui_header_color';
   const WIDGET_JS_URL_KEY = 'addthis_widget_js_url';
@@ -170,6 +171,7 @@ class AddThis {
         . $this->addThisConfigurationGenerator->generate('ui_header_backround', $this->getUiHeaderBackgroundColor())
         . $this->addThisConfigurationGenerator->generate('ui_cobrand', $this->getCoBrand())
         . $this->addThisConfigurationGenerator->generate('ui_508_compliant', $this->get508Compliant())
+        . $this->addThisConfigurationGenerator->generate('data_track_clickback', $this->isClickbackTrackingEnabled())
         . '}'
       ;
     }
@@ -214,6 +216,10 @@ class AddThis {
 
   public function get508Compliant() {
     return variable_get(self::COMPLIANT_508_KEY, FALSE);
+  }
+
+  public function isClickbackTrackingEnabled() {
+    return variable_get(self::TRACK_CLICKBACK, FALSE);
   }
 
   private function getLargeButtonWidgetMarkup($entity) {
