@@ -182,7 +182,7 @@ class AddThis {
   }
 
   public function areLargeIconsEnabled() {
-    return variable_get(self::LARGE_ICONS_ENABLED_KEY, TRUE);
+    return (boolean) variable_get(self::LARGE_ICONS_ENABLED_KEY, TRUE);
   }
 
   public function getUiHeaderColor() {
@@ -198,7 +198,7 @@ class AddThis {
   }
 
   public function isCustomConfigurationCodeEnabled() {
-    return variable_get(self::CUSTOM_CONFIGURATION_CODE_ENABLED_KEY, FALSE);
+    return (boolean) variable_get(self::CUSTOM_CONFIGURATION_CODE_ENABLED_KEY, FALSE);
   }
 
   public function getBaseWidgetJsUrl() {
@@ -218,15 +218,15 @@ class AddThis {
   }
 
   public function get508Compliant() {
-    return variable_get(self::COMPLIANT_508_KEY, FALSE);
+    return (boolean) variable_get(self::COMPLIANT_508_KEY, FALSE);
   }
 
   public function isClickbackTrackingEnabled() {
-    return variable_get(self::CLICKBACK_TRACKING_ENABLED_KEY, FALSE);
+    return (boolean) variable_get(self::CLICKBACK_TRACKING_ENABLED_KEY, FALSE);
   }
 
   public function isAddressbookEnabled() {
-    return variable_get(self::ADDRESSBOOK_ENABLED_KEY, FALSE);
+    return (boolean) variable_get(self::ADDRESSBOOK_ENABLED_KEY, FALSE);
   }
 
   private function getLargeButtonWidgetMarkup($entity) {

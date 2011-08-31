@@ -11,9 +11,19 @@ class AddThisConfigurationGenerator {
   }
 
   private function generateInternal($key, $value, $trailingComma = TRUE) {
-    if ($value == NULL) {
+    if (is_null($value)) {
       return '';
     }
-    return $key . ': ' . "'$value'" . ($trailingComma ? ', ' : '');
+    return $key . ': ' . $this->getValue($value) . ($trailingComma ? ', ' : '');
+  }
+
+  private function getValue($value) {
+    if (is_bool($value)) {
+      return $value ? 'true' : 'false';
+    } elseif (is_string($value)) {
+      return "'$value'";
+    } elseif (is_numeric($value)) {
+      return $value;
+    }
   }
 }
