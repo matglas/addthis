@@ -143,7 +143,9 @@ class AddThis {
   public function getServices() {
     $rows = array();
     $services = $this->json->decode($this->getServicesJsonUrl());
-    if (!empty($services)) {
+    if (empty($services)) {
+      drupal_set_message(t('AddThis services could not be loaded from ' . $this->getServicesJsonUrl()), 'warning');
+    } else {
       foreach ($services['data'] AS $service) {
         $serviceCode = check_plain($service['code']);
         $serviceName = check_plain($service['name']);
