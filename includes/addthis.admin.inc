@@ -150,6 +150,18 @@ function addthis_admin_settings_form($form_state) {
     '#default_value' => AddThis::getInstance()->isTwitterEnabled(),
     '#required' => FALSE,
   );
+  $form['google_plus_one_settings_fieldset'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Google +1 settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['google_plus_one_settings_fieldset'][AddThis::GOOGLE_PLUS_ONE_ENABLED_KEY] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Add Google +1 to toolbox'),
+    '#default_value' => AddThis::getInstance()->isGooglePlusOneEnabled(),
+    '#required' => FALSE,
+  );
   $form['service_urls_fieldset'] = array(
     '#type' => 'fieldset',
     '#title' => t('Service URLs'),

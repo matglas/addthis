@@ -35,6 +35,7 @@ class AddThis {
   const CUSTOM_CONFIGURATION_CODE_KEY = 'addthis_custom_configuration_code';
   const ENABLED_SERVICES_KEY = 'addthis_enabled_services';
   const FACEBOOK_LIKE_ENABLED_KEY = 'addthis_facebook_like_enabled';
+  const GOOGLE_PLUS_ONE_ENABLED_KEY = 'addthis_google_plus_one_enabled';
   const LARGE_ICONS_ENABLED_KEY = 'addthis_large_icons_enabled';
   const NUMBER_OF_PREFERRED_SERVICES_KEY = 'addthis_number_of_preferred_services';
   const OPEN_WINDOWS_ENABLED_KEY = 'addthis_open_windows_enabled';
@@ -209,6 +210,10 @@ class AddThis {
     return (boolean) variable_get(self::FACEBOOK_LIKE_ENABLED_KEY, FALSE);
   }
 
+  public function isGooglePlusOneEnabled() {
+    return (boolean) variable_get(self::GOOGLE_PLUS_ONE_ENABLED_KEY, FALSE);
+  }
+
   public function isTwitterEnabled() {
     return (boolean) variable_get(self::TWITTER_ENABLED_KEY, FALSE);
   }
@@ -300,6 +305,7 @@ class AddThis {
 
     $markup .= $this->getTwitterButtonMarkup();
     $markup .= $this->getFacebookLikeButtonMarkup();
+    $markup .= $this->getGooglePlusOneButtonMarkup();
     $markup .= '</div>';
 
     return $markup;
@@ -340,6 +346,14 @@ class AddThis {
     $markup = '';
     if ($this->isFacebookLikeEnabled()) {
       $markup = '<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>';
+    }
+    return $markup;
+  }
+
+  private function getGooglePlusOneButtonMarkup() {
+    $markup = '';
+    if ($this->isGooglePlusOneEnabled()) {
+      $markup = '<a class="addthis_button_google_plusone"></a>';
     }
     return $markup;
   }
