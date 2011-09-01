@@ -162,6 +162,8 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
     $edit[AddThis::FACEBOOK_LIKE_ENABLED_KEY] = TRUE;
 
+    $edit[AddThis::TWITTER_ENABLED_KEY] = TRUE;
+
     $numberOfPreferredServices = 5;
     $edit[AddThis::NUMBER_OF_PREFERRED_SERVICES_KEY] = $numberOfPreferredServices;
 
@@ -206,6 +208,8 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $this->addThisStandardCssEnabledSettingShouldBeAbleToBeSaved();
 
     $this->addThisFacebookLikeEnabledSettingShouldBeAbleToBeSaved();
+
+    $this->addThisTwitterEnabledSettingShouldBeAbleToBeSaved();
 
     $this->addThisNumberOfPreferredServicesShouldBeAbleToBeSaved($numberOfPreferredServices);
 
@@ -266,6 +270,11 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
   private function addThisFacebookLikeEnabledSettingShouldBeAbleToBeSaved() {
     $this->assertFieldChecked('edit-addthis-facebook-like-enabled',
                               'AddThis Facebook Like enabled setting should be able to be saved.');
+  }
+
+  private function addThisTwitterEnabledSettingShouldBeAbleToBeSaved() {
+    $this->assertFieldChecked('edit-addthis-twitter-enabled',
+                              'AddThis Twitter enabled setting should be able to be saved.');
   }
 
   private function addThisAddressbookEnabledSettingShouldBeAbleToBeSaved() {

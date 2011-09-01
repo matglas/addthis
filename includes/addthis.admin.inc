@@ -138,6 +138,18 @@ function addthis_admin_settings_form($form_state) {
     '#default_value' => AddThis::getInstance()->isFacebookLikeEnabled(),
     '#required' => FALSE,
   );
+  $form['twitter_settings_fieldset'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Twitter settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['twitter_settings_fieldset'][AddThis::TWITTER_ENABLED_KEY] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Add Twitter to toolbox'),
+    '#default_value' => AddThis::getInstance()->isTwitterEnabled(),
+    '#required' => FALSE,
+  );
   $form['service_urls_fieldset'] = array(
     '#type' => 'fieldset',
     '#title' => t('Service URLs'),

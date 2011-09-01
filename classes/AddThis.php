@@ -42,6 +42,7 @@ class AddThis {
   const SERVICES_CSS_URL_KEY = 'addthis_services_css_url';
   const SERVICES_JSON_URL_KEY = 'addthis_services_json_url';
   const STANDARD_CSS_ENABLED_KEY = 'addthis_standard_css_enabled';
+  const TWITTER_ENABLED_KEY = 'addthis_twitter_enabled';
   const UI_DELAY_KEY = 'addthis_ui_delay';
   const UI_HEADER_BACKGROUND_COLOR_KEY = 'addthis_ui_header_background_color';
   const UI_HEADER_COLOR_KEY = 'addthis_ui_header_color';
@@ -208,6 +209,10 @@ class AddThis {
     return (boolean) variable_get(self::FACEBOOK_LIKE_ENABLED_KEY, FALSE);
   }
 
+  public function isTwitterEnabled() {
+    return (boolean) variable_get(self::TWITTER_ENABLED_KEY, FALSE);
+  }
+
   public function getUiDelay() {
     return (int) check_plain(variable_get(self::UI_DELAY_KEY));
   }
@@ -293,6 +298,7 @@ class AddThis {
       $markup .= "<a class=\"addthis_button_preferred_$i\"></a>";
     }
 
+    $markup .= $this->getTwitterButtonMarkup();
     $markup .= $this->getFacebookLikeButtonMarkup();
     $markup .= '</div>';
 
@@ -320,6 +326,14 @@ class AddThis {
 
   private function getLargeButtonsClass() {
     return $this->areLargeIconsEnabled() ? ' addthis_32x32_style ' : '';
+  }
+
+  private function getTwitterButtonMarkup() {
+    $markup = '';
+    if ($this->isTwitterEnabled()) {
+      $markup = '<a class="addthis_button_tweet"></a>';
+    }
+    return $markup;
   }
 
   private function getFacebookLikeButtonMarkup() {
