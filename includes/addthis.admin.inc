@@ -126,6 +126,18 @@ function addthis_admin_settings_form($form_state) {
     '#default_value' => AddThis::getInstance()->isAddressbookEnabled(),
     '#required' => FALSE,
   );
+  $form['facebook_settings_fieldset'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Facebook settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['facebook_settings_fieldset'][AddThis::FACEBOOK_LIKE_ENABLED_KEY] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Add Facebook Like to toolbox'),
+    '#default_value' => AddThis::getInstance()->isFacebookLikeEnabled(),
+    '#required' => FALSE,
+  );
   $form['service_urls_fieldset'] = array(
     '#type' => 'fieldset',
     '#title' => t('Service URLs'),

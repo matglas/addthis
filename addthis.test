@@ -160,6 +160,8 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
     $edit[AddThis::STANDARD_CSS_ENABLED_KEY] = TRUE;
 
+    $edit[AddThis::FACEBOOK_LIKE_ENABLED_KEY] = TRUE;
+
     $numberOfPreferredServices = 5;
     $edit[AddThis::NUMBER_OF_PREFERRED_SERVICES_KEY] = $numberOfPreferredServices;
 
@@ -200,6 +202,10 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $this->addThisClickToOpenCompactMenuEnabledSettingShouldBeAbleToBeSaved();
 
     $this->addThisOpenWindowsEnabledSettingShouldBeAbleToBeSaved();
+
+    $this->addThisStandardCssEnabledSettingShouldBeAbleToBeSaved();
+
+    $this->addThisFacebookLikeEnabledSettingShouldBeAbleToBeSaved();
 
     $this->addThisNumberOfPreferredServicesShouldBeAbleToBeSaved($numberOfPreferredServices);
 
@@ -255,6 +261,11 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
   private function addThisStandardCssEnabledSettingShouldBeAbleToBeSaved() {
     $this->assertFieldChecked('edit-addthis-open-windows-enabled',
                               'AddThis open windows setting should be able to be saved.');
+  }
+
+  private function addThisFacebookLikeEnabledSettingShouldBeAbleToBeSaved() {
+    $this->assertFieldChecked('edit-addthis-facebook-like-enabled',
+                              'AddThis Facebook Like enabled setting should be able to be saved.');
   }
 
   private function addThisAddressbookEnabledSettingShouldBeAbleToBeSaved() {

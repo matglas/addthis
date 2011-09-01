@@ -34,6 +34,7 @@ class AddThis {
   const CUSTOM_CONFIGURATION_CODE_ENABLED_KEY = 'addthis_custom_configuration_code_enabled';
   const CUSTOM_CONFIGURATION_CODE_KEY = 'addthis_custom_configuration_code';
   const ENABLED_SERVICES_KEY = 'addthis_enabled_services';
+  const FACEBOOK_LIKE_ENABLED_KEY = 'addthis_facebook_like_enabled';
   const LARGE_ICONS_ENABLED_KEY = 'addthis_large_icons_enabled';
   const NUMBER_OF_PREFERRED_SERVICES_KEY = 'addthis_number_of_preferred_services';
   const OPEN_WINDOWS_ENABLED_KEY = 'addthis_open_windows_enabled';
@@ -203,6 +204,10 @@ class AddThis {
     return (boolean) variable_get(self::OPEN_WINDOWS_ENABLED_KEY, FALSE);
   }
 
+  public function isFacebookLikeEnabled() {
+    return (boolean) variable_get(self::FACEBOOK_LIKE_ENABLED_KEY, FALSE);
+  }
+
   public function getUiDelay() {
     return (int) check_plain(variable_get(self::UI_DELAY_KEY));
   }
@@ -288,6 +293,7 @@ class AddThis {
       $markup .= "<a class=\"addthis_button_preferred_$i\"></a>";
     }
 
+    $markup .= $this->getFacebookLikeButtonMarkup();
     $markup .= '</div>';
 
     return $markup;
@@ -314,6 +320,14 @@ class AddThis {
 
   private function getLargeButtonsClass() {
     return $this->areLargeIconsEnabled() ? ' addthis_32x32_style ' : '';
+  }
+
+  private function getFacebookLikeButtonMarkup() {
+    $markup = '';
+    if ($this->isFacebookLikeEnabled()) {
+      $markup = '<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>';
+    }
+    return $markup;
   }
 
   private function getServiceNamesAsCommaSeparatedString() {
