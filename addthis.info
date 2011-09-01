@@ -12,5 +12,5 @@ files[] = includes/addthis.block.inc
 files[] = includes/addthis.field.inc
 files[] = classes/AddThis.php
 files[] = classes/AddThisConfigurationGenerator.php
-files[] = classes/Json.php
-files[] = classes/MarkupGenerator.php
+files[] = classes/AddThisJson.php
+files[] = classes/AddThisMarkupGenerator.php

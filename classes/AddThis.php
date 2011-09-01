@@ -69,12 +69,12 @@ class AddThis {
   private static $instance;
 
   /* @var AddThisConfigurationGenerator */
-  private $addThisConfigurationGenerator;
+  private $configurationGenerator;
 
-  /* @var Json */
+  /* @var AddThisJson */
   private $json;
 
-  /* @var MarkupGenerator */
+  /* @var AddThisMarkupGenerator */
   private $markupGenerator;
 
   /**
@@ -84,22 +84,22 @@ class AddThis {
     if (!isset(self::$instance)) {
       $addThis = new AddThis();
       $addThis->setAddThisConfigurationGenerator(new AddThisConfigurationGenerator());
-      $addThis->setJson(new Json());
-      $addThis->setMarkupGenerator(new MarkupGenerator());
+      $addThis->setJson(new AddThisJson());
+      $addThis->setMarkupGenerator(new AddThisMarkupGenerator());
       self::$instance = $addThis;
     }
     return self::$instance;
   }
 
-  public function setAddThisConfigurationGenerator(AddThisConfigurationGenerator $addThisConfigurationGenerator) {
-    $this->addThisConfigurationGenerator = $addThisConfigurationGenerator;
+  public function setAddThisConfigurationGenerator(AddThisConfigurationGenerator $configurationGenerator) {
+    $this->configurationGenerator = $configurationGenerator;
   }
 
-  public function setJson(Json $json) {
+  public function setJson(AddThisJson $json) {
     $this->json = $json;
   }
 
-  public function setMarkupGenerator(MarkupGenerator $markupGenerator) {
+  public function setMarkupGenerator(AddThisMarkupGenerator $markupGenerator) {
     $this->markupGenerator = $markupGenerator;
   }
 
@@ -177,17 +177,17 @@ class AddThis {
     } else {
       $enabledServices = $this->getServiceNamesAsCommaSeparatedString() . 'more';
       $javascript = 'var addthis_config = {'
-        . $this->addThisConfigurationGenerator->generate('services_compact', $enabledServices)
-        . $this->addThisConfigurationGenerator->generate('data_track_clickback', $this->isClickbackTrackingEnabled())
-        . $this->addThisConfigurationGenerator->generate('ui_508_compliant', $this->get508Compliant())
-        . $this->addThisConfigurationGenerator->generate('ui_click', $this->isClickToOpenCompactMenuEnabled())
-        . $this->addThisConfigurationGenerator->generate('ui_cobrand', $this->getCoBrand())
-        . $this->addThisConfigurationGenerator->generate('ui_delay', $this->getUiDelay())
-        . $this->addThisConfigurationGenerator->generate('ui_header_background', $this->getUiHeaderBackgroundColor())
-        . $this->addThisConfigurationGenerator->generate('ui_header_color', $this->getUiHeaderColor())
-        . $this->addThisConfigurationGenerator->generate('ui_open_windows', $this->isOpenWindowsEnabled())
-        . $this->addThisConfigurationGenerator->generate('ui_use_css', $this->isStandardCssEnabled())
-        . $this->addThisConfigurationGenerator->generateWithoutTrailingComma('ui_use_addressbook', $this->isAddressbookEnabled())
+        . $this->configurationGenerator->generate('services_compact', $enabledServices)
+        . $this->configurationGenerator->generate('data_track_clickback', $this->isClickbackTrackingEnabled())
+        . $this->configurationGenerator->generate('ui_508_compliant', $this->get508Compliant())
+        . $this->configurationGenerator->generate('ui_click', $this->isClickToOpenCompactMenuEnabled())
+        . $this->configurationGenerator->generate('ui_cobrand', $this->getCoBrand())
+        . $this->configurationGenerator->generate('ui_delay', $this->getUiDelay())
+        . $this->configurationGenerator->generate('ui_header_background', $this->getUiHeaderBackgroundColor())
+        . $this->configurationGenerator->generate('ui_header_color', $this->getUiHeaderColor())
+        . $this->configurationGenerator->generate('ui_open_windows', $this->isOpenWindowsEnabled())
+        . $this->configurationGenerator->generate('ui_use_css', $this->isStandardCssEnabled())
+        . $this->configurationGenerator->generateWithoutTrailingComma('ui_use_addressbook', $this->isAddressbookEnabled())
         . '}'
       ;
     }

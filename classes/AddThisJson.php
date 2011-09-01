@@ -6,7 +6,7 @@
  * @author Jani Palsamäki
  */
  
-class Json {
+class AddThisJson {
 
   public function decode($url) {
     $response = drupal_http_request($url);

@@ -57,12 +57,14 @@ function addthis_field_formatter_info() {
  * Implements hook_field_formatter_view().
  */
 function addthis_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-  // @todo Write explaining comments
+  // We have only one item to display, the share item.
+  // Get the markup for the share and add that to the $element[0] to display.
   $element = array();
-  $widgetType = $display['type'];
-  $markup = AddThis::getInstance()->getWidgetMarkup($widgetType, $entity);
-  // @todo check for index 0 and add markup.
-  $element[0] = array('#markup' => $markup);
+  $widget_type = $display['type'];
+  $markup = AddThis::getInstance()->getWidgetMarkup($widget_type, $entity);
+  if (!isset($element[0])) {
+    $element[0] = array('#markup' => $markup);
+  }
   return $element;
 }
 
@@ -70,7 +72,9 @@ function addthis_field_formatter_view($entity_type, $entity, $field, $instance, 
  * Implements hook_field_presave().
  */
 function addthis_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  // @todo Write explaining comments
+  // We don't add items in the instance form therefore we check for a item
+  // if not there we (which is the case almost always) we add it. This item
+  // is need for the field_formatter in $items to attach a renderable item to.
   if (count($items) == 0) {
     $items += array(array('value' => AddThis::WIDGET_TYPE_DISABLED));
   }

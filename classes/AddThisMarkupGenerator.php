@@ -6,7 +6,7 @@
  * @author Jani Palsamäki
  */
  
-class MarkupGenerator {
+class AddThisMarkupGenerator {
 
   public function generateAttribute($name, $value) {
     return $name != NULL && $value != NULL ? check_plain($name) . '="' . $value  . '"' : '';

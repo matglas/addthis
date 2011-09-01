@@ -9,21 +9,21 @@
  * Implements hook_block_info().
  */
 function addthis_block_info() {
-  $blockInfo = array();
-  $blockInfo[AddThis::BLOCK_NAME] = array(
+  $block_info = array();
+  $block_info[AddThis::BLOCK_NAME] = array(
     'info' => t('An AddThis-block.'),
     'cache' => DRUPAL_NO_CACHE,
   );
-  return $blockInfo;
+  return $block_info;
 }
 
 /**
  * Implements hook_block_view().
  */
-function addthis_block_view($blockName = '') {
-  if ($blockName == AddThis::BLOCK_NAME) {
-    $widgetType = AddThis::getInstance()->getBlockWidgetType();
-    $markup = AddThis::getInstance()->getWidgetMarkup($widgetType);
+function addthis_block_view($block_name = '') {
+  if ($block_name == AddThis::BLOCK_NAME) {
+    $widget_type = AddThis::getInstance()->getBlockWidgetType();
+    $markup = AddThis::getInstance()->getWidgetMarkup($widget_type);
     return array(
       'subject' => '',
       'content' => $markup,
