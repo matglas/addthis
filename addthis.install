@@ -35,6 +35,7 @@ function addthis_uninstall() {
   variable_del(AddThis::BLOCK_WIDGET_TYPE_KEY);
   variable_del(AddThis::BOOKMARK_URL_KEY);
   variable_del(AddThis::CLICKBACK_TRACKING_ENABLED_KEY);
+  variable_del(AddThis::CLICK_TO_OPEN_COMPACT_MENU_ENABLED_KEY);
   variable_del(AddThis::CO_BRAND_KEY);
   variable_del(AddThis::COMPLIANT_508_KEY);
   variable_del(AddThis::CUSTOM_CONFIGURATION_CODE_ENABLED_KEY);
@@ -42,9 +43,12 @@ function addthis_uninstall() {
   variable_del(AddThis::ENABLED_SERVICES_KEY);
   variable_del(AddThis::LARGE_ICONS_ENABLED_KEY);
   variable_del(AddThis::NUMBER_OF_PREFERRED_SERVICES_KEY);
+  variable_del(AddThis::OPEN_WINDOWS_ENABLED_KEY);
   variable_del(AddThis::PROFILE_ID_KEY);
   variable_del(AddThis::SERVICES_CSS_URL_KEY);
   variable_del(AddThis::SERVICES_JSON_URL_KEY);
+  variable_del(AddThis::STANDARD_CSS_ENABLED_KEY);
+  variable_del(AddThis::UI_DELAY_KEY);
   variable_del(AddThis::UI_HEADER_BACKGROUND_COLOR_KEY);
   variable_del(AddThis::UI_HEADER_COLOR_KEY);
   variable_del(AddThis::WIDGET_JS_URL_KEY);

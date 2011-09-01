@@ -29,6 +29,27 @@ function addthis_admin_settings_form($form_state) {
     '#default_value' => AddThis::getInstance()->areLargeIconsEnabled(),
     '#required' => FALSE,
   );
+  $form['visual_settings_fieldset'][AddThis::CLICK_TO_OPEN_COMPACT_MENU_ENABLED_KEY] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Click to open compact menu'),
+    '#description' => t('If checked, the compact menu will never appear upon mousing over the regular button. Instead, it will be revealed upon clicking the button.'),
+    '#default_value' => AddThis::getInstance()->isClickToOpenCompactMenuEnabled(),
+    '#required' => FALSE,
+  );
+  $form['visual_settings_fieldset'][AddThis::OPEN_WINDOWS_ENABLED_KEY] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use pop-up windows'),
+    '#description' => t('If true, all shares will open in a new pop-up window instead of a new tab or regular browser window.'),
+    '#default_value' => AddThis::getInstance()->isOpenWindowsEnabled(),
+    '#required' => FALSE,
+  );
+  $form['visual_settings_fieldset'][AddThis::STANDARD_CSS_ENABLED_KEY] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use standard AddThis stylesheet'),
+    '#description' => t('If not checked, AddThis will not load standard CSS file, allowing you to style everything yourself without incurring the cost of an additonal load. Always global; must be defined in a page-level global variable.'),
+    '#default_value' => AddThis::getInstance()->isStandardCssEnabled(),
+    '#required' => FALSE,
+  );
   $form['visual_settings_fieldset'][AddThis::NUMBER_OF_PREFERRED_SERVICES_KEY] = array(
     '#type' => 'textfield',
     '#title' => t('Number of preferred service icons displayed when using the toolbox widget'),
@@ -36,6 +57,15 @@ function addthis_admin_settings_form($form_state) {
     '#required' => FALSE,
     '#size' => 1,
     '#maxlength' => 1,
+  );
+  $form['visual_settings_fieldset'][AddThis::UI_DELAY_KEY] = array(
+    '#type' => 'textfield',
+    '#title' => t('UI delay'),
+    '#description' => t('Delay, in milliseconds, before compact menu appears when mousing over a regular button. Capped at 500 ms.'),
+    '#default_value' => AddThis::getInstance()->getUiDelay(),
+    '#required' => FALSE,
+    '#size' => 3,
+    '#maxlength' => 3,
   );
   $form['visual_settings_fieldset'][AddThis::UI_HEADER_COLOR_KEY] = array(
     '#type' => 'textfield',

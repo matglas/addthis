@@ -26,7 +26,7 @@ For link sharing statistics registration at http://addthis.com/ is required, but
 
 -- CONFIGURATION --
 
-TODO, will be completed before 3.x release.
+Use the admin configuration page to configure settings.
 
 
 

@@ -28,6 +28,7 @@ class AddThis {
   const BLOCK_WIDGET_TYPE_KEY = 'addthis_block_widget_type';
   const BOOKMARK_URL_KEY = 'addthis_bookmark_url';
   const CLICKBACK_TRACKING_ENABLED_KEY = 'addthis_clickback_tracking_enabled';
+  const CLICK_TO_OPEN_COMPACT_MENU_ENABLED_KEY = 'addthis_click_to_open_compact_menu_enabled';
   const CO_BRAND_KEY = 'addthis_co_brand';
   const COMPLIANT_508_KEY = 'addthis_508_compliant';
   const CUSTOM_CONFIGURATION_CODE_ENABLED_KEY = 'addthis_custom_configuration_code_enabled';
@@ -35,9 +36,12 @@ class AddThis {
   const ENABLED_SERVICES_KEY = 'addthis_enabled_services';
   const LARGE_ICONS_ENABLED_KEY = 'addthis_large_icons_enabled';
   const NUMBER_OF_PREFERRED_SERVICES_KEY = 'addthis_number_of_preferred_services';
+  const OPEN_WINDOWS_ENABLED_KEY = 'addthis_open_windows_enabled';
   const PROFILE_ID_KEY = 'addthis_profile_id';
   const SERVICES_CSS_URL_KEY = 'addthis_services_css_url';
   const SERVICES_JSON_URL_KEY = 'addthis_services_json_url';
+  const STANDARD_CSS_ENABLED_KEY = 'addthis_standard_css_enabled';
+  const UI_DELAY_KEY = 'addthis_ui_delay';
   const UI_HEADER_BACKGROUND_COLOR_KEY = 'addthis_ui_header_background_color';
   const UI_HEADER_COLOR_KEY = 'addthis_ui_header_color';
   const WIDGET_JS_URL_KEY = 'addthis_widget_js_url';
@@ -169,11 +173,15 @@ class AddThis {
       $enabledServices = $this->getServiceNamesAsCommaSeparatedString() . 'more';
       $javascript = 'var addthis_config = {'
         . $this->addThisConfigurationGenerator->generate('services_compact', $enabledServices)
-        . $this->addThisConfigurationGenerator->generate('ui_header_color', $this->getUiHeaderColor())
-        . $this->addThisConfigurationGenerator->generate('ui_header_background', $this->getUiHeaderBackgroundColor())
-        . $this->addThisConfigurationGenerator->generate('ui_cobrand', $this->getCoBrand())
-        . $this->addThisConfigurationGenerator->generate('ui_508_compliant', $this->get508Compliant())
         . $this->addThisConfigurationGenerator->generate('data_track_clickback', $this->isClickbackTrackingEnabled())
+        . $this->addThisConfigurationGenerator->generate('ui_508_compliant', $this->get508Compliant())
+        . $this->addThisConfigurationGenerator->generate('ui_click', $this->isClickToOpenCompactMenuEnabled())
+        . $this->addThisConfigurationGenerator->generate('ui_cobrand', $this->getCoBrand())
+        . $this->addThisConfigurationGenerator->generate('ui_delay', $this->getUiDelay())
+        . $this->addThisConfigurationGenerator->generate('ui_header_background', $this->getUiHeaderBackgroundColor())
+        . $this->addThisConfigurationGenerator->generate('ui_header_color', $this->getUiHeaderColor())
+        . $this->addThisConfigurationGenerator->generate('ui_open_windows', $this->isOpenWindowsEnabled())
+        . $this->addThisConfigurationGenerator->generate('ui_use_css', $this->isStandardCssEnabled())
         . $this->addThisConfigurationGenerator->generateWithoutTrailingComma('ui_use_addressbook', $this->isAddressbookEnabled())
         . '}'
       ;
@@ -185,12 +193,28 @@ class AddThis {
     return (boolean) variable_get(self::LARGE_ICONS_ENABLED_KEY, TRUE);
   }
 
+  public function isClickToOpenCompactMenuEnabled() {
+    return (boolean) variable_get(self::CLICK_TO_OPEN_COMPACT_MENU_ENABLED_KEY, FALSE);
+  }
+
+  public function isOpenWindowsEnabled() {
+    return (boolean) variable_get(self::OPEN_WINDOWS_ENABLED_KEY, FALSE);
+  }
+
+  public function getUiDelay() {
+    return (int) check_plain(variable_get(self::UI_DELAY_KEY));
+  }
+
   public function getUiHeaderColor() {
     return check_plain(variable_get(self::UI_HEADER_COLOR_KEY));
   }
 
   public function getUiHeaderBackgroundColor() {
     return check_plain(variable_get(self::UI_HEADER_BACKGROUND_COLOR_KEY));
+  }
+
+  public function isStandardCssEnabled() {
+    return (boolean) variable_get(self::STANDARD_CSS_ENABLED_KEY, TRUE);
   }
 
   public function getCustomConfigurationCode() {

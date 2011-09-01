@@ -134,6 +134,9 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $widgetJsUrl = AddThis::DEFAULT_WIDGET_JS_URL;
     $edit[AddThis::WIDGET_JS_URL_KEY] = $widgetJsUrl;
 
+    $uiDelay = 400;
+    $edit[AddThis::UI_DELAY_KEY] = $uiDelay;
+
     $uiHeaderBackgroundColor = '#000000';
     $edit[AddThis::UI_HEADER_BACKGROUND_COLOR_KEY] = $uiHeaderBackgroundColor;
 
@@ -150,6 +153,12 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $edit[AddThis::CLICKBACK_TRACKING_ENABLED_KEY] = TRUE;
 
     $edit[AddThis::ADDRESSBOOK_ENABLED_KEY] = TRUE;
+
+    $edit[AddThis::CLICK_TO_OPEN_COMPACT_MENU_ENABLED_KEY] = TRUE;
+
+    $edit[AddThis::OPEN_WINDOWS_ENABLED_KEY] = TRUE;
+
+    $edit[AddThis::STANDARD_CSS_ENABLED_KEY] = TRUE;
 
     $numberOfPreferredServices = 5;
     $edit[AddThis::NUMBER_OF_PREFERRED_SERVICES_KEY] = $numberOfPreferredServices;
@@ -174,6 +183,8 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
     $this->addThisWidgetJsUrlShouldBeAbleToBeSaved($widgetJsUrl);
 
+    $this->addThisUiDelayShouldBeAbleToBeSaved($uiDelay);
+
     $this->addThisUiHeaderBackgroundColorShouldBeAbleToBeSaved($uiHeaderBackgroundColor);
 
     $this->addThisUiHeaderColorShouldBeAbleToBeSaved($uiHeaderColor);
@@ -185,6 +196,10 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $this->addThis508CompliantSettingShouldBeAbleToBeSaved();
 
     $this->addThisClickbackTrackingEnabledSettingShouldBeAbleToBeSaved();
+
+    $this->addThisClickToOpenCompactMenuEnabledSettingShouldBeAbleToBeSaved();
+
+    $this->addThisOpenWindowsEnabledSettingShouldBeAbleToBeSaved();
 
     $this->addThisNumberOfPreferredServicesShouldBeAbleToBeSaved($numberOfPreferredServices);
 
@@ -227,6 +242,21 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
                               'AddThis clickback tracking enabled setting should be able to be saved.');
   }
 
+  private function addThisClickToOpenCompactMenuEnabledSettingShouldBeAbleToBeSaved() {
+    $this->assertFieldChecked('edit-addthis-click-to-open-compact-menu-enabled',
+                              'AddThis click to open compact menu setting should be able to be saved.');
+  }
+
+  private function addThisOpenWindowsEnabledSettingShouldBeAbleToBeSaved() {
+    $this->assertFieldChecked('edit-addthis-open-windows-enabled',
+                              'AddThis open windows setting should be able to be saved.');
+  }
+
+  private function addThisStandardCssEnabledSettingShouldBeAbleToBeSaved() {
+    $this->assertFieldChecked('edit-addthis-open-windows-enabled',
+                              'AddThis open windows setting should be able to be saved.');
+  }
+
   private function addThisAddressbookEnabledSettingShouldBeAbleToBeSaved() {
     $this->assertFieldChecked('edit-addthis-addressbook-enabled',
                               'AddThis addressbook enabled setting should be able to be saved.');
@@ -250,6 +280,11 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
   private function addThisUiHeaderColorShouldBeAbleToBeSaved($uiHeaderColor) {
     $this->assertFieldByName(AddThis::UI_HEADER_COLOR_KEY, $uiHeaderColor,
                              'AddThis UI header color should be able to be saved.');
+  }
+
+  private function addThisUiDelayShouldBeAbleToBeSaved($uiDelay) {
+    $this->assertFieldByName(AddThis::UI_DELAY_KEY, $uiDelay,
+                             'AddThis UI delay should be able to be saved.');
   }
 
   private function addThisUiHeaderBackgroundColorShouldBeAbleToBeSaved($uiHeaderBackgroundColor) {
