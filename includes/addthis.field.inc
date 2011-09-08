@@ -62,8 +62,13 @@ function addthis_field_formatter_view($entity_type, $entity, $field, $instance, 
   $element = array();
   $widget_type = $display['type'];
   $markup = AddThis::getInstance()->getWidgetMarkup($widget_type, $entity);
-  if (!isset($element[0])) {
+  if (!isset($element[0]) && !is_array($markup)) {
+    // Supporting #markup is for legacy in this module.
+    // We move towards using the render array.
     $element[0] = array('#markup' => $markup);
+  } 
+  elseif (!isset($element[0])) {
+    $element[0] = $markup;
   }
   return $element;
 }

@@ -92,3 +92,70 @@ function addthis_form_alter(&$form, &$form_state, $form_id) {
     $form['instance']['default_value_widget']['#access'] = FALSE;
   }
 }
+
+/**
+ * Implementation of hook_theme().
+ */
+function addthis_theme($existing, $type, $theme, $path) {
+  return array(
+    'addthis_element' => array(
+      'render element' => 'addthis_element'
+    )
+  );
+}
+
+/**
+ * Theme the elements that are created in the AddThis module. This is
+ * created with hook_addthis_element.
+ */
+function theme_addthis_element($variables) {
+  // Get the element
+  $element = $variables['addthis_element'];
+
+  // Refactor the classes in the array #classes if there.
+  if (isset($element['#classes']) && count($element['#classes']) > 0) {
+    $att_class = implode(' ', $element['#classes']);
+    if (isset($element['#attributes']['class'])) {
+      $att_class = trim($element['#attributes']['class']) . ' ' . $att_class;
+    }
+    // Finally implode it and add it to or override it in the attributes.
+    $element['#attributes']['class'] = $att_class;
+  }
+
+  // When rendered children are passed put them in the value
+  // to wrap the element we are rendering. If #children is there it means
+  // we are called as theme_wrapper.
+  if (isset($element['#children']) && !empty($element['#children'])) {
+    $element['#value'] = $element['#children'];
+  }
+
+  // Set default if not there
+  if (!isset($element['#tag_empty'])) {
+    $element['#tag_empty'] = FALSE;
+  }
+  // When the #theme_wrappers is set we can't render a empty tag.
+  // Or if #tag_empty is set to FALSE.
+  if (isset($element['#theme_wrappers']) && !isset($element['#value']) ||
+      isset($element['#tag_empty']) && $element['#tag_empty'] === FALSE && !isset($element['#value'])) {
+    $element['#value'] = '';
+    // Note that when #theme is set and not #theme_wrappers the tag will
+    // always be rendered not empty unless #tag_empty is set to TRUE.
+  }
+
+  // Render the html
+  if (!isset($element['#value'])) {
+    return '<' . $element['#tag'] . drupal_attributes($element['#attributes']) . " />\n";
+  }
+  else {
+    $output = '<' . $element['#tag'] . drupal_attributes($element['#attributes']) . '>';
+    if (isset($element['#value_prefix'])) {
+      $output .= $element['#value_prefix'];
+    }
+    $output .= $element['#value'];
+    if (isset($element['#value_suffix'])) {
+      $output .= $element['#value_suffix'];
+    }
+    $output .= '</' . $element['#tag'] . ">\n";
+    return $output;
+  }
+}

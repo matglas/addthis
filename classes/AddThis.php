@@ -271,63 +271,163 @@ class AddThis {
   }
 
   private function getLargeButtonWidgetMarkup($entity) {
-    return '<a class="addthis_button" '
-           . $this->getAddThisAttributesMarkup($entity)
-           . $this->markupGenerator->generateAttribute('href', self::getFullBookmarkUrl())
-           . '><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="'
-           . t('Bookmark and Share')
-           . '" style="border:0"/></a>';
+    // This is a render array representation.
+    $element = array(
+      // Note that theme_wrappers needs an array.
+      '#theme_wrappers' => array('addthis_element'),
+      '#tag' => 'a',
+      '#classes' => array(
+          'addthis_button',
+      ),
+      '#attributes' => array(
+        'href' => self::getFullBookmarkUrl(),
+      )
+    );
+    $element['#attributes'] += $this->getAddThisAttributesMarkup($entity);
+
+    // Here we start the children of the a element.
+    $image = array(
+        '#theme' => 'addthis_element',
+        '#tag' => 'img',
+        '#tag_empty' => TRUE,
+        '#classes' => array(
+        ),
+        '#attributes' => array(
+          'src' => 'http://s7.addthis.com/static/btn/v2/lg-share-en.gif',
+          'width' => '125',
+          'height' => '16',
+          'alt' => t('Bookmark and Share'),
+          'style' => 'border:0;'
+        )
+      );
+    $element[] = $image;
+
+    return $element;
   }
 
   private function getCompactButtonWidgetMarkup($entity) {
-    return '<a class="addthis_button" '
-           . self::getAddThisAttributesMarkup($entity)
-           . $this->markupGenerator->generateAttribute('href', $this->getFullBookmarkUrl())
-           . '><img src="http://s7.addthis.com/static/btn/sm-share-en.gif" width="83" height="16" alt="'
-           . t('Bookmark and Share')
-           . '" style="border:0"/></a>';
+    // Create wrapper element a
+    $element = array(
+      '#theme_wrappers' => array('addthis_element'),
+      '#tag' => 'a',
+      '#classes' => array(
+        'addthis_button'
+      ),
+      '#attributes' => array(
+        'href' => $this->getFullBookmarkUrl()
+      )
+    );
+    $element['#attributes'] += self::getAddThisAttributesMarkup($entity);
+
+    // Create img button
+    $image = array(
+      '#theme' => 'addthis_element',
+      '#tag' => 'img',
+      '#tag_empty' => TRUE,
+      '#attributes' => array(
+        'src' => 'http://s7.addthis.com/static/btn/sm-share-en.gif',
+        'width' => '83',
+        'height' => '16',
+        'alt' => t('Bookmark and Share'),
+        'style' => 'border:0;',
+      ),
+    );
+    $element[] = $image;
+
+    // Return element to render.
+    return $element;
   }
 
   private function getToolboxWidgetMarkup($entity) {
-    $markup = '<div class="addthis_toolbox addthis_default_style '
-           . $this->getLargeButtonsClass()
-           . '" '
-           . $this->getAddThisAttributesMarkup($entity)
-           . '><a '
-           . $this->markupGenerator->generateAttribute('href', $this->getFullBookmarkUrl())
-           . ' class="addthis_button_compact"></a>';
+    // Creating render array for the widget.
+    $element = array(
+      // We use #theme_wrappers to include the rendered children otherwise
+      // we only get a non empty element like <div></div>.
+      '#theme_wrappers' => array('addthis_element'),
+      '#tag' => 'div',
+      '#classes' => array(
+        'addthis_toolbox',
+        'addthis_default_style',
+        trim($this->getLargeButtonsClass()),
+      ),
+      '#attributes' => array(),
+    );
+    $element['#attributes'] += $this->getAddThisAttributesMarkup($entity);
 
+    // All service elements
+    $items = array();
+    $items[] = array(
+      '#theme' => 'addthis_element',
+      '#tag' => 'a',
+      '#attributes' => array(
+        'href' => $this->getFullBookmarkUrl()
+      ),
+      '#classes' => array(
+        'addthis_button_compact'
+      ),
+    );
     $numberOfPreferredServices = self::getNumberOfPreferredServices();
-
     for ($i = 1; $i <= $numberOfPreferredServices; $i++) {
-      $markup .= "<a class=\"addthis_button_preferred_$i\"></a>";
+      $items[] = array(
+        '#theme' => 'addthis_element',
+        '#tag' => 'a',
+        '#attributes' => array(
+          'href' => $this->getFullBookmarkUrl()
+        ),
+        '#classes' => array(
+          ('addthis_button_preferred_' . $i),
+        ),
+      );
     }
+    $items[] = $this->getTwitterButtonMarkup();
+    $items[] = $this->getFacebookLikeButtonMarkup();
+    $items[] = $this->getGooglePlusOneButtonMarkup();
+    $element += $items;
 
-    $markup .= $this->getTwitterButtonMarkup();
-    $markup .= $this->getFacebookLikeButtonMarkup();
-    $markup .= $this->getGooglePlusOneButtonMarkup();
-    $markup .= '</div>';
-
-    return $markup;
+    return $element;
   }
 
   private function getSharecountWidgetMarkup($entity) {
-    return '<div class="addthis_toolbox addthis_default_style"><a class="addthis_counter" '
-           . $this->getAddThisAttributesMarkup($entity)
-           . '></a></div>';
+    $element = array(
+      '#theme_wrappers' => array('addthis_element'),
+      '#tag' => 'div',
+      '#classes' => array(
+        'addthis_toolbox',
+        'addthis_default_style'
+      ),
+    );
+    // <a> element with counter
+    $item = array(
+      '#theme' => 'addthis_element',
+      '#tag' => 'a',
+      '#classes' => array(
+        'addthis_counter'
+      ),
+      '#attributes' => array(),
+    );
+    $item['#attributes'] += $this->getAddThisAttributesMarkup($entity);
+    $element[] = $item;
+
+    return $element;
   }
 
   private function getAddThisAttributesMarkup($entity) {
     if (is_object($entity)) {
-      return $this->getAddThisTitleAttributeMarkup($entity) . ' ';
+      $attributes = array();
+
+      // Add title
+      $attributes += $this->getAddThisTitleAttributeMarkup($entity);
+
+      // Return the array with attributes
+      return $attributes;
     }
-    return '';
+    return array();
   }
 
   private function getAddThisTitleAttributeMarkup($entity) {
-    return $this->markupGenerator->generateAttribute(
-      self::TITLE_ATTRIBUTE, drupal_get_title() . ' - ' . check_plain($entity->title)
-    );
+    return array(
+      self::TITLE_ATTRIBUTE => (drupal_get_title() . ' - ' . check_plain($entity->title)) 
+      );
   }
 
   private function getLargeButtonsClass() {
@@ -335,27 +435,48 @@ class AddThis {
   }
 
   private function getTwitterButtonMarkup() {
-    $markup = '';
+    $element = NULL;
     if ($this->isTwitterEnabled()) {
-      $markup = '<a class="addthis_button_tweet"></a>';
+      $element = array(
+        '#theme_wrappers' => array('addthis_element'),
+        '#tag' => 'a',
+        '#classes' => array(
+          'addthis_button_tweet'
+        ),
+      );
     }
-    return $markup;
+    return $element;
   }
 
   private function getFacebookLikeButtonMarkup() {
-    $markup = '';
+    $element = NULL;
     if ($this->isFacebookLikeEnabled()) {
-      $markup = '<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>';
+      $element = array(
+        '#theme' => 'addthis_element',
+        '#tag' => 'a',
+        '#classes' => array(
+          'addthis_button_facebook_like'
+        ),
+        '#attributes' => array(
+          'fb:like:layout' => 'button_count'
+        )
+      );
     }
-    return $markup;
+    return $element;
   }
 
   private function getGooglePlusOneButtonMarkup() {
-    $markup = '';
+    $element = NULL;
     if ($this->isGooglePlusOneEnabled()) {
-      $markup = '<a class="addthis_button_google_plusone"></a>';
+      $element = array(
+        '#theme' => 'addthis_element',
+        '#tag' => 'a',
+        '#classes' => array(
+          'addthis_button_google_plusone'
+        )
+      );
     }
-    return $markup;
+    return $element;
   }
 
   private function getServiceNamesAsCommaSeparatedString() {
@@ -374,7 +495,7 @@ class AddThis {
   }
 
   private function getFullBookmarkUrl() {
-    return check_url($this->getBaseBookmarkUrl() . $this->getProfileIdQueryParameterPrefixedWithAmp());
+    return $this->getBaseBookmarkUrl() . $this->getProfileIdQueryParameterPrefixedWithAmp();
   }
 
   private function getProfileIdQueryParameter($prefix) {
