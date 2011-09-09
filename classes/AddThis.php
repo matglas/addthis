@@ -176,20 +176,23 @@ class AddThis {
       $javascript = $this->getCustomConfigurationCode();
     } else {
       $enabledServices = $this->getServiceNamesAsCommaSeparatedString() . 'more';
-      $javascript = 'var addthis_config = {'
-        . $this->configurationGenerator->generate('services_compact', $enabledServices)
-        . $this->configurationGenerator->generate('data_track_clickback', $this->isClickbackTrackingEnabled())
-        . $this->configurationGenerator->generate('ui_508_compliant', $this->get508Compliant())
-        . $this->configurationGenerator->generate('ui_click', $this->isClickToOpenCompactMenuEnabled())
-        . $this->configurationGenerator->generate('ui_cobrand', $this->getCoBrand())
-        . $this->configurationGenerator->generate('ui_delay', $this->getUiDelay())
-        . $this->configurationGenerator->generate('ui_header_background', $this->getUiHeaderBackgroundColor())
-        . $this->configurationGenerator->generate('ui_header_color', $this->getUiHeaderColor())
-        . $this->configurationGenerator->generate('ui_open_windows', $this->isOpenWindowsEnabled())
-        . $this->configurationGenerator->generate('ui_use_css', $this->isStandardCssEnabled())
-        . $this->configurationGenerator->generateWithoutTrailingComma('ui_use_addressbook', $this->isAddressbookEnabled())
-        . '}'
-      ;
+
+      $configuration = array(
+        'services_compact' => $enabledServices,
+        'data_track_clickback' => $this->isClickbackTrackingEnabled(),
+        'ui_508_compliant' => $this->get508Compliant(),
+        'ui_click' => $this->isClickToOpenCompactMenuEnabled(),
+        'ui_cobrand' =>  $this->getCoBrand(),
+        'ui_delay' => $this->getUiDelay(),
+        'ui_header_background' => $this->getUiHeaderBackgroundColor(),
+        'ui_header_color' => $this->getUiHeaderColor(),
+        'ui_open_windows' => $this->isOpenWindowsEnabled(),
+        'ui_use_css' => $this->isStandardCssEnabled(),
+        'ui_use_addressbook' => $this->isAddressbookEnabled(),
+      );
+      // @todo provide hook to alter the default configuration.
+
+      $javascript = 'var addthis_config = ' . drupal_json_encode($configuration);
     }
     drupal_add_js($javascript, array('type' => 'inline'));
   }
