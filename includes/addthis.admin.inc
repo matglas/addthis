@@ -129,6 +129,7 @@ function addthis_admin_settings_form($form_state) {
   $form['facebook_settings_fieldset'] = array(
     '#type' => 'fieldset',
     '#title' => t('Facebook settings'),
+    '#description' => t('Facebook functionality requires some meta-tags to be added to your pages (<a href="http://developers.facebook.com/docs/opengraph/" target="_blank">Open Graph protocol</a>). You can use the <a href="http://drupal.org/project/opengraph_meta">Open Graph meta tags module</a> or add the tags some other way.'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
