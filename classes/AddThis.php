@@ -411,8 +411,8 @@ class AddThis {
 
   private function getAddThisTitleAttributeMarkup($entity) {
     return array(
-      self::TITLE_ATTRIBUTE => (drupal_get_title() . ' - ' . check_plain($entity->title)) 
-      );
+      self::TITLE_ATTRIBUTE => (check_plain($entity->title)  . ' - ' . variable_get('site_name'))
+    );
   }
 
   private function getLargeButtonsClass() {
