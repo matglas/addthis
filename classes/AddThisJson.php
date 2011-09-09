@@ -2,8 +2,6 @@
 /**
  * @file
  * A class containing utility methods for json-related functionality.
- *
- * @author Jani Palsamäki
  */
  
 class AddThisJson {

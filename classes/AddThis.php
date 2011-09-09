@@ -2,8 +2,6 @@
 /**
  * @file
  * An AddThis-class.
- *
- * @author Jani Palsamäki
  */
 
 class AddThis {
@@ -68,14 +66,8 @@ class AddThis {
 
   private static $instance;
 
-  /* @var AddThisConfigurationGenerator */
-  private $configurationGenerator;
-
   /* @var AddThisJson */
   private $json;
-
-  /* @var AddThisMarkupGenerator */
-  private $markupGenerator;
 
   /**
    * @return AddThis
@@ -83,24 +75,14 @@ class AddThis {
   public static function getInstance() {
     if (!isset(self::$instance)) {
       $addThis = new AddThis();
-      $addThis->setAddThisConfigurationGenerator(new AddThisConfigurationGenerator());
       $addThis->setJson(new AddThisJson());
-      $addThis->setMarkupGenerator(new AddThisMarkupGenerator());
       self::$instance = $addThis;
     }
     return self::$instance;
   }
 
-  public function setAddThisConfigurationGenerator(AddThisConfigurationGenerator $configurationGenerator) {
-    $this->configurationGenerator = $configurationGenerator;
-  }
-
   public function setJson(AddThisJson $json) {
     $this->json = $json;
-  }
-
-  public function setMarkupGenerator(AddThisMarkupGenerator $markupGenerator) {
-    $this->markupGenerator = $markupGenerator;
   }
 
   public function getWidgetTypes() {
