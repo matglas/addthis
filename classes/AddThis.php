@@ -259,13 +259,13 @@ class AddThis {
     // This is a render array representation.
     $element = array(
       // Note that theme_wrappers needs an array.
-      '#theme_wrappers' => array('addthis_element'),
+      '#theme' => 'addthis_wrapper',
       '#tag' => 'a',
-      '#classes' => array(
-          'addthis_button',
-      ),
       '#attributes' => array(
         'href' => self::getFullBookmarkUrl(),
+        'class' => array(
+          'addthis_button',
+        )
       )
     );
     $element['#attributes'] += $this->getAddThisAttributesMarkup($entity);
@@ -274,9 +274,6 @@ class AddThis {
     $image = array(
         '#theme' => 'addthis_element',
         '#tag' => 'img',
-        '#tag_empty' => TRUE,
-        '#classes' => array(
-        ),
         '#attributes' => array(
           'src' => 'http://s7.addthis.com/static/btn/v2/lg-share-en.gif',
           'width' => '125',
@@ -293,13 +290,13 @@ class AddThis {
   private function getCompactButtonWidgetMarkup($entity) {
     // Create wrapper element a
     $element = array(
-      '#theme_wrappers' => array('addthis_element'),
+      '#theme' => 'addthis_wrapper',
       '#tag' => 'a',
-      '#classes' => array(
-        'addthis_button'
-      ),
       '#attributes' => array(
-        'href' => $this->getFullBookmarkUrl()
+        'href' => $this->getFullBookmarkUrl(),
+        'class' => array(
+          'addthis_button'
+        )
       )
     );
     $element['#attributes'] += self::getAddThisAttributesMarkup($entity);
@@ -308,7 +305,6 @@ class AddThis {
     $image = array(
       '#theme' => 'addthis_element',
       '#tag' => 'img',
-      '#tag_empty' => TRUE,
       '#attributes' => array(
         'src' => 'http://s7.addthis.com/static/btn/sm-share-en.gif',
         'width' => '83',
@@ -328,14 +324,15 @@ class AddThis {
     $element = array(
       // We use #theme_wrappers to include the rendered children otherwise
       // we only get a non empty element like <div></div>.
-      '#theme_wrappers' => array('addthis_element'),
+      '#theme' => 'addthis_wrapper',
       '#tag' => 'div',
-      '#classes' => array(
-        'addthis_toolbox',
-        'addthis_default_style',
-        trim($this->getLargeButtonsClass()),
+      '#attributes' => array(
+        'class' => array(
+          'addthis_toolbox',
+          'addthis_default_style',
+          trim($this->getLargeButtonsClass()),
+        )
       ),
-      '#attributes' => array(),
     );
     $element['#attributes'] += $this->getAddThisAttributesMarkup($entity);
 
@@ -344,11 +341,12 @@ class AddThis {
     $items[] = array(
       '#theme' => 'addthis_element',
       '#tag' => 'a',
+      '#value' => '',
       '#attributes' => array(
-        'href' => $this->getFullBookmarkUrl()
-      ),
-      '#classes' => array(
-        'addthis_button_compact'
+        'href' => $this->getFullBookmarkUrl(),
+        'class' => array(
+          'addthis_button_compact'
+        ),
       ),
     );
     $numberOfPreferredServices = self::getNumberOfPreferredServices();
@@ -356,11 +354,12 @@ class AddThis {
       $items[] = array(
         '#theme' => 'addthis_element',
         '#tag' => 'a',
+        '#value' => '',
         '#attributes' => array(
-          'href' => $this->getFullBookmarkUrl()
-        ),
-        '#classes' => array(
-          ('addthis_button_preferred_' . $i),
+          'href' => $this->getFullBookmarkUrl(),
+          'class' => array(
+            ('addthis_button_preferred_' . $i),
+          )
         ),
       );
     }
@@ -368,27 +367,31 @@ class AddThis {
     $items[] = $this->getFacebookLikeButtonMarkup();
     $items[] = $this->getGooglePlusOneButtonMarkup();
     $element += $items;
-
+    
     return $element;
   }
 
   private function getSharecountWidgetMarkup($entity) {
     $element = array(
-      '#theme_wrappers' => array('addthis_element'),
+      '#theme' => 'addthis_wrapper',
       '#tag' => 'div',
-      '#classes' => array(
-        'addthis_toolbox',
-        'addthis_default_style'
+      '#attributes' => array(
+        'class' => array(
+          'addthis_toolbox',
+          'addthis_default_style'
+        )
       ),
     );
     // <a> element with counter
     $item = array(
       '#theme' => 'addthis_element',
       '#tag' => 'a',
-      '#classes' => array(
-        'addthis_counter'
+      '#value' => '',
+      '#attributes' => array(
+        'class' => array(
+          'addthis_counter'
+        ),
       ),
-      '#attributes' => array(),
     );
     $item['#attributes'] += $this->getAddThisAttributesMarkup($entity);
     $element[] = $item;
@@ -423,10 +426,11 @@ class AddThis {
     $element = NULL;
     if ($this->isTwitterEnabled()) {
       $element = array(
-        '#theme_wrappers' => array('addthis_element'),
+        '#theme' => 'addthis_element',
         '#tag' => 'a',
-        '#classes' => array(
-          'addthis_button_tweet'
+        '#value' => '',
+        '#attributes' => array(
+          'class' => array('addthis_button_tweet')
         ),
       );
     }
@@ -439,10 +443,11 @@ class AddThis {
       $element = array(
         '#theme' => 'addthis_element',
         '#tag' => 'a',
-        '#classes' => array(
-          'addthis_button_facebook_like'
-        ),
+        '#value' => '',
         '#attributes' => array(
+          'class' => array(
+           'addthis_button_facebook_like'
+          ),
           'fb:like:layout' => 'button_count'
         )
       );
@@ -456,8 +461,9 @@ class AddThis {
       $element = array(
         '#theme' => 'addthis_element',
         '#tag' => 'a',
-        '#classes' => array(
-          'addthis_button_google_plusone'
+        '#value' => '',
+        '#attributes' => array(
+          'class' => array('addthis_button_google_plusone')
         )
       );
     }

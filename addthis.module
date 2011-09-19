@@ -98,10 +98,48 @@ function addthis_form_alter(&$form, &$form_state, $form_id) {
  */
 function addthis_theme($existing, $type, $theme, $path) {
   return array(
+    'addthis_wrapper' => array(
+      'render element' => 'addthis_wrapper'
+    ),
     'addthis_element' => array(
       'render element' => 'addthis_element'
+    ),
+    'addthis' => array(
+      'variables' => array(
+        'format' => NULL,
+        'options' => NULL
+      )
     )
   );
+}
+
+/**
+ * Implementation hook_preprocess() for theme_addthis.
+ */
+function template_preprocess_addthis(&$variables) {
+  dpm($variables);
+}
+
+function theme_addthis($variables) {
+  dpm($variables);
+  return render($variables);
+}
+
+function theme_addthis_wrapper($variables) {
+  // Get the element
+  $element = $variables['addthis_wrapper'];
+  
+  // Render the html
+  $output = '<' . $element['#tag'] . drupal_attributes($element['#attributes']) . '>';
+  
+  $children = element_children($element);
+  if (count($children) > 0) {
+    foreach($children as $child) {
+      $output .= render($element[$child]);
+    }
+  }
+  $output .= '</' . $element['#tag'] . ">\n";
+  return $output;  
 }
 
 /**
@@ -111,36 +149,6 @@ function addthis_theme($existing, $type, $theme, $path) {
 function theme_addthis_element($variables) {
   // Get the element
   $element = $variables['addthis_element'];
-
-  // Refactor the classes in the array #classes if there.
-  if (isset($element['#classes']) && count($element['#classes']) > 0) {
-    $att_class = implode(' ', $element['#classes']);
-    if (isset($element['#attributes']['class'])) {
-      $att_class = trim($element['#attributes']['class']) . ' ' . $att_class;
-    }
-    // Finally implode it and add it to or override it in the attributes.
-    $element['#attributes']['class'] = $att_class;
-  }
-
-  // When rendered children are passed put them in the value
-  // to wrap the element we are rendering. If #children is there it means
-  // we are called as theme_wrapper.
-  if (isset($element['#children']) && !empty($element['#children'])) {
-    $element['#value'] = $element['#children'];
-  }
-
-  // Set default if not there
-  if (!isset($element['#tag_empty'])) {
-    $element['#tag_empty'] = FALSE;
-  }
-  // When the #theme_wrappers is set we can't render a empty tag.
-  // Or if #tag_empty is set to FALSE.
-  if (isset($element['#theme_wrappers']) && !isset($element['#value']) ||
-      isset($element['#tag_empty']) && $element['#tag_empty'] === FALSE && !isset($element['#value'])) {
-    $element['#value'] = '';
-    // Note that when #theme is set and not #theme_wrappers the tag will
-    // always be rendered not empty unless #tag_empty is set to TRUE.
-  }
 
   // Render the html
   if (!isset($element['#value'])) {
