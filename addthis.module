@@ -105,10 +105,7 @@ function addthis_theme($existing, $type, $theme, $path) {
       'render element' => 'addthis_element'
     ),
     'addthis' => array(
-      'variables' => array(
-        'format' => NULL,
-        'options' => NULL
-      )
+      'render element' => 'addthis'
     )
   );
 }
@@ -117,12 +114,23 @@ function addthis_theme($existing, $type, $theme, $path) {
  * Implementation hook_preprocess() for theme_addthis.
  */
 function template_preprocess_addthis(&$variables) {
-  dpm($variables);
+  // Set the correct display information
+  $display_type = NULL;
+  if (isset($variables[0]) && count($variables) == 3) {
+    $variables['display'] = $variables[0];
+    unset($variables[0]);
+  } elseif (isset($variables['display'])) {
+    $display_type = $variables['display'];
+  }
+  
+  // Get formatters
+  $addthis_formatters = addthis_field_info_formatter_field_type();
 }
 
 function theme_addthis($variables) {
-  dpm($variables);
-  return render($variables);
+  //dpm($variables);
+  //return render($variables);
+  return '';
 }
 
 function theme_addthis_wrapper($variables) {

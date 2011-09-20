@@ -54,6 +54,19 @@ function addthis_field_formatter_info() {
 }
 
 /**
+ * Implementation to retrieve formatters for a certain type of field.
+ */
+function addthis_field_info_formatter_field_type($field_type = NULL) {
+  $formatters = field_info_formatter_types();
+  foreach($formatters as $key => $formatter) {
+    if (!in_array((!isset($field_type) ? AddThis::FIELD_TYPE : $field_type), $formatter['field types'])) {
+      unset($formatters[$key]);
+    }
+  }
+  return $formatters;
+}
+
+/**
  * Implements hook_field_formatter_view().
  */
 function addthis_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
