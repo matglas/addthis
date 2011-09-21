@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Hook implementations for the AddThis-module. Most of the logic is defined
@@ -8,6 +7,20 @@
 
 module_load_include('inc', 'addthis', 'includes/addthis.block');
 module_load_include('inc', 'addthis', 'includes/addthis.field');
+
+/**
+ * Implementation of hook_hook_info()
+ */
+function addthis_hook_info() {
+    // Definde hook_addthis_display_markup in the addthis group.
+    // All the $module.addthis.inc files that are found will be included
+    // because group addthis is defined.
+    // See addthis.addthis.inc for examples of the hook implementation.
+  $hooks['addthis_display_markup'] = array(
+      'group' => 'addthis'
+  );
+  return $hooks;
+}
 
 /**
  * Implements hook_help().
@@ -83,6 +96,7 @@ function addthis_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'field_ui_field_edit_form' &&
       $form['#field']['type'] == AddThis::FIELD_TYPE &&
       $form['#field']['type'] == AddThis::MODULE_NAME) {
+
     // We hide the instance fieldset because we don't hold any value's per instance.
     // I know this is a dirty hack to hide it but I'm not aware that there is a way to
     // disable instance value's in the field API.
@@ -114,32 +128,29 @@ function addthis_theme($existing, $type, $theme, $path) {
  * Implementation hook_preprocess() for theme_addthis.
  */
 function template_preprocess_addthis(&$variables) {
-  // Set the correct display information
+  // Set the correct display type
   $display_type = NULL;
   if (isset($variables[0]) && count($variables) == 3) {
-    $variables['display'] = $variables[0];
+    $variables['#display'] = $variables[0];
     unset($variables[0]);
-  } elseif (isset($variables['display'])) {
-    $display_type = $variables['display'];
+  } elseif (isset($variables['#display'])) {
+    $display_type = $variables['#display'];
   }
-  
-  // Get formatters
-  $addthis_formatters = addthis_field_info_formatter_field_type();
 }
 
 function theme_addthis($variables) {
-  //dpm($variables);
-  //return render($variables);
-  return '';
+  // Get the correct display type markup
+  $markup = AddThis::getInstance()->getDisplayMarkup($variables['#display']);
+  return render($markup);
 }
 
 function theme_addthis_wrapper($variables) {
   // Get the element
   $element = $variables['addthis_wrapper'];
-  
+
   // Render the html
   $output = '<' . $element['#tag'] . drupal_attributes($element['#attributes']) . '>';
-  
+
   $children = element_children($element);
   if (count($children) > 0) {
     foreach($children as $child) {
