@@ -54,38 +54,52 @@ function addthis_field_formatter_info() {
 }
 
 /**
+ * Implementation to retrieve formatters for a certain type of field.
+ */
+function addthis_field_info_formatter_field_type($field_type = NULL) {
+  $formatters = field_info_formatter_types();
+  foreach($formatters as $key => $formatter) {
+    if (!in_array((!isset($field_type) ? AddThis::FIELD_TYPE : $field_type), $formatter['field types'])) {
+      unset($formatters[$key]);
+    }
+  }
+  return $formatters;
+}
+
+/**
  * Implements hook_field_formatter_view().
  */
 function addthis_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   // We have only one item to display, the share item.
   // Get the markup for the share and add that to the $element[0] to display.
   $element = array();
-  $widget_type = $display['type'];
-  $markup = AddThis::getInstance()->getWidgetMarkup($widget_type, $entity);
-  if (!isset($element[0]) && !is_array($markup)) {
-    // Supporting #markup is for legacy in this module.
-    // We move towards using the render array.
-    $element[0] = array('#markup' => $markup);
-  } 
-  elseif (!isset($element[0])) {
+  $display_type = $display['type'];
+  $markup = AddThis::getInstance()->getDisplayMarkup($display_type, $entity);
+  if (!isset($element[0])) {
     $element[0] = $markup;
   }
   return $element;
 }
 
+// @todo add hook_field_prepare_view
+// See: http://api.drupal.org/api/drupal/modules--field--field.api.php/function/hook_field_prepare_view/7
+// 
+// We need this to make sure there is a single value we can add the format too in the addthis_field_formatter_view.
+
 /**
  * Implements hook_field_presave().
  */
 function addthis_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  $dummy_value = "Don't mind this value. Is't a placeholder.";
   // We don't add items in the instance form therefore we check for a item
   // if not there we (which is the case almost always) we add it. This item
   // is need for the field_formatter in $items to attach a renderable item to.
   if (count($items) == 0) {
-    $items += array(array('value' => AddThis::WIDGET_TYPE_DISABLED));
+    $items += array(array('value' => $dummy_value));
   }
   else {
     foreach ($items as $delta => $value) {
-      $items[$delta]['value'] = AddThis::WIDGET_TYPE_DISABLED;
+      $items[$delta]['value'] = $dummy_value;
     }
   }
 }

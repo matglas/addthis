@@ -22,8 +22,8 @@ function addthis_block_info() {
  */
 function addthis_block_view($block_name = '') {
   if ($block_name == AddThis::BLOCK_NAME) {
-    $widget_type = AddThis::getInstance()->getBlockWidgetType();
-    $markup = AddThis::getInstance()->getWidgetMarkup($widget_type);
+    $widget_type = AddThis::getInstance()->getBlockDisplayType();
+    $markup = AddThis::getInstance()->getDisplayMarkup($widget_type);
     return array(
       'subject' => '',
       'content' => $markup,
