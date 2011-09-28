@@ -5,6 +5,9 @@
  * Install, update and uninstall functions for the AddThis module.
  */
 
+// We need some constant values from the AddThis class.
+include_once('classes/AddThis.php');
+
 /**
  * Implements hook_field_schema().
  */
