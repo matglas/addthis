@@ -105,9 +105,9 @@ class AddThis {
 
   /*
    * Return me the markup for a certain display type.
-   * 
-   * Variables contains #entity and #settings as keys when applicable. 
-   * When #entity is not there we link to the current url. When #settings 
+   *
+   * Variables contains #entity and #settings as keys when applicable.
+   * When #entity is not there we link to the current url. When #settings
    * is not there we use the default settings.
    */
   public function getDisplayMarkup($display, $variables = NULL) {
