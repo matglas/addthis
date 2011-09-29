@@ -87,9 +87,9 @@ class AddThis {
 
   //@TODO: Refactor all WidgetType names into DisplayType
   // A widget type is the element shown to edit a value.
-  // We use the widget as a type way to define the way to Display. 
+  // We use the widget as a type way to define the way to Display.
   // Therefore we need to keep a good descriptive name as DisplayType.
-  
+
   /*
    * Get all the DisplayTypes that are available.
    */
@@ -135,11 +135,11 @@ class AddThis {
     } else {
       // Return empty
       return array();
-    } 
+    }
     // If no display is found or something went wrong we go here.
     return array();
   }
-  
+
   /*
    * Get the type DisplayType used for our AddThis block.
    */

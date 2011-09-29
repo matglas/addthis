@@ -5,7 +5,7 @@
  * Install, update and uninstall functions for the AddThis module.
  */
 
-// We need the AddThis class for some constant values during install.
+// We need some constant values from the AddThis class.
 include_once('classes/AddThis.php');
 
 /**

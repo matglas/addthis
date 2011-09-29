@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Implementation of hook_addthis_display_markup().
  */
@@ -41,7 +41,7 @@ function addthis_addthis_display_markup__addthis_large_button($variables = NULL)
     );
   $element[] = $image;
 
- return $element;
+  return $element;
 }
 
 /**
@@ -50,7 +50,7 @@ function addthis_addthis_display_markup__addthis_large_button($variables = NULL)
 function addthis_addthis_display_markup__addthis_compact_button($variables = NULL) {
   $addthis = AddThis::getInstance();
   $entity = $variables['#entity'];
-  
+
   // Create wrapper element a
   $element = array(
     '#theme' => 'addthis_wrapper',
@@ -87,7 +87,7 @@ function addthis_addthis_display_markup__addthis_compact_button($variables = NUL
 function addthis_addthis_display_markup__addthis_toolbox($variables = NULL) {
   $addthis = AddThis::getInstance();
   $entity = $variables['#entity'];
-  
+
   // Creating render array for the widget.
   $element = array(
     // We use #theme_wrappers to include the rendered children otherwise
@@ -135,7 +135,7 @@ function addthis_addthis_display_markup__addthis_toolbox($variables = NULL) {
   $items[] = $addthis->getFacebookLikeButtonMarkup();
   $items[] = $addthis->getGooglePlusOneButtonMarkup();
   $element += $items;
-  
+
   return $element;
 }
 
@@ -145,7 +145,7 @@ function addthis_addthis_display_markup__addthis_toolbox($variables = NULL) {
 function addthis_addthis_display_markup__addthis_sharecount($variables = NULL) {
   $addthis = AddThis::getInstance();
   $entity = $variables['#entity'];
-  
+
   $element = array(
     '#theme' => 'addthis_wrapper',
     '#tag' => 'div',

@@ -158,7 +158,7 @@ function theme_addthis_wrapper($variables) {
     }
   }
   $output .= '</' . $element['#tag'] . ">\n";
-  return $output;  
+  return $output;
 }
 
 /**
