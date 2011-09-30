@@ -81,10 +81,21 @@ function addthis_field_formatter_view($entity_type, $entity, $field, $instance, 
   return $element;
 }
 
-// @todo add hook_field_prepare_view
-// See: http://api.drupal.org/api/drupal/modules--field--field.api.php/function/hook_field_prepare_view/7
-//
-// We need this to make sure there is a single value we can add the format too in the addthis_field_formatter_view.
+/**
+ * Implementation of hook_field_prepare_view().
+ *
+ * This make sure we don't miss node that have no saved value on the AddThis
+ * field. We need the value to be able to render something.
+ */
+function addthis_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items) {
+  $dummy_value = "Don't mind this value. Is't a placeholder.";
+  foreach($items as $key => $item) {
+    if (!isset($item[0]['value'])) {
+      $items[$key][0]['value'] = $dummy_value;
+    }
+  }
+}
+
 
 /**
  * Implements hook_field_presave().
