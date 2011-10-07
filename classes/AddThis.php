@@ -63,6 +63,9 @@ class AddThis {
   const WIDGET_TYPE_LARGE_BUTTON = 'addthis_large_button';
   const WIDGET_TYPE_SHARECOUNT = 'addthis_sharecount';
   const WIDGET_TYPE_TOOLBOX = 'addthis_toolbox';
+  
+  // Styles
+  const CSS_32x32 = 'addthis_32x32_style';
 
   private static $instance;
 
@@ -110,8 +113,24 @@ class AddThis {
    * When #entity is not there we link to the current url. When #settings
    * is not there we use the default settings.
    */
-  public function getDisplayMarkup($display, $variables = NULL) {
+  public function getDisplayMarkup($display, $options = array()) {
     $formatters = addthis_field_info_formatter_field_type();
+    
+    // When we have the entity and entity_type we can send it to the url.
+    if (isset($options['#entity']) && isset($options['#entity_type'])) {
+      // See if we can create the url and send it through a hook so others 
+      // can play with it.
+      $uri = entity_uri($options['#entity_type'], $options['#entity']);
+      $uri['options'] += array(
+        'absolute' => TRUE
+      );
+      // Add hook here to alter the uri maybe also based on fields from the
+      // entity. Like a custom share link. Pass $options and $uri. Return
+      // a uri object to which we can reset it. Maybe use the alter structure.
+      
+      $options['#url'] = url($uri['path'], $uri['options']);
+    }
+    
     if (array_key_exists($display, $formatters)) {
       // The display type is found. Now get it and get the markup.
       $display_inf = $formatters[$display];
@@ -122,11 +141,11 @@ class AddThis {
       $markup = array();
       // First we look for a targeted implementation to call.
       if (function_exists($display_inf['module'] . '_addthis_display_markup__' . $display)) {
-        $markup = call_user_func_array($display_inf['module'] . '_addthis_display_markup__' . $display, array(NULL));
+        $markup = call_user_func_array($display_inf['module'] . '_addthis_display_markup__' . $display, array($options));
 
       // This should be the default implementation that is called.
       } elseif (in_array($display_inf['module'], $implementations)) {
-        $markup = module_invoke($display_inf['module'], 'addthis_display_markup', $display);
+        $markup = module_invoke($display_inf['module'], 'addthis_display_markup', $display, $options);
 
       // When we end up here somebody did something wrong in there module.
       }

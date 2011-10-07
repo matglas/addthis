@@ -55,6 +55,8 @@ function addthis_field_formatter_info() {
 
 /**
  * Implementation to retrieve formatters for a certain type of field.
+ * 
+ * @todo make this a private function atleast by naming convention with a prefixed _ (underscore).
  */
 function addthis_field_info_formatter_field_type($field_type = NULL) {
   $formatters = field_info_formatter_types();
@@ -70,11 +72,22 @@ function addthis_field_info_formatter_field_type($field_type = NULL) {
  * Implements hook_field_formatter_view().
  */
 function addthis_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  return addthis_render_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display);
+}
+
+function addthis_render_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   // We have only one item to display, the share item.
   // Get the markup for the share and add that to the $element[0] to display.
   $element = array();
   $display_type = $display['type'];
-  $markup = AddThis::getInstance()->getDisplayMarkup($display_type, $entity);
+  
+  $options = array(
+    '#entity_type' => $entity_type,
+    '#entity' => $entity,
+    '#display' => $display
+  );
+  
+  $markup = AddThis::getInstance()->getDisplayMarkup($display_type, $options);
   if (!isset($element[0])) {
     $element[0] = $markup;
   }
@@ -131,8 +144,10 @@ function addthis_field_widget_info() {
  * Implements hook_field_widget_form().
  */
 function addthis_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-
-  // @todo Write explaining comments
+  
+  
+  // The AddThis field is a placeholder field and has no widget settings.
+  // To suppress the form we set access to false here.
   if ($instance['widget']['type'] == AddThis::WIDGET_TYPE) {
     $main_widget = $element + array(
       '#access' => FALSE,

@@ -1,0 +1,11 @@
+<?php
+
+// Seperated field hooks for the purpose of keeping it clean.
+module_load_include('inc', 'addthis_displays', 'addthis_displays.field');
+
+function addthis_displays_form_alter(&$form, &$form_state, $form_id) {
+  // With this form_id we can alter the formatter settings form.
+  if ($form_id == 'field_ui_display_overview_form') {
+    
+  }
+}
