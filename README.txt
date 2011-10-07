@@ -35,6 +35,7 @@ Use the admin configuration page to configure settings.
 Current maintainers:
 * Vesa Palmu (wesku) - http://drupal.org/user/75070
 * Jani Palsamäki (janip) - http://drupal.org/user/1356218
+* Matthias Glastra (matglas86) - http://drupal.org/user/573464
 
 Major contributions by:
 Lesmana Lim (lesmana) - http://drupal.org/user/84263
