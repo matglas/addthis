@@ -53,7 +53,7 @@ function addthis_filter_format_disable($format) {
  * Implements hook_menu().
  */
 function addthis_menu() {
-  $menuItems['admin/config/system/addthis'] = array(
+  $menuItems['admin/config/user-interface/addthis'] = array(
     'title' => 'AddThis',
     'description' => 'Configure AddThis settings.',
     'page callback' => 'drupal_get_form',
