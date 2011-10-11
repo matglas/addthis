@@ -12,4 +12,4 @@ files[] = includes/addthis.block.inc
 files[] = includes/addthis.field.inc
 files[] = classes/AddThis.php
 files[] = classes/AddThisJson.php
-configure = admin/config/system/addthis
+configure = admin/config/user-interface/addthis
