@@ -46,12 +46,14 @@ class AddThis {
   const UI_HEADER_BACKGROUND_COLOR_KEY = 'addthis_ui_header_background_color';
   const UI_HEADER_COLOR_KEY = 'addthis_ui_header_color';
   const WIDGET_JS_URL_KEY = 'addthis_widget_js_url';
+  const WIDGET_JS_ASYNC = 'addthis_widget_async';
 
   // External resources
   const DEFAULT_BOOKMARK_URL = 'http://www.addthis.com/bookmark.php?v=250';
   const DEFAULT_SERVICES_CSS_URL = 'http://cache.addthiscdn.com/icons/v1/sprites/services.css';
   const DEFAULT_SERVICES_JSON_URL = 'http://cache.addthiscdn.com/services/v1/sharing.en.json';
   const DEFAULT_WIDGET_JS_URL = 'http://s7.addthis.com/js/250/addthis_widget.js';
+  const DEFAULT_WIDGET_JS_ASYNC = TRUE;
 
   // Internal resources
   const ADMIN_CSS_FILE = 'addthis.admin.css';
@@ -115,7 +117,7 @@ class AddThis {
    */
   public function getDisplayMarkup($display, $options = array()) {
     $formatters = addthis_field_info_formatter_field_type();
-    
+
     // When we have the entity and entity_type we can send it to the url.
     if (isset($options['#entity']) && isset($options['#entity_type'])) {
       // See if we can create the url and send it through a hook so others 
@@ -130,7 +132,7 @@ class AddThis {
       
       $options['#url'] = url($uri['path'], $uri['options']);
     }
-    
+
     if (array_key_exists($display, $formatters)) {
       // The display type is found. Now get it and get the markup.
       $display_inf = $formatters[$display];
@@ -197,19 +199,59 @@ class AddThis {
     return variable_get(self::ENABLED_SERVICES_KEY, array());
   }
 
+  public function getWidgetJsAsync() {
+    return variable_get(self::WIDGET_JS_ASYNC, self::DEFAULT_WIDGET_JS_ASYNC);
+  }
+
   public function addStylesheets() {
     drupal_add_css($this->getServicesCssUrl(), 'external');
     drupal_add_css($this->getAdminCssFilePath(), 'file');
   }
 
   public function addWidgetJs() {
-    drupal_add_js(self::getWidgetUrl(), array('type' => 'external', 'scope' => 'footer'));
+    // Define if we load async or not.
+    $url = self::getWidgetUrl() . (self::getWidgetJsAsync() ? '?async=1' : '');
+    if (self::getWidgetJsAsync()) {
+      drupal_add_js(
+        array(
+          'addthis' => array(
+            'widget_url' => $url,
+          )
+        ),
+        'setting'
+      );
+    }
+    else {
+      // Add AddThis.com resources
+      drupal_add_js(
+        $url,
+        array(
+          'type' => 'external',
+          'group' => JS_LIBRARY,
+          'every_page' => TRUE,
+          'weight' => 9
+        )
+      );
+    }
+    // Add local internal behaviours
+    if (self::getWidgetJsAsync()) {
+      drupal_add_js(
+        drupal_get_path('module', 'addthis') . '/addthis.js',
+        array(
+          'group' => JS_DEFAULT,
+          'weight' => 10,
+          'every_page' => TRUE,
+          'preprocess' => TRUE
+        )
+      );
+    }
   }
 
   public function addConfigurationOptionsJs() {
     if ($this->isCustomConfigurationCodeEnabled()) {
       $javascript = $this->getCustomConfigurationCode();
-    } else {
+    }
+    else {
       $enabledServices = $this->getServiceNamesAsCommaSeparatedString() . 'more';
 
       $configuration = array(
@@ -229,7 +271,14 @@ class AddThis {
 
       $javascript = 'var addthis_config = ' . drupal_json_encode($configuration);
     }
-    drupal_add_js($javascript, array('type' => 'inline'));
+    drupal_add_js(
+      $javascript,
+      array(
+      'type' => 'inline',
+      'scope' => 'footer',
+      'every_page' => TRUE
+      )
+    );
   }
 
   public function areLargeIconsEnabled() {
