@@ -133,7 +133,8 @@ function template_preprocess_addthis(&$variables) {
   if (isset($variables[0]) && count($variables) == 3) {
     $variables['#display'] = $variables[0];
     unset($variables[0]);
-  } elseif (isset($variables['#display'])) {
+  }
+  elseif (isset($variables['#display'])) {
     $display_type = $variables['#display'];
   }
 }
@@ -153,7 +154,7 @@ function theme_addthis_wrapper($variables) {
 
   $children = element_children($element);
   if (count($children) > 0) {
-    foreach($children as $child) {
+    foreach ($children as $child) {
       $output .= render($element[$child]);
     }
   }

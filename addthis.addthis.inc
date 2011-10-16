@@ -1,5 +1,11 @@
 <?php
 /**
+ * @file
+ * This file contains the definitions for the AddThis Display types and the 
+ * rendering of markup.
+ */
+
+/**
  * Implementation of hook_addthis_display_markup().
  */
 function addthis_addthis_display_markup($display, $variables = NULL) {
@@ -117,8 +123,8 @@ function addthis_addthis_display_markup__addthis_toolbox($variables = NULL) {
       ),
     ),
   );
-  $numberOfPreferredServices = $addthis->getNumberOfPreferredServices();
-  for ($i = 1; $i <= $numberOfPreferredServices; $i++) {
+  $number_of_preferred_services = $addthis->getNumberOfPreferredServices();
+  for ($i = 1; $i <= $number_of_preferred_services; $i++) {
     $items[] = array(
       '#theme' => 'addthis_element',
       '#tag' => 'a',

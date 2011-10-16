@@ -11,7 +11,7 @@
 function addthis_block_info() {
   $block_info = array();
   $block_info[AddThis::BLOCK_NAME] = array(
-    'info' => t('An AddThis-block.'),
+    'info' => t('AddThis'),
     'cache' => DRUPAL_NO_CACHE,
   );
   return $block_info;
@@ -37,9 +37,9 @@ function addthis_block_view($block_name = '') {
 function addthis_block_configure($delta = '') {
   $form[AddThis::BLOCK_WIDGET_TYPE_KEY] = array(
     '#type' => 'select',
-    '#title' => t('AddThis widget type'),
+    '#title' => t('AddThis Display type'),
     '#options' => AddThis::getInstance()->getWidgetTypes(),
-    '#default_value' => AddThis::getInstance()->getBlockWidgetType(),
+    '#default_value' => AddThis::getInstance()->getBlockDisplayType(),
   );
   return $form;
 }

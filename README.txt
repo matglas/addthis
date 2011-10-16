@@ -16,7 +16,7 @@ month our button is displayed 20 billion times.
 
 -- REQUIREMENTS --
 
-None.
+Field, Block
 
 -- INSTALLATION --
 
@@ -26,8 +26,8 @@ For link sharing statistics registration at http://addthis.com/ is required, but
 
 -- CONFIGURATION --
 
-Use the admin configuration page to configure settings.
-
+Use the admin configuration page to configure settings and see http://drupal.org/node/1309922
+for a walkthrough on how to configure the rest.
 
 
 -- CONTACT --
