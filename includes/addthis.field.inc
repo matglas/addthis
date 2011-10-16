@@ -58,7 +58,7 @@ function addthis_field_formatter_info() {
  */
 function addthis_field_info_formatter_field_type($field_type = NULL) {
   $formatters = field_info_formatter_types();
-  foreach($formatters as $key => $formatter) {
+  foreach ($formatters as $key => $formatter) {
     if (!in_array((!isset($field_type) ? AddThis::FIELD_TYPE : $field_type), $formatter['field types'])) {
       unset($formatters[$key]);
     }
@@ -89,7 +89,7 @@ function addthis_field_formatter_view($entity_type, $entity, $field, $instance, 
  */
 function addthis_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items) {
   $dummy_value = "Don't mind this value. Is't a placeholder.";
-  foreach($items as $key => $item) {
+  foreach ($items as $key => $item) {
     if (!isset($item[0]['value'])) {
       $items[$key][0]['value'] = $dummy_value;
     }

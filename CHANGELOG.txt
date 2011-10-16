@@ -1,0 +1,1 @@
+Fix for #1308970 reported by vasike,fixed by matglas86. Error in block configure.
