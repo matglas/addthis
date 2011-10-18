@@ -22,7 +22,7 @@ function addthis_displays_addthis_display_markup__addthis_basic_toolbox($options
       'class' => array(
         'addthis_toolbox',
         'addthis_default_style',
-        ($options['#display']['settings']['buttons_size'] == $addthis::CSS_32x32 ? $addthis::CSS_32x32 : NULL)
+        ($options['#display']['settings']['buttons_size'] == AddThis::CSS_32x32 ? AddThis::CSS_32x32 : NULL)
       )
     ),
   );

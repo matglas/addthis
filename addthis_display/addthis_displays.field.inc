@@ -4,12 +4,11 @@
  * Implements hook_field_formatter_info().
  */
 function addthis_displays_field_formatter_info() {
-  $addthis = AddThis::getInstance();
   $formatters = array();
   
   $formatters['addthis_basic_toolbox'] = array(
     'label' => t('Basic Toolbox'),
-    'field types' => array($addthis::FIELD_TYPE),
+    'field types' => array(AddThis::FIELD_TYPE),
     'settings' => array(
       'share_services' => 'facebook,twitter',
       'buttons_size' => 'addtthis_16x16_style',
@@ -24,7 +23,6 @@ function addthis_displays_field_formatter_info() {
  * Implementss hook_field_formatter_settings_form()
  */
 function addthis_displays_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
-  $addthis = AddThis::getInstance();
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
   
@@ -45,7 +43,7 @@ function addthis_displays_field_formatter_settings_form($field, $instance, $view
     '#default_value' => $settings['buttons_size'],
     '#options' => array(
       'addtthis_16x16_style' => t('Small (16x16)'),
-      $addthis::CSS_32x32 => t('Big (32x32)'),
+      AddThis::CSS_32x32 => t('Big (32x32)'),
     )
   );
   $element['extra_css'] = array(
