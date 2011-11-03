@@ -236,6 +236,7 @@ class AddThis {
     else {
       $enabledServices = $this->getServiceNamesAsCommaSeparatedString() . 'more';
 
+      global $language;
       $configuration = array(
         'services_compact' => $enabledServices,
         'data_track_clickback' => $this->isClickbackTrackingEnabled(),
@@ -248,6 +249,7 @@ class AddThis {
         'ui_open_windows' => $this->isOpenWindowsEnabled(),
         'ui_use_css' => $this->isStandardCssEnabled(),
         'ui_use_addressbook' => $this->isAddressbookEnabled(),
+        'ui_language' => $language->language
       );
       // @todo provide hook to alter the default configuration.
 
