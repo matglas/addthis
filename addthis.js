@@ -2,9 +2,12 @@
 
   Drupal.behaviors.addthis = {
     attach: function(context, settings) {
-      if ($.getScript(Drupal.settings.addthis.widget_url)) {
-        addthis.init();
-      }
+      $.getScript(
+        Drupal.settings.addthis.widget_url,
+        function(data, textStatus) {
+          addthis.init();
+        }
+      );
     }
   };
 
