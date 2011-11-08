@@ -20,7 +20,7 @@ class AddThis {
   // AddThis attribute and parameter names (as defined in AddThis APIs)
   const PROFILE_ID_QUERY_PARAMETER = 'pubid';
   const TITLE_ATTRIBUTE = 'addthis:title';
-  const URL_ATTRIBUTE = 'addthis:title';
+  const URL_ATTRIBUTE = 'addthis:url';
 
   // Persistent variable keys
   const ADDRESSBOOK_ENABLED_KEY = 'addthis_addressbook_enabled';

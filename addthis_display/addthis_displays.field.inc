@@ -5,17 +5,24 @@
  */
 function addthis_displays_field_formatter_info() {
   $formatters = array();
-  
+
   $formatters['addthis_basic_toolbox'] = array(
     'label' => t('Basic Toolbox'),
     'field types' => array(AddThis::FIELD_TYPE),
     'settings' => array(
       'share_services' => 'facebook,twitter',
-      'buttons_size' => 'addtthis_16x16_style',
+      'buttons_size' => 'addthis_16x16_style',
       'extra_css' => ''
     )
   );
-  
+  $formatters['addthis_basic_button'] = array(
+    'label' => t('Basic Button'),
+    'field types' => array(AddThis::FIELD_TYPE),
+    'settings' => array(
+      'button_size' => 'small',
+      'extra_css' => ''
+    )
+  );
   return $formatters;
 }
 
@@ -25,35 +32,56 @@ function addthis_displays_field_formatter_info() {
 function addthis_displays_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
-  
   $element = array();
 
-  $element['share_services'] = array(
-    '#title' => t('Services'),
-    '#type' => 'textfield',
-    '#size' => 80,
-    '#default_value' => $settings['share_services'],
-    '#required' => TRUE,
-    '#element_validate' => array('_addthis_display_element_validate_services'),
-    '#description' => t('Specify the names of the sharing services and seperate them with a , (comma). <a href="http://www.addthis.com/services/list">The names on this list are valid.</a>')
-  );
-  $element['buttons_size'] = array(
-    '#title' => t('Buttons size'),
-    '#type' => 'select',
-    '#default_value' => $settings['buttons_size'],
-    '#options' => array(
-      'addtthis_16x16_style' => t('Small (16x16)'),
-      AddThis::CSS_32x32 => t('Big (32x32)'),
-    )
-  );
-  $element['extra_css'] = array(
-    '#title' => t('Extra CSS decleration'),
-    '#type' => 'textfield',
-    '#size' => 40,
-    '#default_value' => $settings['extra_css'],
-    '#description' => t('Specify extra CSS classes to apply to the toolbox')
-  );
-  
+  switch ($display['type']) {
+    case 'addthis_basic_toolbox':
+      $element['share_services'] = array(
+        '#title' => t('Services'),
+        '#type' => 'textfield',
+        '#size' => 80,
+        '#default_value' => $settings['share_services'],
+        '#required' => TRUE,
+        '#element_validate' => array('_addthis_display_element_validate_services'),
+        '#description' => t('Specify the names of the sharing services and seperate them with a , (comma). <a href="http://www.addthis.com/services/list">The names on this list are valid.</a>')
+      );
+      $element['buttons_size'] = array(
+        '#title' => t('Buttons size'),
+        '#type' => 'select',
+        '#default_value' => $settings['buttons_size'],
+        '#options' => array(
+          'addthis_16x16_style' => t('Small (16x16)'),
+          AddThis::CSS_32x32 => t('Big (32x32)'),
+        )
+      );
+      $element['extra_css'] = array(
+        '#title' => t('Extra CSS decleration'),
+        '#type' => 'textfield',
+        '#size' => 40,
+        '#default_value' => $settings['extra_css'],
+        '#description' => t('Specify extra CSS classes to apply to the toolbox')
+      );
+      break;
+    case 'addthis_basic_button':
+      $element['button_size'] = array(
+        '#title' => t('Image'),
+        '#type' => 'select',
+        '#default_value' => $settings['button_size'],
+        '#options' => array(
+          'small' => t('Small'),
+          'big' => t('Big'),
+        )
+      );
+      $element['extra_css'] = array(
+        '#title' => t('Extra CSS decleration'),
+        '#type' => 'textfield',
+        '#size' => 40,
+        '#default_value' => $settings['extra_css'],
+        '#description' => t('Specify extra CSS classes to apply to the button')
+      );
+      break;
+  }
+
   return $element;
 }
 
@@ -83,15 +111,25 @@ function _addthis_display_element_validate_services($element, &$form_state, $for
 function addthis_displays_field_formatter_settings_summary($field, $instance, $view_mode) {
   $view = $instance['display'][$view_mode];
   $info = '';
-  if ($view['type'] == 'addthis_basic_toolbox') {
-    $settings = $view['settings'];
+  switch ($view['type']) {
+    case 'addthis_basic_toolbox':
+      $settings = $view['settings'];
 
-    $services = trim($settings['share_services']);
-    $services = str_replace(' ', '', $services);
-    $services = '<b>' . implode(', ', explode(',', $services)) . '</b>';
-    
-    $info =  t('Toolbox with the following services: !services', array('!services' => $services));
+      $services = trim($settings['share_services']);
+      $services = str_replace(' ', '', $services);
+      $services = '<b>' . implode(', ', explode(',', $services)) . '</b>';
+
+      $info =  t('Toolbox with the following services: !services', array('!services' => $services));
+      break;
+
+    case 'addthis_basic_button':
+      $settings = $view['settings'];
+
+      $size = '<b>' . $settings['button_size'] . '</b>';
+      $info = t('Basic button size: !size', array('!size' => $size));
+      break;
   }
+
   return $info;
 }
 
