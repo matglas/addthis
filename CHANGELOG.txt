@@ -1,1 +1,2 @@
 Fix for #1308970 reported by vasike,fixed by matglas86. Error in block configure.
+Changed dir name for submodule from addthis_display to addthis_displays.

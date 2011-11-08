@@ -20,6 +20,7 @@ class AddThis {
   // AddThis attribute and parameter names (as defined in AddThis APIs)
   const PROFILE_ID_QUERY_PARAMETER = 'pubid';
   const TITLE_ATTRIBUTE = 'addthis:title';
+  const URL_ATTRIBUTE = 'addthis:title';
 
   // Persistent variable keys
   const ADDRESSBOOK_ENABLED_KEY = 'addthis_addressbook_enabled';
@@ -65,7 +66,7 @@ class AddThis {
   const WIDGET_TYPE_LARGE_BUTTON = 'addthis_large_button';
   const WIDGET_TYPE_SHARECOUNT = 'addthis_sharecount';
   const WIDGET_TYPE_TOOLBOX = 'addthis_toolbox';
-  
+
   // Styles
   const CSS_32x32 = 'addthis_32x32_style';
 
@@ -120,7 +121,7 @@ class AddThis {
 
     // When we have the entity and entity_type we can send it to the url.
     if (isset($options['#entity']) && isset($options['#entity_type'])) {
-      // See if we can create the url and send it through a hook so others 
+      // See if we can create the url and send it through a hook so others
       // can play with it.
       $uri = entity_uri($options['#entity_type'], $options['#entity']);
       $uri['options'] += array(
@@ -129,7 +130,7 @@ class AddThis {
       // Add hook here to alter the uri maybe also based on fields from the
       // entity. Like a custom share link. Pass $options and $uri. Return
       // a uri object to which we can reset it. Maybe use the alter structure.
-      
+
       $options['#url'] = url($uri['path'], $uri['options']);
     }
 
@@ -359,12 +360,22 @@ class AddThis {
     return (boolean) variable_get(self::ADDRESSBOOK_ENABLED_KEY, FALSE);
   }
 
-  public function getAddThisAttributesMarkup($entity) {
-    if (is_object($entity)) {
+  /**
+   * Define the following object in the $optoins.
+   *
+   * #entity_type
+   * #entity
+   * #url
+   */
+  public function getAddThisAttributesMarkup($options) {
+    if (isset($options)) {
       $attributes = array();
 
       // Add title
-      $attributes += $this->getAddThisTitleAttributeMarkup($entity);
+      if (isset($options['#entity'])) {
+        $attributes += $this->getAttributeTitle($options['#entity']);
+      }
+      $attributes += $this->getAttributeUrl($options);
 
       // Return the array with attributes
       return $attributes;
@@ -372,10 +383,22 @@ class AddThis {
     return array();
   }
 
-  private function getAddThisTitleAttributeMarkup($entity) {
-    return array(
-      self::TITLE_ATTRIBUTE => (check_plain($entity->title)  . ' - ' . variable_get('site_name'))
-    );
+  private function getAttributeTitle($entity) {
+    if (isset($entity->title)) {
+      return array(
+        self::TITLE_ATTRIBUTE => (check_plain($entity->title)  . ' - ' . variable_get('site_name'))
+      );
+    }
+    return array();
+  }
+
+  private function getAttributeUrl($options) {
+    if (isset($options['#url'])) {
+      return array(
+        self::URL_ATTRIBUTE => $options['#url']
+      );
+    }
+    return array();
   }
 
   public function getLargeButtonsClass() {

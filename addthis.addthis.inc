@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * This file contains the definitions for the AddThis Display types and the 
+ * This file contains the definitions for the AddThis Display types and the
  * rendering of markup.
  */
 
@@ -17,7 +17,6 @@ function addthis_addthis_display_markup($display, $variables = NULL) {
  */
 function addthis_addthis_display_markup__addthis_large_button($variables = NULL) {
   $addthis = AddThis::getInstance();
-  $entity = $variables['#entity'];
 
   // This is a render array representation.
   $element = array(
@@ -31,7 +30,7 @@ function addthis_addthis_display_markup__addthis_large_button($variables = NULL)
       )
     )
   );
-  $element['#attributes'] += $addthis->getAddThisAttributesMarkup($entity);
+  $element['#attributes'] += $addthis->getAddThisAttributesMarkup($variables);
 
   // Here we start the children of the a element.
   $image = array(
@@ -55,7 +54,6 @@ function addthis_addthis_display_markup__addthis_large_button($variables = NULL)
  */
 function addthis_addthis_display_markup__addthis_compact_button($variables = NULL) {
   $addthis = AddThis::getInstance();
-  $entity = $variables['#entity'];
 
   // Create wrapper element a
   $element = array(
@@ -68,7 +66,7 @@ function addthis_addthis_display_markup__addthis_compact_button($variables = NUL
       )
     )
   );
-  $element['#attributes'] += $addthis->getAddThisAttributesMarkup($entity);
+  $element['#attributes'] += $addthis->getAddThisAttributesMarkup($variables);
 
   // Create img button
   $image = array(
@@ -92,7 +90,6 @@ function addthis_addthis_display_markup__addthis_compact_button($variables = NUL
  */
 function addthis_addthis_display_markup__addthis_toolbox($variables = NULL) {
   $addthis = AddThis::getInstance();
-  $entity = $variables['#entity'];
 
   // Creating render array for the widget.
   $element = array(
@@ -108,7 +105,7 @@ function addthis_addthis_display_markup__addthis_toolbox($variables = NULL) {
       )
     ),
   );
-  $element['#attributes'] += $addthis->getAddThisAttributesMarkup($entity);
+  $element['#attributes'] += $addthis->getAddThisAttributesMarkup($variables);
 
   // All service elements
   $items = array();
@@ -150,7 +147,6 @@ function addthis_addthis_display_markup__addthis_toolbox($variables = NULL) {
  */
 function addthis_addthis_display_markup__addthis_sharecount($variables = NULL) {
   $addthis = AddThis::getInstance();
-  $entity = $variables['#entity'];
 
   $element = array(
     '#theme' => 'addthis_wrapper',
@@ -173,7 +169,7 @@ function addthis_addthis_display_markup__addthis_sharecount($variables = NULL) {
       ),
     ),
   );
-  $item['#attributes'] += $addthis->getAddThisAttributesMarkup($entity);
+  $item['#attributes'] += $addthis->getAddThisAttributesMarkup($variables);
   $element[] = $item;
 
   return $element;
