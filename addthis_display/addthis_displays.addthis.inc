@@ -44,6 +44,7 @@ function addthis_displays_addthis_display_markup__addthis_basic_toolbox($options
           'addthis_button_' . $service
         ),
       ),
+      '#addthis_service' => $service,
     );
   }
   $element += $items;

@@ -133,6 +133,11 @@ class AddThis {
 
       $options['#url'] = url($uri['path'], $uri['options']);
     }
+    // @todo Hash the options array and cache the markup.
+    // This will save all the extra calls to modules and alters.
+
+    // Give other module the option to alter our markup options.
+    drupal_alter('addthis_markup_options', $options);
 
     if (array_key_exists($display, $formatters)) {
       // The display type is found. Now get it and get the markup.
@@ -149,9 +154,9 @@ class AddThis {
       // This should be the default implementation that is called.
       } elseif (in_array($display_inf['module'], $implementations)) {
         $markup = module_invoke($display_inf['module'], 'addthis_display_markup', $display, $options);
-
-      // When we end up here somebody did something wrong in there module.
       }
+      // Give other module the option to later our markup.
+      drupal_alter('addthis_markup', $markup);
       return $markup;
 
     } else {
