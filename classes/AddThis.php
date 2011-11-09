@@ -139,6 +139,9 @@ class AddThis {
     // Give other module the option to alter our markup options.
     drupal_alter('addthis_markup_options', $options);
 
+    $markup = array(
+      '#display' => $options['#display'],
+    );
     if (array_key_exists($display, $formatters)) {
       // The display type is found. Now get it and get the markup.
       $display_inf = $formatters[$display];
@@ -146,14 +149,13 @@ class AddThis {
       // Get all hook implementation to verify later if we can call it.
       $implementations = module_implements('addthis_display_markup');
 
-      $markup = array();
       // First we look for a targeted implementation to call.
       if (function_exists($display_inf['module'] . '_addthis_display_markup__' . $display)) {
-        $markup = call_user_func_array($display_inf['module'] . '_addthis_display_markup__' . $display, array($options));
+        $markup += call_user_func_array($display_inf['module'] . '_addthis_display_markup__' . $display, array($options));
 
       // This should be the default implementation that is called.
       } elseif (in_array($display_inf['module'], $implementations)) {
-        $markup = module_invoke($display_inf['module'], 'addthis_display_markup', $display, $options);
+        $markup += module_invoke($display_inf['module'], 'addthis_display_markup', $display, $options);
       }
       // Give other module the option to later our markup.
       drupal_alter('addthis_markup', $markup);
