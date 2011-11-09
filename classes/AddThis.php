@@ -277,7 +277,7 @@ class AddThis {
         'ui_use_addressbook' => $this->isAddressbookEnabled(),
         'ui_language' => $language->language
       );
-      // @todo provide hook to alter the default configuration.
+      drupal_alter('addthis_configuration', $configuration);
 
       $javascript = 'var addthis_config = ' . drupal_json_encode($configuration);
     }
@@ -352,7 +352,7 @@ class AddThis {
   }
 
   public function getCoBrand() {
-    return variable_get(self::CO_BRAND_KEY);
+    return variable_get(self::CO_BRAND_KEY, '');
   }
 
   public function get508Compliant() {
