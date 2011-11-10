@@ -22,7 +22,7 @@ function addthis_displays_addthis_display_markup__addthis_basic_toolbox($options
         'addthis_default_style',
         ($options['#display']['settings']['buttons_size'] == AddThis::CSS_32x32 ? AddThis::CSS_32x32 : NULL),
         $options['#display']['settings']['extra_css'],
-      )
+      ),
     ),
   );
   $element['#attributes'] += $addthis->getAddThisAttributesMarkup($options);
@@ -33,7 +33,7 @@ function addthis_displays_addthis_display_markup__addthis_basic_toolbox($options
 
   // All service elements
   $items = array();
-  foreach($services as $service) {
+  foreach ($services as $service) {
     $items[] = array(
       '#theme' => 'addthis_element',
       '#tag' => 'a',
@@ -41,7 +41,7 @@ function addthis_displays_addthis_display_markup__addthis_basic_toolbox($options
       '#attributes' => array(
         'href' => $addthis->getBaseBookmarkUrl(),
         'class' => array(
-          'addthis_button_' . $service
+          'addthis_button_' . $service,
         ),
       ),
       '#addthis_service' => $service,
@@ -71,7 +71,7 @@ function addthis_displays_addthis_display_markup__addthis_basic_button($options 
       'class' => array(
         'addthis_button',
         $options['#display']['settings']['extra_css'],
-      )
+      ),
     ),
   );
   $element['#attributes'] += $addthis->getAddThisAttributesMarkup($options);

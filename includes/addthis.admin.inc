@@ -4,7 +4,7 @@
  * @file
  * Administrative page callbacks for the AddThis-module.
  */
- 
+
 /**
  * Implements hook_admin_settings_form().
  */

@@ -125,7 +125,7 @@ class AddThis {
       // can play with it.
       $uri = entity_uri($options['#entity_type'], $options['#entity']);
       $uri['options'] += array(
-        'absolute' => TRUE
+        'absolute' => TRUE,
       );
       // Add hook here to alter the uri maybe also based on fields from the
       // entity. Like a custom share link. Pass $options and $uri. Return
@@ -153,15 +153,17 @@ class AddThis {
       if (function_exists($display_inf['module'] . '_addthis_display_markup__' . $display)) {
         $markup += call_user_func_array($display_inf['module'] . '_addthis_display_markup__' . $display, array($options));
 
-      // This should be the default implementation that is called.
-      } elseif (in_array($display_inf['module'], $implementations)) {
+        // This should be the default implementation that is called.
+      }
+      elseif (in_array($display_inf['module'], $implementations)) {
         $markup += module_invoke($display_inf['module'], 'addthis_display_markup', $display, $options);
       }
       // Give other module the option to later our markup.
       drupal_alter('addthis_markup', $markup);
       return $markup;
 
-    } else {
+    }
+    else {
       // Return empty
       return array();
     }
@@ -193,8 +195,9 @@ class AddThis {
     $services = $this->json->decode($this->getServicesJsonUrl());
     if (empty($services)) {
       drupal_set_message(t('AddThis services could not be loaded from ' . $this->getServicesJsonUrl()), 'warning');
-    } else {
-      foreach ($services['data'] AS $service) {
+    }
+    else {
+      foreach ($services['data'] as $service) {
         $serviceCode = check_plain($service['code']);
         $serviceName = check_plain($service['name']);
         $rows[$serviceCode] = '<span class="addthis_service_icon icon_' . $serviceCode . '"></span> ' . $serviceName;
@@ -222,10 +225,10 @@ class AddThis {
     if (self::getWidgetJsAsync()) {
       drupal_add_js(
         array(
-          'addthis' => array(
-            'widget_url' => $url,
-          )
+        'addthis' => array(
+          'widget_url' => $url,
         ),
+      ),
         'setting'
       );
     }
@@ -234,11 +237,11 @@ class AddThis {
       drupal_add_js(
         $url,
         array(
-          'type' => 'external',
-          'group' => JS_LIBRARY,
-          'every_page' => TRUE,
-          'weight' => 9
-        )
+        'type' => 'external',
+        'group' => JS_LIBRARY,
+        'every_page' => TRUE,
+        'weight' => 9,
+      )
       );
     }
     // Add local internal behaviours
@@ -246,11 +249,11 @@ class AddThis {
       drupal_add_js(
         drupal_get_path('module', 'addthis') . '/addthis.js',
         array(
-          'group' => JS_DEFAULT,
-          'weight' => 10,
-          'every_page' => TRUE,
-          'preprocess' => TRUE
-        )
+        'group' => JS_DEFAULT,
+        'weight' => 10,
+        'every_page' => TRUE,
+        'preprocess' => TRUE,
+      )
       );
     }
   }
@@ -268,14 +271,14 @@ class AddThis {
         'data_track_clickback' => $this->isClickbackTrackingEnabled(),
         'ui_508_compliant' => $this->get508Compliant(),
         'ui_click' => $this->isClickToOpenCompactMenuEnabled(),
-        'ui_cobrand' =>  $this->getCoBrand(),
+        'ui_cobrand' => $this->getCoBrand(),
         'ui_delay' => $this->getUiDelay(),
         'ui_header_background' => $this->getUiHeaderBackgroundColor(),
         'ui_header_color' => $this->getUiHeaderColor(),
         'ui_open_windows' => $this->isOpenWindowsEnabled(),
         'ui_use_css' => $this->isStandardCssEnabled(),
         'ui_use_addressbook' => $this->isAddressbookEnabled(),
-        'ui_language' => $language->language
+        'ui_language' => $language->language,
       );
       drupal_alter('addthis_configuration', $configuration);
 
@@ -286,8 +289,8 @@ class AddThis {
       array(
       'type' => 'inline',
       'scope' => 'footer',
-      'every_page' => TRUE
-      )
+      'every_page' => TRUE,
+    )
     );
   }
 
@@ -393,7 +396,7 @@ class AddThis {
   private function getAttributeTitle($entity) {
     if (isset($entity->title)) {
       return array(
-        self::TITLE_ATTRIBUTE => (check_plain($entity->title)  . ' - ' . variable_get('site_name'))
+        self::TITLE_ATTRIBUTE => (check_plain($entity->title)  . ' - ' . variable_get('site_name')),
       );
     }
     return array();
@@ -402,7 +405,7 @@ class AddThis {
   private function getAttributeUrl($options) {
     if (isset($options['#url'])) {
       return array(
-        self::URL_ATTRIBUTE => $options['#url']
+        self::URL_ATTRIBUTE => $options['#url'],
       );
     }
     return array();
@@ -420,7 +423,7 @@ class AddThis {
         '#tag' => 'a',
         '#value' => '',
         '#attributes' => array(
-          'class' => array('addthis_button_tweet')
+          'class' => array('addthis_button_tweet'),
         ),
       );
     }
@@ -436,10 +439,10 @@ class AddThis {
         '#value' => '',
         '#attributes' => array(
           'class' => array(
-           'addthis_button_facebook_like'
+            'addthis_button_facebook_like',
           ),
-          'fb:like:layout' => 'button_count'
-        )
+          'fb:like:layout' => 'button_count',
+        ),
       );
     }
     return $element;
@@ -453,8 +456,8 @@ class AddThis {
         '#tag' => 'a',
         '#value' => '',
         '#attributes' => array(
-          'class' => array('addthis_button_google_plusone')
-        )
+          'class' => array('addthis_button_google_plusone'),
+        ),
       );
     }
     return $element;

@@ -27,23 +27,23 @@ function addthis_addthis_display_markup__addthis_large_button($variables = NULL)
       'href' => $addthis->getFullBookmarkUrl(),
       'class' => array(
         'addthis_button',
-      )
-    )
+      ),
+    ),
   );
   $element['#attributes'] += $addthis->getAddThisAttributesMarkup($variables);
 
   // Here we start the children of the a element.
   $image = array(
-      '#theme' => 'addthis_element',
-      '#tag' => 'img',
-      '#attributes' => array(
-        'src' => 'http://s7.addthis.com/static/btn/v2/lg-share-en.gif',
-        'width' => '125',
-        'height' => '16',
-        'alt' => t('Bookmark and Share'),
-        'style' => 'border:0;'
-      )
-    );
+    '#theme' => 'addthis_element',
+    '#tag' => 'img',
+    '#attributes' => array(
+      'src' => 'http://s7.addthis.com/static/btn/v2/lg-share-en.gif',
+      'width' => '125',
+      'height' => '16',
+      'alt' => t('Bookmark and Share'),
+      'style' => 'border:0;',
+    ),
+  );
   $element[] = $image;
 
   return $element;
@@ -62,9 +62,9 @@ function addthis_addthis_display_markup__addthis_compact_button($variables = NUL
     '#attributes' => array(
       'href' => $addthis->getFullBookmarkUrl(),
       'class' => array(
-        'addthis_button'
-      )
-    )
+        'addthis_button',
+      ),
+    ),
   );
   $element['#attributes'] += $addthis->getAddThisAttributesMarkup($variables);
 
@@ -102,7 +102,7 @@ function addthis_addthis_display_markup__addthis_toolbox($variables = NULL) {
         'addthis_toolbox',
         'addthis_default_style',
         trim($addthis->getLargeButtonsClass()),
-      )
+      ),
     ),
   );
   $element['#attributes'] += $addthis->getAddThisAttributesMarkup($variables);
@@ -116,7 +116,7 @@ function addthis_addthis_display_markup__addthis_toolbox($variables = NULL) {
     '#attributes' => array(
       'href' => $addthis->getFullBookmarkUrl(),
       'class' => array(
-        'addthis_button_compact'
+        'addthis_button_compact',
       ),
     ),
   );
@@ -130,7 +130,7 @@ function addthis_addthis_display_markup__addthis_toolbox($variables = NULL) {
         'href' => $addthis->getFullBookmarkUrl(),
         'class' => array(
           ('addthis_button_preferred_' . $i),
-        )
+        ),
       ),
     );
   }
@@ -154,8 +154,8 @@ function addthis_addthis_display_markup__addthis_sharecount($variables = NULL) {
     '#attributes' => array(
       'class' => array(
         'addthis_toolbox',
-        'addthis_default_style'
-      )
+        'addthis_default_style',
+      ),
     ),
   );
   // <a> element with counter
@@ -165,7 +165,7 @@ function addthis_addthis_display_markup__addthis_sharecount($variables = NULL) {
     '#value' => '',
     '#attributes' => array(
       'class' => array(
-        'addthis_counter'
+        'addthis_counter',
       ),
     ),
   );

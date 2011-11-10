@@ -3,7 +3,7 @@
  * @file
  * A class containing utility methods for json-related functionality.
  */
- 
+
 class AddThisJson {
 
   public function decode($url) {

@@ -4,7 +4,7 @@
  * @file
  * Field related hook implementations for the AddThis-module.
  */
- 
+
 /**
  * Implements hook_field_info().
  *
@@ -21,8 +21,8 @@ function addthis_field_info() {
       'description' => t('This field stores addthis settings in the database.'),
       'settings' => array('max_length' => 255),
       'instance_settings' => array(
-        AddThis::STYLE_KEY => AddThis::WIDGET_TYPE_COMPACT_BUTTON
-       ),
+        AddThis::STYLE_KEY => AddThis::WIDGET_TYPE_COMPACT_BUTTON,
+      ),
       'default_widget' => AddThis::WIDGET_TYPE,
       'default_formatter' => AddThis::WIDGET_TYPE_DISABLED,
     ),
@@ -46,7 +46,7 @@ function addthis_field_formatter_info() {
   foreach (AddThis::getInstance()->getWidgetTypes() as $key => $label) {
     $formatters[$key] = array(
       'label' => $label,
-      'field types' => array(AddThis::FIELD_TYPE)
+      'field types' => array(AddThis::FIELD_TYPE),
     );
   }
 
@@ -55,7 +55,7 @@ function addthis_field_formatter_info() {
 
 /**
  * Implementation to retrieve formatters for a certain type of field.
- * 
+ *
  * @todo make this a private function atleast by naming convention with a prefixed _ (underscore).
  */
 function addthis_field_info_formatter_field_type($field_type = NULL) {
@@ -80,13 +80,13 @@ function addthis_render_formatter_view($entity_type, $entity, $field, $instance,
   // Get the markup for the share and add that to the $element[0] to display.
   $element = array();
   $display_type = $display['type'];
-  
+
   $options = array(
     '#entity_type' => $entity_type,
     '#entity' => $entity,
-    '#display' => $display
+    '#display' => $display,
   );
-  
+
   $markup = AddThis::getInstance()->getDisplayMarkup($display_type, $options);
   if (!isset($element[0])) {
     $element[0] = $markup;
@@ -144,8 +144,8 @@ function addthis_field_widget_info() {
  * Implements hook_field_widget_form().
  */
 function addthis_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-  
-  
+
+
   // The AddThis field is a placeholder field and has no widget settings.
   // To suppress the form we set access to false here.
   if ($instance['widget']['type'] == AddThis::WIDGET_TYPE) {

@@ -12,12 +12,12 @@ module_load_include('inc', 'addthis', 'includes/addthis.field');
  * Implementation of hook_hook_info()
  */
 function addthis_hook_info() {
-    // Definde hook_addthis_display_markup in the addthis group.
-    // All the $module.addthis.inc files that are found will be included
-    // because group addthis is defined.
-    // See addthis.addthis.inc for examples of the hook implementation.
+  // Definde hook_addthis_display_markup in the addthis group.
+  // All the $module.addthis.inc files that are found will be included
+  // because group addthis is defined.
+  // See addthis.addthis.inc for examples of the hook implementation.
   $hooks['addthis_display_markup'] = array(
-      'group' => 'addthis'
+    'group' => 'addthis',
   );
   return $hooks;
 }
@@ -113,14 +113,14 @@ function addthis_form_alter(&$form, &$form_state, $form_id) {
 function addthis_theme($existing, $type, $theme, $path) {
   return array(
     'addthis_wrapper' => array(
-      'render element' => 'addthis_wrapper'
+      'render element' => 'addthis_wrapper',
     ),
     'addthis_element' => array(
-      'render element' => 'addthis_element'
+      'render element' => 'addthis_element',
     ),
     'addthis' => array(
-      'render element' => 'addthis'
-    )
+      'render element' => 'addthis',
+    ),
   );
 }
 
