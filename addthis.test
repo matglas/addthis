@@ -151,6 +151,10 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $edit[AddThis::COMPLIANT_508_KEY] = TRUE;
 
     $edit[AddThis::CLICKBACK_TRACKING_ENABLED_KEY] = TRUE;
+    
+    $edit[AddThis::GOOGLE_ANALYTICS_TRACKING_ENABLED_KEY] = TRUE;
+    
+    $edit[AddThis::GOOGLE_ANALYTICS_SOCIAL_TRACKING_ENABLED_KEY] = TRUE;
 
     $edit[AddThis::ADDRESSBOOK_ENABLED_KEY] = TRUE;
 
@@ -193,6 +197,10 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $this->addThis508CompliantSettingShouldBeAbleToBeSaved();
 
     $this->addThisClickbackTrackingEnabledSettingShouldBeAbleToBeSaved();
+
+    $this->addThisGoogleAnalyticsTrackingEnabledSettingShouldBeAbleToBeSaved();
+
+    $this->addThisGoogleAnalyticsSocialTrackingEnabledSettingShouldBeAbleToBeSaved();
 
     $this->addThisClickToOpenCompactMenuEnabledSettingShouldBeAbleToBeSaved();
 
@@ -237,6 +245,16 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
   private function addThisClickbackTrackingEnabledSettingShouldBeAbleToBeSaved() {
     $this->assertFieldChecked('edit-addthis-clickback-tracking-enabled',
                               'AddThis clickback tracking enabled setting should be able to be saved.');
+  }
+
+  private function addThisGoogleAnalyticsTrackingEnabledSettingShouldBeAbleToBeSaved() {
+    $this->assertFieldChecked('edit-addthis-google-analytics-tracking-enabled',
+                              'AddThis Google Analytics tracking enabled setting should be able to be saved.');
+  }
+
+  private function addThisGoogleAnalyticsSocialTrackingEnabledSettingShouldBeAbleToBeSaved() {
+    $this->assertFieldChecked('edit-addthis-google-analytics-tracking-enabled',
+                              'AddThis Google Analytics social tracking enabled setting should be able to be saved.');
   }
 
   private function addThisClickToOpenCompactMenuEnabledSettingShouldBeAbleToBeSaved() {

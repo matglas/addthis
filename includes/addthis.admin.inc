@@ -148,25 +148,41 @@ function addthis_admin_settings_form($form_state) {
     '#required' => FALSE,
   );
 
-   $form['enabled_services_fieldset'] = array(
-     '#type' => 'fieldset',
-     '#title' => t('Enabled services'),
-     '#description' => t('The sharing services you select here will be in the compact menu. If you select nothing AddThis will provide a list of frequently used services. This list is updated regularily.'),
-     '#collapsible' => TRUE,
-     '#collapsed' => TRUE,
-   );
-   $form['enabled_services_fieldset'][AddThis::ENABLED_SERVICES_KEY] = array(
-     '#type' => 'checkboxes',
-     '#title' => t('Enabled services'),
-     '#options' => AddThis::getInstance()->getServices(),
-     '#default_value' => AddThis::getInstance()->getEnabledServices(),
-     '#required' => FALSE,
-     '#theme' => 'addthis_checkboxes_columns',
-     '#columns' => 3,
-   );
-
-  // @todo Move to advanced tab.
-  $form['service_urls_fieldset'] = array(
+  if (module_exists('googleanalytics') && variable_get('googleanalytics_account', '') !== '') {
+    // Google Analytics support
+    $form['fieldset_analytics'][AddThis::GOOGLE_ANALYTICS_TRACKING_ENABLED_KEY] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Track with Google Analytics'),
+      '#description' => 'Check to track shares in your Google Analytics account reports (<a href="http://www.addthis.com/help/google-analytics-integration">more info</a>). Always global.',
+      '#default_value' => AddThis::getInstance()->isGoogleAnalyticsTrackingEnabled(),
+      '#required' => FALSE,
+    );
+    // Google Social Tracking support
+    $form['fieldset_analytics'][AddThis::GOOGLE_ANALYTICS_SOCIAL_TRACKING_ENABLED_KEY] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Track with Google Analytics social'),
+      '#description' => 'Check to track shares in the new Google Analytics social interaction reports (<a href="http://www.addthis.com/help/google-analytics-integration#social">more info</a>). Always global.',
+      '#default_value' => AddThis::getInstance()->isGoogleAnalyticsSocialTrackingEnabled(),
+      '#required' => FALSE,
+    );
+  }
+  $form['enabled_services_fieldset'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Enabled services'),
+    '#description' => t('The sharing services you select here will be in the compact menu. If you select nothing AddThis will provide a list of frequently used services. This list is updated regularily.'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['enabled_services_fieldset'][AddThis::ENABLED_SERVICES_KEY] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Enabled services'),
+    '#options' => AddThis::getInstance()->getServices(),
+    '#default_value' => AddThis::getInstance()->getEnabledServices(),
+    '#required' => FALSE,
+    '#theme' => 'addthis_checkboxes_columns',
+    '#columns' => 3,
+  );
+    $form['service_urls_fieldset'] = array(
       '#type' => 'fieldset',
       '#title' => t('Service URLs'),
       '#collapsible' => TRUE,
