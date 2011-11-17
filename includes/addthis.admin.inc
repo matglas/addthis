@@ -113,6 +113,22 @@ function addthis_admin_settings_form($form_state) {
     '#default_value' => AddThis::getInstance()->isClickbackTrackingEnabled(),
     '#required' => FALSE,
   );
+  if (module_exists('googleanalytics') && variable_get('googleanalytics_account', '') !== '') {
+    $form['data_tracking_fieldset'][AddThis::GOOGLE_ANALYTICS_TRACKING_ENABLED_KEY] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Track with Google Analytics'),
+      '#description' => 'Check to track shares in your Google Analytics account reports (<a href="http://www.addthis.com/help/google-analytics-integration">more info</a>). Always global.',
+      '#default_value' => AddThis::getInstance()->isGoogleAnalyticsTrackingEnabled(),
+      '#required' => FALSE,
+    );
+    $form['data_tracking_fieldset'][AddThis::GOOGLE_ANALYTICS_SOCIAL_TRACKING_ENABLED_KEY] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Track with Google Analytics social'),
+      '#description' => 'Check to track shares in the new Google Analytics social interaction reports (<a href="http://www.addthis.com/help/google-analytics-integration#social">more info</a>). Always global.',
+      '#default_value' => AddThis::getInstance()->isGoogleAnalyticsSocialTrackingEnabled(),
+      '#required' => FALSE,
+    );
+  }
   $form['email_settings_fieldset'] = array(
     '#type' => 'fieldset',
     '#title' => t('Email settings'),

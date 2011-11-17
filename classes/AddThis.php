@@ -33,6 +33,8 @@ class AddThis {
   const CUSTOM_CONFIGURATION_CODE_KEY = 'addthis_custom_configuration_code';
   const ENABLED_SERVICES_KEY = 'addthis_enabled_services';
   const FACEBOOK_LIKE_ENABLED_KEY = 'addthis_facebook_like_enabled';
+  const GOOGLE_ANALYTICS_TRACKING_ENABLED_KEY = 'addthis_google_analytics_tracking_enabled';
+  const GOOGLE_ANALYTICS_SOCIAL_TRACKING_ENABLED_KEY = 'addthis_google_analytics_social_tracking_enabled';
   const GOOGLE_PLUS_ONE_ENABLED_KEY = 'addthis_google_plus_one_enabled';
   const LARGE_ICONS_ENABLED_KEY = 'addthis_large_icons_enabled';
   const NUMBER_OF_PREFERRED_SERVICES_KEY = 'addthis_number_of_preferred_services';
@@ -251,6 +253,12 @@ class AddThis {
         'ui_use_addressbook' => $this->isAddressbookEnabled(),
         'ui_language' => $language->language
       );
+      if (module_exists('googleanalytics')) {
+        if ($this->isGoogleAnalyticsTrackingEnabled()) {
+          $configuration['data_ga_property'] = variable_get('googleanalytics_account', '');
+          $configuration['data_ga_social'] = $this->isGoogleAnalyticsSocialTrackingEnabled();
+        }
+      }
       // @todo provide hook to alter the default configuration.
 
       $javascript = 'var addthis_config = ' . drupal_json_encode($configuration);
@@ -339,6 +347,14 @@ class AddThis {
 
   public function isAddressbookEnabled() {
     return (boolean) variable_get(self::ADDRESSBOOK_ENABLED_KEY, FALSE);
+  }
+  
+  public function isGoogleAnalyticsTrackingEnabled() {
+    return (boolean) variable_get(self::GOOGLE_ANALYTICS_TRACKING_ENABLED_KEY, FALSE);
+  }
+  
+  public function isGoogleAnalyticsSocialTrackingEnabled() {
+    return (boolean) variable_get(self::GOOGLE_ANALYTICS_SOCIAL_TRACKING_ENABLED_KEY, FALSE);
   }
 
   public function getAddThisAttributesMarkup($entity) {
