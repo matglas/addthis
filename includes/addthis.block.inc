@@ -38,7 +38,7 @@ function addthis_block_configure($delta = '') {
   $form[AddThis::BLOCK_WIDGET_TYPE_KEY] = array(
     '#type' => 'select',
     '#title' => t('AddThis Display type'),
-    '#options' => AddThis::getInstance()->getWidgetTypes(),
+    '#options' => AddThis::getInstance()->getDisplayTypes(),
     '#default_value' => AddThis::getInstance()->getBlockDisplayType(),
   );
   return $form;

@@ -20,9 +20,6 @@ function addthis_field_info() {
       'label' => t('AddThis'),
       'description' => t('This field stores addthis settings in the database.'),
       'settings' => array('max_length' => 255),
-      'instance_settings' => array(
-        AddThis::STYLE_KEY => AddThis::WIDGET_TYPE_COMPACT_BUTTON,
-      ),
       'default_widget' => AddThis::WIDGET_TYPE,
       'default_formatter' => AddThis::WIDGET_TYPE_DISABLED,
     ),
@@ -43,7 +40,7 @@ function addthis_field_formatter_info() {
   $formatters = array();
 
   // Create a formatter element for all the default style types we have.
-  foreach (AddThis::getInstance()->getWidgetTypes() as $key => $label) {
+  foreach (AddThis::getInstance()->getDisplayTypes() as $key => $label) {
     $formatters[$key] = array(
       'label' => $label,
       'field types' => array(AddThis::FIELD_TYPE),

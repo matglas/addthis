@@ -105,7 +105,7 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
   private function addThisShouldBeAbleToBeUsedAsBlock() {
     $this->drupalGet('admin/structure/block');
-    $this->assertRaw(t('An AddThis-block.'), 'AddThis should be able to be used as a block.');
+    $this->assertRaw(t('AddThis'), 'AddThis should be able to be used as a block.');
 
     $this->addThisBlockSettingsShouldBeAbleToBeSaved();
   }
@@ -160,24 +160,15 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
     $edit[AddThis::STANDARD_CSS_ENABLED_KEY] = TRUE;
 
-    $edit[AddThis::FACEBOOK_LIKE_ENABLED_KEY] = TRUE;
-
-    $edit[AddThis::GOOGLE_PLUS_ONE_ENABLED_KEY] = TRUE;
-
-    $edit[AddThis::TWITTER_ENABLED_KEY] = TRUE;
-
-    $numberOfPreferredServices = 5;
-    $edit[AddThis::NUMBER_OF_PREFERRED_SERVICES_KEY] = $numberOfPreferredServices;
-
     $edit[AddThis::CUSTOM_CONFIGURATION_CODE_ENABLED_KEY] = TRUE;
 
     $customConfigurationCode = TestHelper::generateRandomLowercaseString();
     $edit[AddThis::CUSTOM_CONFIGURATION_CODE_KEY] = $customConfigurationCode;
-    
+
     $serviceName = '2linkme';
     $edit["addthis_enabled_services[$serviceName]"] = $serviceName;
 
-    $this->drupalPost('admin/config/system/addthis', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/user-interface/addthis', $edit, t('Save configuration'));
 
     $this->assertText(t('The configuration options have been saved.'), 'AddThis system settings should be able to be saved.');
 
@@ -208,14 +199,6 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $this->addThisOpenWindowsEnabledSettingShouldBeAbleToBeSaved();
 
     $this->addThisStandardCssEnabledSettingShouldBeAbleToBeSaved();
-
-    $this->addThisFacebookLikeEnabledSettingShouldBeAbleToBeSaved();
-
-    $this->addThisGooglePlusOneEnabledSettingShouldBeAbleToBeSaved();
-
-    $this->addThisTwitterEnabledSettingShouldBeAbleToBeSaved();
-
-    $this->addThisNumberOfPreferredServicesShouldBeAbleToBeSaved($numberOfPreferredServices);
 
     $this->addThisEnabledServicesShouldBeAbleToBeSaved($serviceName);
 

@@ -1,3 +1,12 @@
+Removed legacy display types.
+  AddThis module contained some small non generic display types. They where
+  removed in favor of the display types added in the addthis_displays submodule.
+
+Redesigned the config page.
+  The settings page has been made more condensed and options have been merged
+  into clear categories. There are some options that where removed because of
+  legacy functionality that is now support inside the display types.
+
 Fixed default value for ui_co_brand setting.
 Added alter hook for configuration.
 Added alter hook for markup options.

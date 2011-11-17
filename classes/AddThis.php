@@ -33,16 +33,11 @@ class AddThis {
   const CUSTOM_CONFIGURATION_CODE_ENABLED_KEY = 'addthis_custom_configuration_code_enabled';
   const CUSTOM_CONFIGURATION_CODE_KEY = 'addthis_custom_configuration_code';
   const ENABLED_SERVICES_KEY = 'addthis_enabled_services';
-  const FACEBOOK_LIKE_ENABLED_KEY = 'addthis_facebook_like_enabled';
-  const GOOGLE_PLUS_ONE_ENABLED_KEY = 'addthis_google_plus_one_enabled';
-  const LARGE_ICONS_ENABLED_KEY = 'addthis_large_icons_enabled';
-  const NUMBER_OF_PREFERRED_SERVICES_KEY = 'addthis_number_of_preferred_services';
   const OPEN_WINDOWS_ENABLED_KEY = 'addthis_open_windows_enabled';
   const PROFILE_ID_KEY = 'addthis_profile_id';
   const SERVICES_CSS_URL_KEY = 'addthis_services_css_url';
   const SERVICES_JSON_URL_KEY = 'addthis_services_json_url';
   const STANDARD_CSS_ENABLED_KEY = 'addthis_standard_css_enabled';
-  const TWITTER_ENABLED_KEY = 'addthis_twitter_enabled';
   const UI_DELAY_KEY = 'addthis_ui_delay';
   const UI_HEADER_BACKGROUND_COLOR_KEY = 'addthis_ui_header_background_color';
   const UI_HEADER_COLOR_KEY = 'addthis_ui_header_color';
@@ -61,11 +56,7 @@ class AddThis {
   const ADMIN_INCLUDE_FILE = 'includes/addthis.admin.inc';
 
   // Widget types
-  const WIDGET_TYPE_COMPACT_BUTTON = 'addthis_compact_button';
   const WIDGET_TYPE_DISABLED = 'addthis_disabled';
-  const WIDGET_TYPE_LARGE_BUTTON = 'addthis_large_button';
-  const WIDGET_TYPE_SHARECOUNT = 'addthis_sharecount';
-  const WIDGET_TYPE_TOOLBOX = 'addthis_toolbox';
 
   // Styles
   const CSS_32x32 = 'addthis_32x32_style';
@@ -91,22 +82,15 @@ class AddThis {
     $this->json = $json;
   }
 
-  //@TODO: Refactor all WidgetType names into DisplayType
-  // A widget type is the element shown to edit a value.
-  // We use the widget as a type way to define the way to Display.
-  // Therefore we need to keep a good descriptive name as DisplayType.
-
   /*
    * Get all the DisplayTypes that are available.
    */
-  public function getWidgetTypes() {
+  public function getDisplayTypes() {
     return array(
       self::WIDGET_TYPE_DISABLED => t('Disabled'),
-      self::WIDGET_TYPE_COMPACT_BUTTON => t('Compact button'),
-      self::WIDGET_TYPE_LARGE_BUTTON => t('Large button'),
-      self::WIDGET_TYPE_TOOLBOX => t('Toolbox'),
-      self::WIDGET_TYPE_SHARECOUNT => t('Sharecount'),
     );
+    // @todo Get all display types available and
+    // provide a array with their names.
   }
 
   /*
@@ -175,7 +159,7 @@ class AddThis {
    * Get the type DisplayType used for our AddThis block.
    */
   public function getBlockDisplayType() {
-    return variable_get(self::BLOCK_WIDGET_TYPE_KEY, self::WIDGET_TYPE_COMPACT_BUTTON);
+    return variable_get(self::BLOCK_WIDGET_TYPE_KEY, self::WIDGET_TYPE_DISABLED);
   }
 
   public function getProfileId() {
@@ -294,28 +278,12 @@ class AddThis {
     );
   }
 
-  public function areLargeIconsEnabled() {
-    return (boolean) variable_get(self::LARGE_ICONS_ENABLED_KEY, TRUE);
-  }
-
   public function isClickToOpenCompactMenuEnabled() {
     return (boolean) variable_get(self::CLICK_TO_OPEN_COMPACT_MENU_ENABLED_KEY, FALSE);
   }
 
   public function isOpenWindowsEnabled() {
     return (boolean) variable_get(self::OPEN_WINDOWS_ENABLED_KEY, FALSE);
-  }
-
-  public function isFacebookLikeEnabled() {
-    return (boolean) variable_get(self::FACEBOOK_LIKE_ENABLED_KEY, FALSE);
-  }
-
-  public function isGooglePlusOneEnabled() {
-    return (boolean) variable_get(self::GOOGLE_PLUS_ONE_ENABLED_KEY, FALSE);
-  }
-
-  public function isTwitterEnabled() {
-    return (boolean) variable_get(self::TWITTER_ENABLED_KEY, FALSE);
   }
 
   public function getUiDelay() {
@@ -348,10 +316,6 @@ class AddThis {
 
   public function getBaseBookmarkUrl() {
     return check_url(variable_get(self::BOOKMARK_URL_KEY, self::DEFAULT_BOOKMARK_URL));
-  }
-
-  public function getNumberOfPreferredServices() {
-    return variable_get(self::NUMBER_OF_PREFERRED_SERVICES_KEY, self::DEFAULT_NUMBER_OF_PREFERRED_SERVICES);
   }
 
   public function getCoBrand() {
@@ -413,54 +377,6 @@ class AddThis {
 
   public function getLargeButtonsClass() {
     return $this->areLargeIconsEnabled() ? ' addthis_32x32_style ' : '';
-  }
-
-  public function getTwitterButtonMarkup() {
-    $element = NULL;
-    if ($this->isTwitterEnabled()) {
-      $element = array(
-        '#theme' => 'addthis_element',
-        '#tag' => 'a',
-        '#value' => '',
-        '#attributes' => array(
-          'class' => array('addthis_button_tweet'),
-        ),
-      );
-    }
-    return $element;
-  }
-
-  public function getFacebookLikeButtonMarkup() {
-    $element = NULL;
-    if ($this->isFacebookLikeEnabled()) {
-      $element = array(
-        '#theme' => 'addthis_element',
-        '#tag' => 'a',
-        '#value' => '',
-        '#attributes' => array(
-          'class' => array(
-            'addthis_button_facebook_like',
-          ),
-          'fb:like:layout' => 'button_count',
-        ),
-      );
-    }
-    return $element;
-  }
-
-  public function getGooglePlusOneButtonMarkup() {
-    $element = NULL;
-    if ($this->isGooglePlusOneEnabled()) {
-      $element = array(
-        '#theme' => 'addthis_element',
-        '#tag' => 'a',
-        '#value' => '',
-        '#attributes' => array(
-          'class' => array('addthis_button_google_plusone'),
-        ),
-      );
-    }
-    return $element;
   }
 
   private function getServiceNamesAsCommaSeparatedString() {
