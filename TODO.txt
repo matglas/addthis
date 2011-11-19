@@ -2,8 +2,6 @@
 - Write addthis.api.php file with example of implementation.
 - Add custom button with upload functionality for a custom button image.
 - Move basic button to main module to provide a basic implementation.
-- Rebuild getDisplayTypes() to get all display types implementations and return a list.
 - Create a column view of the services on the settings page.
 - Create asynchronous load checkbox in settings page.
 - Refactor the order of methods in the AddThis class to collect same type of methods.
-- Add Facebook namespaces

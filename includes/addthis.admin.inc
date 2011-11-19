@@ -148,12 +148,13 @@ function addthis_admin_settings_form($form_state) {
     '#required' => FALSE,
   );
 
+
   if (module_exists('googleanalytics') && variable_get('googleanalytics_account', '') !== '') {
     // Google Analytics support
     $form['fieldset_analytics'][AddThis::GOOGLE_ANALYTICS_TRACKING_ENABLED_KEY] = array(
       '#type' => 'checkbox',
       '#title' => t('Track with Google Analytics'),
-      '#description' => 'Check to track shares in your Google Analytics account reports (<a href="http://www.addthis.com/help/google-analytics-integration">more info</a>). Always global.',
+      '#description' => t('Check to track shares in your Google Analytics account reports (<a href="http://www.addthis.com/help/google-analytics-integration">more info</a>). Always global.'),
       '#default_value' => AddThis::getInstance()->isGoogleAnalyticsTrackingEnabled(),
       '#required' => FALSE,
     );
@@ -161,11 +162,32 @@ function addthis_admin_settings_form($form_state) {
     $form['fieldset_analytics'][AddThis::GOOGLE_ANALYTICS_SOCIAL_TRACKING_ENABLED_KEY] = array(
       '#type' => 'checkbox',
       '#title' => t('Track with Google Analytics social'),
-      '#description' => 'Check to track shares in the new Google Analytics social interaction reports (<a href="http://www.addthis.com/help/google-analytics-integration#social">more info</a>). Always global.',
+      '#description' => t('Check to track shares in the new Google Analytics social interaction reports (<a href="http://www.addthis.com/help/google-analytics-integration#social">more info</a>). Always global.'),
       '#default_value' => AddThis::getInstance()->isGoogleAnalyticsSocialTrackingEnabled(),
       '#required' => FALSE,
     );
   }
+
+  $rdf_enabled = module_exists('rdf');
+  if (!$rdf_enabled) {
+    $rdf_description = t('<span class="admin-disabled">The RDF module needs to be enabled to support Facebook Like tracking support.<br>Enabled the module here on the <a href="!modules">modules</a> page.</span>',
+      array('!modules' => base_path() . 'admin/modules')
+    );
+  }
+  else {
+    $rdf_description = t('Check to track Facebook Like tracking support. Always global.');
+  }
+  // Trackinhg of Facebook Like needs a namespace added.
+  $form['fieldset_analytics'][AddThis::FACEBOOK_LIKE_COUNT_SUPPORT_ENABLED] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Enable Facebook Like tracking'),
+        '#description' => $rdf_description,
+        '#default_value' => AddThis::getInstance()->isFacebookLikeCountSupportEnabled(),
+        '#required' => FALSE,
+        '#disabled' => !$rdf_enabled,
+  );
+
+  // Servicees enabled for compact menu.
   $form['enabled_services_fieldset'] = array(
     '#type' => 'fieldset',
     '#title' => t('Enabled services'),

@@ -23,7 +23,9 @@ function addthis_block_info() {
 function addthis_block_view($block_name = '') {
   if ($block_name == AddThis::BLOCK_NAME) {
     $widget_type = AddThis::getInstance()->getBlockDisplayType();
-    $markup = AddThis::getInstance()->getDisplayMarkup($widget_type);
+    // We have added the option variable #block to have a reference in the alter hooks
+    // to react on this information. Someone might want to change this specific display.
+    $markup = AddThis::getInstance()->getDisplayMarkup($widget_type, array('#block' => AddThis::BLOCK_NAME));
     return array(
       'subject' => '',
       'content' => $markup,

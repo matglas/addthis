@@ -40,7 +40,7 @@ function addthis_field_formatter_info() {
   $formatters = array();
 
   // Create a formatter element for all the default style types we have.
-  foreach (AddThis::getInstance()->getDisplayTypes() as $key => $label) {
+  foreach (AddThis::getInstance()->getDefaultFormatterTypes() as $key => $label) {
     $formatters[$key] = array(
       'label' => $label,
       'field types' => array(AddThis::FIELD_TYPE),
@@ -55,7 +55,7 @@ function addthis_field_formatter_info() {
  *
  * @todo make this a private function atleast by naming convention with a prefixed _ (underscore).
  */
-function addthis_field_info_formatter_field_type($field_type = NULL) {
+function _addthis_field_info_formatter_field_type($field_type = NULL) {
   $formatters = field_info_formatter_types();
   foreach ($formatters as $key => $formatter) {
     if (!in_array((!isset($field_type) ? AddThis::FIELD_TYPE : $field_type), $formatter['field types'])) {

@@ -35,6 +35,7 @@ class AddThis {
   const ENABLED_SERVICES_KEY = 'addthis_enabled_services';
   const GOOGLE_ANALYTICS_TRACKING_ENABLED_KEY = 'addthis_google_analytics_tracking_enabled';
   const GOOGLE_ANALYTICS_SOCIAL_TRACKING_ENABLED_KEY = 'addthis_google_analytics_social_tracking_enabled';
+  const FACEBOOK_LIKE_COUNT_SUPPORT_ENABLED = 'addthis_facebook_like_count_support_enabled';
   const OPEN_WINDOWS_ENABLED_KEY = 'addthis_open_windows_enabled';
   const PROFILE_ID_KEY = 'addthis_profile_id';
   const SERVICES_CSS_URL_KEY = 'addthis_services_css_url';
@@ -85,14 +86,25 @@ class AddThis {
   }
 
   /*
-   * Get all the DisplayTypes that are available.
+   * Get all the default formatters provided by the core addthis module.
    */
-  public function getDisplayTypes() {
+  public function getDefaultFormatterTypes() {
     return array(
       self::WIDGET_TYPE_DISABLED => t('Disabled'),
     );
     // @todo Get all display types available and
     // provide a array with their names.
+  }
+
+  /*
+  * Get all the DisplayTypes that are available.
+  */
+  public function getDisplayTypes() {
+    $displays = array();
+    foreach ($display_impl = _addthis_field_info_formatter_field_type() as $key => $display) {
+      $displays[$key] = t(check_plain($display['label']));
+    }
+    return $displays;
   }
 
   /*
@@ -103,58 +115,71 @@ class AddThis {
    * is not there we use the default settings.
    */
   public function getDisplayMarkup($display, $options = array()) {
-    $formatters = addthis_field_info_formatter_field_type();
+    if (!empty($display)) {
+      $options = $options;
+      $formatters = _addthis_field_info_formatter_field_type();
 
-    // When we have the entity and entity_type we can send it to the url.
-    if (isset($options['#entity']) && isset($options['#entity_type'])) {
-      // See if we can create the url and send it through a hook so others
-      // can play with it.
-      $uri = entity_uri($options['#entity_type'], $options['#entity']);
-      $uri['options'] += array(
-        'absolute' => TRUE,
-      );
-      // Add hook here to alter the uri maybe also based on fields from the
-      // entity. Like a custom share link. Pass $options and $uri. Return
-      // a uri object to which we can reset it. Maybe use the alter structure.
+      if (array_key_exists($display, $formatters)) {
+        // The display type is found. Now get it and get the markup.
+        $display_inf = $formatters[$display];
 
-      $options['#url'] = url($uri['path'], $uri['options']);
-    }
-    // @todo Hash the options array and cache the markup.
-    // This will save all the extra calls to modules and alters.
+        // Theme function might only give a display name and
+        // render on default implementation.
+        $settings = array();
+        if (!isset($options['#display']) || $options['#display']['type'] != $display) {
+          $options['#display'] = $display_inf;
+        }
 
-    // Give other module the option to alter our markup options.
-    drupal_alter('addthis_markup_options', $options);
+        // When we have the entity and entity_type we can send it to the url.
+        if (isset($options['#entity']) && isset($options['#entity_type'])) {
+          // See if we can create the url and send it through a hook so others
+          // can play with it.
+          $uri = entity_uri($options['#entity_type'], $options['#entity']);
+          $uri['options'] += array(
+            'absolute' => TRUE,
+          );
+          // Add hook here to alter the uri maybe also based on fields from the
+          // entity. Like a custom share link. Pass $options and $uri. Return
+          // a uri object to which we can reset it. Maybe use the alter structure.
 
-    $markup = array(
-      '#display' => $options['#display'],
-    );
-    if (array_key_exists($display, $formatters)) {
-      // The display type is found. Now get it and get the markup.
-      $display_inf = $formatters[$display];
+          $options['#url'] = url($uri['path'], $uri['options']);
+        }
+        // @todo Hash the options array and cache the markup.
+        // This will save all the extra calls to modules and alters.
 
-      // Get all hook implementation to verify later if we can call it.
-      $implementations = module_implements('addthis_display_markup');
+        // Give other module the option to alter our markup options.
+        drupal_alter('addthis_markup_options', $options);
 
-      // First we look for a targeted implementation to call.
-      if (function_exists($display_inf['module'] . '_addthis_display_markup__' . $display)) {
-        $markup += call_user_func_array($display_inf['module'] . '_addthis_display_markup__' . $display, array($options));
+        $markup = array(
+          '#display' => $options['#display'],
+        );
+        // Get all hook implementation to verify later if we can call it.
+        $implementations = module_implements('addthis_display_markup');
 
-        // This should be the default implementation that is called.
+        // First we look for a targeted implementation to call.
+        if (function_exists($display_inf['module'] . '_addthis_display_markup__' . $display)) {
+          $markup += call_user_func_array($display_inf['module'] . '_addthis_display_markup__' . $display, array($options));
+
+          // This should be the default implementation that is called.
+        }
+        elseif (in_array($display_inf['module'], $implementations)) {
+          $markup += module_invoke($display_inf['module'], 'addthis_display_markup', $display, $options);
+        }
+        // Give other module the option to later our markup.
+        drupal_alter('addthis_markup', $markup);
+        return $markup;
+
       }
-      elseif (in_array($display_inf['module'], $implementations)) {
-        $markup += module_invoke($display_inf['module'], 'addthis_display_markup', $display, $options);
+      else {
+        // Return empty
+        return array();
       }
-      // Give other module the option to later our markup.
-      drupal_alter('addthis_markup', $markup);
-      return $markup;
-
-    }
-    else {
-      // Return empty
+      // If no display is found or something went wrong we go here.
       return array();
     }
-    // If no display is found or something went wrong we go here.
-    return array();
+    else {
+      return null;
+    }
   }
 
   /*
@@ -345,6 +370,10 @@ class AddThis {
 
   public function isGoogleAnalyticsTrackingEnabled() {
     return (boolean) variable_get(self::GOOGLE_ANALYTICS_TRACKING_ENABLED_KEY, FALSE);
+  }
+
+  public function isFacebookLikeCountSupportEnabled() {
+    return (boolean) variable_get(self::FACEBOOK_LIKE_COUNT_SUPPORT_ENABLED, TRUE);
   }
 
   public function isGoogleAnalyticsSocialTrackingEnabled() {

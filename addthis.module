@@ -108,6 +108,18 @@ function addthis_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
+ * Implements hook_rdf_namespaces()
+ */
+function addthis_rdf_namespaces() {
+  if (AddThis::getInstance()->isFacebookLikeCountSupportEnabled()) {
+    return array(
+      'fb' => 'http://www.facebook.com/2008/fbml',
+    );
+  }
+  return array();
+}
+
+/**
  * Implementation of hook_theme().
  */
 function addthis_theme($existing, $type, $theme, $path) {

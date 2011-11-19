@@ -34,7 +34,7 @@ function addthis_displays_addthis_display_markup__addthis_basic_toolbox($options
   // All service elements
   $items = array();
   foreach ($services as $service) {
-    $items[] = array(
+    $items[$service] = array(
       '#theme' => 'addthis_element',
       '#tag' => 'a',
       '#value' => '',
@@ -46,6 +46,33 @@ function addthis_displays_addthis_display_markup__addthis_basic_toolbox($options
       ),
       '#addthis_service' => $service,
     );
+
+    // Basic implementations of bubble counter orientation.
+    // @todo Figure all the bubbles out and add them.
+    //   We miss tweetmeme, hyves and stubleupon. I did not find the right
+    //   style settings yet.
+    //
+    // @todo Fix a way to use addthis_bubble_style.
+    //   There is a conflict now with using the class addthis_button_[service].
+    //   You can't add this bubble style now.
+    $orientation = ($options['#display']['settings']['counter_orientation'] == 'horizontal' ? TRUE : FALSE);
+    switch ($service) {
+      case 'facebook_like':
+        $items[$service]['#attributes'] += array(
+          'fb:like:layout' => ($orientation ? 'button_count' : 'box_count')
+        );
+        break;
+      case 'google_plusone':
+        $items[$service]['#attributes'] += array(
+          'g:plusone:size' => ($orientation ? 'standard' : 'tall')
+        );
+        break;
+      case 'tweet':
+        $items[$service]['#attributes'] += array(
+          'tw:count' => ($orientation ? 'horizontal' : 'vertical')
+        );
+        break;
+    }
   }
   $element += $items;
 

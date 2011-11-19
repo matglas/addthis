@@ -1,3 +1,8 @@
+Added namespace adding for Facebook Like.
+Added counter bubble orientation in Basic Toolbox display type.
+Fixed getDisplayTypes() to work with blocks. Also provide default settings always.
+Add t() to description of Google Analytics elements in config page.
+
 Removed legacy display types.
   AddThis module contained some small non generic display types. They where
   removed in favor of the display types added in the addthis_displays submodule.
