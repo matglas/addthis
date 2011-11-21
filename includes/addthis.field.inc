@@ -7,12 +7,6 @@
 
 /**
  * Implements hook_field_info().
- *
- * Field settings:
- *   - max_length: the maximum length for a varchar field.
- *
- * Instance settings:
- *   - AddThis::STYLE_KEY: The style of AddThis widget to render for this field.
  */
 function addthis_field_info() {
   return array(
@@ -35,11 +29,12 @@ function addthis_field_is_empty($item, $field) {
 
 /**
  * Implements hook_field_formatter_info().
+ *
+ * Creates a formatter element for all the default formatter types.
  */
 function addthis_field_formatter_info() {
   $formatters = array();
 
-  // Create a formatter element for all the default style types we have.
   foreach (AddThis::getInstance()->getDefaultFormatterTypes() as $key => $label) {
     $formatters[$key] = array(
       'label' => $label,
@@ -51,9 +46,7 @@ function addthis_field_formatter_info() {
 }
 
 /**
- * Implementation to retrieve formatters for a certain type of field.
- *
- * @todo make this a private function atleast by naming convention with a prefixed _ (underscore).
+ * Implementation to retrieve formatters for a given type of field.
  */
 function _addthis_field_info_formatter_field_type($field_type = NULL) {
   $formatters = field_info_formatter_types();
@@ -72,9 +65,10 @@ function addthis_field_formatter_view($entity_type, $entity, $field, $instance, 
   return addthis_render_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display);
 }
 
+// There is only one item to display, the share item.
+// Get the markup for the display type and add that to the $element[0] to display.
 function addthis_render_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-  // We have only one item to display, the share item.
-  // Get the markup for the share and add that to the $element[0] to display.
+
   $element = array();
   $display_type = $display['type'];
 
@@ -92,29 +86,27 @@ function addthis_render_formatter_view($entity_type, $entity, $field, $instance,
 }
 
 /**
- * Implementation of hook_field_prepare_view().
+ * Implements hook_field_prepare_view().
  *
- * This make sure we don't miss node that have no saved value on the AddThis
- * field. We need the value to be able to render something.
+ * Adds a dummy value in AddThis field for nodes that do not have any value for
+ * the field to make rendering possible.
  */
 function addthis_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items) {
-  $dummy_value = "Don't mind this value. Is't a placeholder.";
   foreach ($items as $key => $item) {
     if (!isset($item[0]['value'])) {
-      $items[$key][0]['value'] = $dummy_value;
+      $items[$key][0]['value'] = 'Dummy value';
     }
   }
 }
 
-
 /**
  * Implements hook_field_presave().
+ *
+ * Adds a dummy value to $items to make rendering possible.
  */
 function addthis_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  $dummy_value = "Don't mind this value. Is't a placeholder.";
-  // We don't add items in the instance form therefore we check for a item
-  // if not there we (which is the case almost always) we add it. This item
-  // is need for the field_formatter in $items to attach a renderable item to.
+  $dummy_value = 'Dummy value';
+
   if (count($items) == 0) {
     $items += array(array('value' => $dummy_value));
   }
@@ -139,12 +131,12 @@ function addthis_field_widget_info() {
 
 /**
  * Implements hook_field_widget_form().
+ *
+ * The AddThis field is a placeholder field and has no widget settings.
+ * To suppress the form, #access is set to FALSE.
  */
 function addthis_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
 
-
-  // The AddThis field is a placeholder field and has no widget settings.
-  // To suppress the form we set access to false here.
   if ($instance['widget']['type'] == AddThis::WIDGET_TYPE) {
     $main_widget = $element + array(
       '#access' => FALSE,

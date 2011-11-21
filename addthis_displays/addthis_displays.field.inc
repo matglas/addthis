@@ -28,7 +28,7 @@ function addthis_displays_field_formatter_info() {
 }
 
 /**
- * Implementss hook_field_formatter_settings_form()
+ * Implements hook_field_formatter_settings_form()
  */
 function addthis_displays_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
   $display = $instance['display'][$view_mode];
@@ -146,8 +146,9 @@ function addthis_displays_field_formatter_settings_summary($field, $instance, $v
 
 /**
  * Implements hook_field_formatter_view().
+ *
+ * Calling the helper function addthis_render_formatter_view with literally all the arguments.
  */
 function addthis_displays_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-  // We use the helper function addthis_render_formatter_view with litteraly all the arguments.
   return addthis_render_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display);
 }

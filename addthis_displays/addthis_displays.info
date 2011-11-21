@@ -1,5 +1,5 @@
 name = AddThis Displays
-description = Adds the AddThis Display types to render several basic types of AddThis buttons.
+description = Adds the AddThis display types to render several basic types of AddThis buttons.
 core = 7.x
 package = Fields
 dependencies[] = addthis

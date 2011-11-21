@@ -9,13 +9,13 @@ module_load_include('inc', 'addthis', 'includes/addthis.block');
 module_load_include('inc', 'addthis', 'includes/addthis.field');
 
 /**
- * Implementation of hook_hook_info()
+ * Implements hook_hook_info().
+ *
+ * Define hook_addthis_display_markup in the addthis group so that
+ * $module.addthis.inc files will be included. See addthis.addthis.inc for
+ * examples of the hook implementation.
  */
 function addthis_hook_info() {
-  // Definde hook_addthis_display_markup in the addthis group.
-  // All the $module.addthis.inc files that are found will be included
-  // because group addthis is defined.
-  // See addthis.addthis.inc for examples of the hook implementation.
   $hooks['addthis_display_markup'] = array(
     'group' => 'addthis',
   );
@@ -29,7 +29,9 @@ function addthis_help($path, $arg) {
   switch ($path) {
     case 'admin/help#addthis':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t("The AddThis module defines AddThis field type for the Field module. A AddThis field may contain a button, toolbox, sharecount or customized sharing tool using <a href=\"http://addthis.com/\">AddThis.com</a>.") . '</p>';
+      $output .= '<p>';
+      $output .= t("The AddThis module defines AddThis field type for the Field module. A AddThis field may contain a button, toolbox, sharecount or customized sharing tool using <a href=\"http://addthis.com/\">AddThis.com</a>.");
+      $output .= '</p>';
       return $output;
   }
 }
@@ -53,7 +55,7 @@ function addthis_filter_format_disable($format) {
  * Implements hook_menu().
  */
 function addthis_menu() {
-  $menuItems['admin/config/user-interface/addthis'] = array(
+  $menu_items['admin/config/user-interface/addthis'] = array(
     'title' => 'AddThis',
     'description' => 'Configure AddThis settings.',
     'page callback' => 'drupal_get_form',
@@ -62,7 +64,7 @@ function addthis_menu() {
     'type' => MENU_NORMAL_ITEM,
     'file' => AddThis::ADMIN_INCLUDE_FILE,
   );
-  return $menuItems;
+  return $menu_items;
 }
 
 /**
@@ -90,16 +92,12 @@ function addthis_page_alter(&$page) {
 }
 
 /**
- * Implements hook_form_alter().
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Hide the instance fieldset because there aren't any values per instance.
  */
-function addthis_form_alter(&$form, &$form_state, $form_id) {
-  if ($form_id == 'field_ui_field_edit_form' &&
-      $form['#field']['type'] == AddThis::FIELD_TYPE &&
-      $form['#field']['type'] == AddThis::MODULE_NAME) {
-
-    // We hide the instance fieldset because we don't hold any value's per instance.
-    // I know this is a dirty hack to hide it but I'm not aware that there is a way to
-    // disable instance value's in the field API.
+function addthis_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id) {
+  if ($form['#field']['type'] == AddThis::FIELD_TYPE && $form['#field']['type'] == AddThis::MODULE_NAME) {
     $form['field']['#access'] = FALSE;
     $form['instance']['required']['#access'] = FALSE;
     $form['instance']['description']['#access'] = FALSE;
@@ -120,7 +118,7 @@ function addthis_rdf_namespaces() {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implements hook_theme().
  */
 function addthis_theme($existing, $type, $theme, $path) {
   return array(
@@ -137,39 +135,31 @@ function addthis_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implementation hook_preprocess() for theme_addthis.
+ * Implements hook_preprocess() for theme_addthis.
  */
 function template_preprocess_addthis(&$variables) {
-  // Set the correct display type
-  $display_type = NULL;
   if (isset($variables[0]) && count($variables) == 3) {
     $variables['#display'] = $variables[0];
     unset($variables[0]);
   }
-  elseif (isset($variables['#display'])) {
-    $display_type = $variables['#display'];
-  }
 }
 
 function theme_addthis($variables) {
-  // Get the correct display type markup
   $markup = AddThis::getInstance()->getDisplayMarkup($variables['#display']);
   return render($markup);
 }
 
 function theme_addthis_wrapper($variables) {
-  // Get the element
   $element = $variables['addthis_wrapper'];
-
-  // Render the html
   $output = '<' . $element['#tag'] . drupal_attributes($element['#attributes']) . '>';
-
   $children = element_children($element);
+
   if (count($children) > 0) {
     foreach ($children as $child) {
       $output .= render($element[$child]);
     }
   }
+
   $output .= '</' . $element['#tag'] . ">\n";
   return $output;
 }
@@ -179,23 +169,20 @@ function theme_addthis_wrapper($variables) {
  * created with hook_addthis_element.
  */
 function theme_addthis_element($variables) {
-  // Get the element
   $element = $variables['addthis_element'];
 
-  // Render the html
   if (!isset($element['#value'])) {
     return '<' . $element['#tag'] . drupal_attributes($element['#attributes']) . " />\n";
   }
-  else {
-    $output = '<' . $element['#tag'] . drupal_attributes($element['#attributes']) . '>';
-    if (isset($element['#value_prefix'])) {
-      $output .= $element['#value_prefix'];
-    }
-    $output .= $element['#value'];
-    if (isset($element['#value_suffix'])) {
-      $output .= $element['#value_suffix'];
-    }
-    $output .= '</' . $element['#tag'] . ">\n";
-    return $output;
+
+  $output = '<' . $element['#tag'] . drupal_attributes($element['#attributes']) . '>';
+  if (isset($element['#value_prefix'])) {
+    $output .= $element['#value_prefix'];
   }
+  $output .= $element['#value'];
+  if (isset($element['#value_suffix'])) {
+    $output .= $element['#value_suffix'];
+  }
+  $output .= '</' . $element['#tag'] . ">\n";
+  return $output;
 }

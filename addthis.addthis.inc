@@ -6,7 +6,7 @@
  */
 
 /**
- * Implementation of hook_addthis_display_markup().
+ * Implements hook_addthis_display_markup().
  */
 function addthis_addthis_display_markup($display, $variables = NULL) {
   return array();

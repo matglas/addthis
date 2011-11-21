@@ -5,15 +5,15 @@ function addthis_displays_addthis_display_markup($display, $variables = NULL) {
 }
 
 /**
- * Implementation of hook_addthis_display_markup__[display]().
+ * Implements hook_addthis_display_markup__[display]().
  */
 function addthis_displays_addthis_display_markup__addthis_basic_toolbox($options = array()) {
   $addthis = AddThis::getInstance();
 
-  // Creating render array for the widget.
+  // Create a render array for the widget.
   $element = array(
-    // We use #theme_wrappers to include the rendered children otherwise
-    // we only get a non empty element like <div></div>.
+    // Use #theme_wrappers to include the rendered children. Otherwise the
+    // result is an empty element like <div></div>.
     '#theme' => 'addthis_wrapper',
     '#tag' => 'div',
     '#attributes' => array(
@@ -49,8 +49,7 @@ function addthis_displays_addthis_display_markup__addthis_basic_toolbox($options
 
     // Basic implementations of bubble counter orientation.
     // @todo Figure all the bubbles out and add them.
-    //   We miss tweetmeme, hyves and stubleupon. I did not find the right
-    //   style settings yet.
+    //   Still missing: tweetme, hyves and stubleupon.
     //
     // @todo Fix a way to use addthis_bubble_style.
     //   There is a conflict now with using the class addthis_button_[service].
@@ -80,11 +79,9 @@ function addthis_displays_addthis_display_markup__addthis_basic_toolbox($options
 }
 
 /**
- * Implementation of hook_addthis_display_markup__[display]().
+ * Implements hook_addthis_display_markup__[display]().
  */
 function addthis_displays_addthis_display_markup__addthis_basic_button($options = array()) {
-  $addthis = AddThis::getInstance();
-  $settings = (isset($options['#display']['settings']) ? $options['#display']['settings'] : NULL);
 
   $button_img = 'http://s7.addthis.com/static/btn/sm-share-en.gif';
   if ($options['#display']['settings']['button_size'] == 'big') {
@@ -101,7 +98,7 @@ function addthis_displays_addthis_display_markup__addthis_basic_button($options 
       ),
     ),
   );
-  $element['#attributes'] += $addthis->getAddThisAttributesMarkup($options);
+  $element['#attributes'] += AddThis::getInstance()->getAddThisAttributesMarkup($options);
 
   // Create img button
   $image = array(
@@ -113,6 +110,5 @@ function addthis_displays_addthis_display_markup__addthis_basic_button($options 
   );
   $element[] = $image;
 
-  // Return element to render.
   return $element;
 }

@@ -85,9 +85,6 @@ class AddThis {
     $this->json = $json;
   }
 
-  /*
-   * Get all the default formatters provided by the core addthis module.
-   */
   public function getDefaultFormatterTypes() {
     return array(
       self::WIDGET_TYPE_DISABLED => t('Disabled'),
@@ -96,9 +93,6 @@ class AddThis {
     // provide a array with their names.
   }
 
-  /*
-  * Get all the DisplayTypes that are available.
-  */
   public function getDisplayTypes() {
     $displays = array();
     foreach ($display_impl = _addthis_field_info_formatter_field_type() as $key => $display) {
@@ -108,97 +102,66 @@ class AddThis {
   }
 
   /*
-   * Return me the markup for a certain display type.
+   * Get markup for a given display type.
    *
-   * Variables contains #entity and #settings as keys when applicable.
-   * When #entity is not there we link to the current url. When #settings
-   * is not there we use the default settings.
+   * When $options does not contain #entity, link to the current URL.
+   * When $options does not contain #display, use default settings.
    */
   public function getDisplayMarkup($display, $options = array()) {
-    if (!empty($display)) {
-      $options = $options;
-      $formatters = _addthis_field_info_formatter_field_type();
-
-      if (array_key_exists($display, $formatters)) {
-        // The display type is found. Now get it and get the markup.
-        $display_inf = $formatters[$display];
-
-        // Theme function might only give a display name and
-        // render on default implementation.
-        $settings = array();
-        if (!isset($options['#display']) || $options['#display']['type'] != $display) {
-          $options['#display'] = $display_inf;
-        }
-
-        // When we have the entity and entity_type we can send it to the url.
-        if (isset($options['#entity']) && isset($options['#entity_type'])) {
-          // See if we can create the url and send it through a hook so others
-          // can play with it.
-          $uri = entity_uri($options['#entity_type'], $options['#entity']);
-          $uri['options'] += array(
-            'absolute' => TRUE,
-          );
-          // Add hook here to alter the uri maybe also based on fields from the
-          // entity. Like a custom share link. Pass $options and $uri. Return
-          // a uri object to which we can reset it. Maybe use the alter structure.
-
-          $options['#url'] = url($uri['path'], $uri['options']);
-        }
-        // @todo Hash the options array and cache the markup.
-        // This will save all the extra calls to modules and alters.
-
-        // Give other module the option to alter our markup options.
-        drupal_alter('addthis_markup_options', $options);
-
-        $markup = array(
-          '#display' => $options['#display'],
-        );
-        // Get all hook implementation to verify later if we can call it.
-        $implementations = module_implements('addthis_display_markup');
-
-        // First we look for a targeted implementation to call.
-        if (function_exists($display_inf['module'] . '_addthis_display_markup__' . $display)) {
-          $markup += call_user_func_array($display_inf['module'] . '_addthis_display_markup__' . $display, array($options));
-
-          // This should be the default implementation that is called.
-        }
-        elseif (in_array($display_inf['module'], $implementations)) {
-          $markup += module_invoke($display_inf['module'], 'addthis_display_markup', $display, $options);
-        }
-        // Give other module the option to later our markup.
-        drupal_alter('addthis_markup', $markup);
-        return $markup;
-
-      }
-      else {
-        // Return empty
-        return array();
-      }
-      // If no display is found or something went wrong we go here.
+    if (empty($display)) {
       return array();
     }
-    else {
-      return null;
+
+    $formatters = _addthis_field_info_formatter_field_type();
+
+    if (!array_key_exists($display, $formatters)) {
+      return array();
     }
-  }
 
-  /*
-   * Get the type DisplayType used for our AddThis block.
-   */
-  public function getBlockDisplayType() {
-    return variable_get(self::BLOCK_WIDGET_TYPE_KEY, self::WIDGET_TYPE_DISABLED);
-  }
+    // The display type exists. Now get it and get the markup.
+    $display_information = $formatters[$display];
 
-  public function getProfileId() {
-    return check_plain(variable_get(AddThis::PROFILE_ID_KEY));
-  }
+    // Theme function might only give a display name and
+    // render on default implementation.
+    if (!isset($options['#display']) || $options['#display']['type'] != $display) {
+      $options['#display'] = $display_information;
+    }
 
-  public function getServicesCssUrl() {
-    return check_url(variable_get(AddThis::SERVICES_CSS_URL_KEY, self::DEFAULT_SERVICES_CSS_URL));
-  }
+    // When #entity and #entity_type exist, use the entity's URL.
+    if (isset($options['#entity']) && isset($options['#entity_type'])) {
+      $uri = entity_uri($options['#entity_type'], $options['#entity']);
+      $uri['options'] += array(
+        'absolute' => TRUE,
+      );
 
-  public function getServicesJsonUrl() {
-    return check_url(variable_get(AddThis::SERVICES_JSON_URL_KEY, self::DEFAULT_SERVICES_JSON_URL));
+      // @todo Add a hook to alter the uri also based on fields from the
+      // entity (such as custom share link). Pass $options and $uri. Return
+      // a uri object to which we can reset it. Maybe use the alter structure.
+
+      $options['#url'] = url($uri['path'], $uri['options']);
+    }
+    // @todo Hash the options array and cache the markup.
+    // This will save all the extra calls to modules and alters.
+
+    // Allow other modules to alter markup options.
+    drupal_alter('addthis_markup_options', $options);
+
+    $markup = array(
+      '#display' => $options['#display'],
+    );
+    // Get all hook implementation to verify later if we can call it.
+    $addthis_display_markup_implementations = module_implements('addthis_display_markup');
+
+    // Look for a targeted implementation to call.
+    // This should be the default implementation that is called.
+    if (function_exists($display_information['module'] . '_addthis_display_markup__' . $display)) {
+      $markup += call_user_func_array($display_information['module'] . '_addthis_display_markup__' . $display, array($options));
+    } elseif (in_array($display_information['module'], $addthis_display_markup_implementations)) {
+      $markup += module_invoke($display_information['module'], 'addthis_display_markup', $display, $options);
+    }
+    // Allow other modules to alter markup.
+    drupal_alter('addthis_markup', $markup);
+    return $markup;
   }
 
   public function getServices() {
@@ -217,23 +180,10 @@ class AddThis {
     return $rows;
   }
 
-  public function getEnabledServices() {
-    return variable_get(self::ENABLED_SERVICES_KEY, array());
-  }
-
-  public function getWidgetJsAsync() {
-    return variable_get(self::WIDGET_JS_ASYNC, self::DEFAULT_WIDGET_JS_ASYNC);
-  }
-
-  public function addStylesheets() {
-    drupal_add_css($this->getServicesCssUrl(), 'external');
-    drupal_add_css($this->getAdminCssFilePath(), 'file');
-  }
-
   public function addWidgetJs() {
-    // Define if we load async or not.
-    $url = self::getWidgetUrl() . (self::getWidgetJsAsync() ? '?async=1' : '');
-    if (self::getWidgetJsAsync()) {
+    $async_parameter = self::isWidgetJsAsync() ? '?async=1' : '';
+    $url = self::getWidgetUrl() . $async_parameter;
+    if (self::isWidgetJsAsync()) {
       drupal_add_js(
         array(
         'addthis' => array(
@@ -256,7 +206,7 @@ class AddThis {
       );
     }
     // Add local internal behaviours
-    if (self::getWidgetJsAsync()) {
+    if (self::isWidgetJsAsync()) {
       drupal_add_js(
         drupal_get_path('module', 'addthis') . '/addthis.js',
         array(
@@ -271,7 +221,7 @@ class AddThis {
 
   public function addConfigurationOptionsJs() {
     if ($this->isCustomConfigurationCodeEnabled()) {
-      $javascript = $this->getCustomConfigurationCode();
+      $configurationOptionsJavascript = $this->getCustomConfigurationCode();
     }
     else {
       $enabledServices = $this->getServiceNamesAsCommaSeparatedString() . 'more';
@@ -300,16 +250,54 @@ class AddThis {
 
       drupal_alter('addthis_configuration', $configuration);
 
-      $javascript = 'var addthis_config = ' . drupal_json_encode($configuration);
+      $configurationOptionsJavascript = 'var addthis_config = ' . drupal_json_encode($configuration);
     }
     drupal_add_js(
-      $javascript,
+      $configurationOptionsJavascript,
       array(
       'type' => 'inline',
       'scope' => 'footer',
       'every_page' => TRUE,
     )
     );
+  }
+
+  public function getAddThisAttributesMarkup($options) {
+    if (isset($options)) {
+      $attributes = array();
+
+      if (isset($options['#entity'])) {
+        $attributes += $this->getAttributeTitle($options['#entity']);
+      }
+      $attributes += $this->getAttributeUrl($options);
+
+      return $attributes;
+    }
+    return array();
+  }
+
+  public function getBlockDisplayType() {
+    return variable_get(self::BLOCK_WIDGET_TYPE_KEY, self::WIDGET_TYPE_DISABLED);
+  }
+
+  public function getProfileId() {
+    return check_plain(variable_get(AddThis::PROFILE_ID_KEY));
+  }
+
+  public function getServicesCssUrl() {
+    return check_url(variable_get(AddThis::SERVICES_CSS_URL_KEY, self::DEFAULT_SERVICES_CSS_URL));
+  }
+
+  public function getServicesJsonUrl() {
+    return check_url(variable_get(AddThis::SERVICES_JSON_URL_KEY, self::DEFAULT_SERVICES_JSON_URL));
+  }
+
+  public function getEnabledServices() {
+    return variable_get(self::ENABLED_SERVICES_KEY, array());
+  }
+
+  public function isWidgetJsAsync() {
+    return variable_get(self::WIDGET_JS_ASYNC, self::DEFAULT_WIDGET_JS_ASYNC);
   }
 
   public function isClickToOpenCompactMenuEnabled() {
@@ -380,27 +368,13 @@ class AddThis {
     return (boolean) variable_get(self::GOOGLE_ANALYTICS_SOCIAL_TRACKING_ENABLED_KEY, FALSE);
   }
 
-  /**
-   * Define the following object in the $optoins.
-   *
-   * #entity_type
-   * #entity
-   * #url
-   */
-  public function getAddThisAttributesMarkup($options) {
-    if (isset($options)) {
-      $attributes = array();
+  public function addStylesheets() {
+    drupal_add_css($this->getServicesCssUrl(), 'external');
+    drupal_add_css($this->getAdminCssFilePath(), 'file');
+  }
 
-      // Add title
-      if (isset($options['#entity'])) {
-        $attributes += $this->getAttributeTitle($options['#entity']);
-      }
-      $attributes += $this->getAttributeUrl($options);
-
-      // Return the array with attributes
-      return $attributes;
-    }
-    return array();
+  public function getFullBookmarkUrl() {
+    return $this->getBaseBookmarkUrl() . $this->getProfileIdQueryParameterPrefixedWithAmp();
   }
 
   private function getAttributeTitle($entity) {
@@ -421,10 +395,6 @@ class AddThis {
     return array();
   }
 
-  public function getLargeButtonsClass() {
-    return $this->areLargeIconsEnabled() ? ' addthis_32x32_style ' : '';
-  }
-
   private function getServiceNamesAsCommaSeparatedString() {
     $enabledServiceNames = array_values($this->getEnabledServices());
     $enabledServicesAsCommaSeparatedString = '';
@@ -438,13 +408,6 @@ class AddThis {
 
   private function getAdminCssFilePath() {
     return drupal_get_path('module', self::MODULE_NAME) . '/' . self::ADMIN_CSS_FILE;
-  }
-
-  /*
-   * Helper function. Get a bookmark url appended with the ProfileId
-   */
-  public function getFullBookmarkUrl() {
-    return $this->getBaseBookmarkUrl() . $this->getProfileIdQueryParameterPrefixedWithAmp();
   }
 
   private function getProfileIdQueryParameter($prefix) {

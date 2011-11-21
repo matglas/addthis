@@ -5,13 +5,10 @@
  * Administrative page callbacks for the AddThis-module.
  */
 
-/**
- * Implements hook_admin_settings_form().
- */
 function addthis_admin_settings_form($form_state) {
   AddThis::getInstance()->addStylesheets();
 
-  // Part with compact menu settings.
+  // Profile settings.
   $form['fieldset_profile'] = array(
       '#type' => 'fieldset',
       '#title' => t('Profile'),
@@ -27,7 +24,7 @@ function addthis_admin_settings_form($form_state) {
     '#description' => t('ProfileID at <a href="http://addthis.com/" target="_blank">AddThis.com</a>. Required for statistics.'),
   );
 
-  // The first fieldset to set the user interface settings.
+  // Visual settings.
   $form['visual_settings_fieldset'] = array(
     '#type' => 'fieldset',
     '#title' => t('User interface'),
@@ -35,8 +32,6 @@ function addthis_admin_settings_form($form_state) {
     '#collapsed' => TRUE,
     '#description' => '<p>' . t('Configure the global behavior and style of the compact menu and some additional settings related to the interface.') . '</p>'
   );
-
-  // Part with compact menu settings.
   $form['visual_settings_fieldset']['fieldset_compact_menu'] = array(
     '#type' => 'fieldset',
     '#title' => t('Compact menu'),
@@ -93,7 +88,7 @@ function addthis_admin_settings_form($form_state) {
     '#maxlength' => 3,
   );
 
-  // Additional settings
+  // Additional visual settings.
   $form['visual_settings_fieldset']['fieldset_additionals'] = array(
       '#type' => 'fieldset',
       '#title' => t('Additional configuration'),
@@ -122,7 +117,7 @@ function addthis_admin_settings_form($form_state) {
       '#required' => FALSE,
   );
 
-  // Analytics
+  // Analytics settings.
   $form['fieldset_analytics'] = array(
         '#type' => 'fieldset',
         '#title' => t('Analytics'),
@@ -148,9 +143,8 @@ function addthis_admin_settings_form($form_state) {
     '#required' => FALSE,
   );
 
-
+  // Google Analytics and Google Social Tracking support
   if (module_exists('googleanalytics') && variable_get('googleanalytics_account', '') !== '') {
-    // Google Analytics support
     $form['fieldset_analytics'][AddThis::GOOGLE_ANALYTICS_TRACKING_ENABLED_KEY] = array(
       '#type' => 'checkbox',
       '#title' => t('Track with Google Analytics'),
@@ -158,7 +152,6 @@ function addthis_admin_settings_form($form_state) {
       '#default_value' => AddThis::getInstance()->isGoogleAnalyticsTrackingEnabled(),
       '#required' => FALSE,
     );
-    // Google Social Tracking support
     $form['fieldset_analytics'][AddThis::GOOGLE_ANALYTICS_SOCIAL_TRACKING_ENABLED_KEY] = array(
       '#type' => 'checkbox',
       '#title' => t('Track with Google Analytics social'),
@@ -177,7 +170,7 @@ function addthis_admin_settings_form($form_state) {
   else {
     $rdf_description = t('Check to track Facebook Like tracking support. Always global.');
   }
-  // Trackinhg of Facebook Like needs a namespace added.
+  // Facebook Like tracking requires a namespace to be added.
   $form['fieldset_analytics'][AddThis::FACEBOOK_LIKE_COUNT_SUPPORT_ENABLED] = array(
         '#type' => 'checkbox',
         '#title' => t('Enable Facebook Like tracking'),
@@ -187,7 +180,7 @@ function addthis_admin_settings_form($form_state) {
         '#disabled' => !$rdf_enabled,
   );
 
-  // Servicees enabled for compact menu.
+  // Enabled services settings.
   $form['enabled_services_fieldset'] = array(
     '#type' => 'fieldset',
     '#title' => t('Enabled services'),
@@ -204,7 +197,9 @@ function addthis_admin_settings_form($form_state) {
     '#theme' => 'addthis_checkboxes_columns',
     '#columns' => 3,
   );
-    $form['service_urls_fieldset'] = array(
+
+  // Service URL's settings.
+  $form['service_urls_fieldset'] = array(
       '#type' => 'fieldset',
       '#title' => t('Service URLs'),
       '#collapsible' => TRUE,
@@ -234,6 +229,8 @@ function addthis_admin_settings_form($form_state) {
       '#default_value' => AddThis::getInstance()->getBaseWidgetJsUrl(),
       '#required' => TRUE,
   );
+
+  // Advanced settings.
   // @todo Move to advanced tab.
   $form['advanced_settings_fieldset'] = array(
     '#type' => 'fieldset',
