@@ -28,7 +28,7 @@ function addthis_displays_field_formatter_info() {
 }
 
 /**
- * Implements hook_field_formatter_settings_form()
+ * Implementss hook_field_formatter_settings_form()
  */
 function addthis_displays_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
   $display = $instance['display'][$view_mode];
@@ -66,7 +66,7 @@ function addthis_displays_field_formatter_settings_form($field, $instance, $view
         )
       );
       $element['extra_css'] = array(
-        '#title' => t('Extra CSS decleration'),
+        '#title' => t('Extra CSS declaration'),
         '#type' => 'textfield',
         '#size' => 40,
         '#default_value' => $settings['extra_css'],
@@ -84,7 +84,7 @@ function addthis_displays_field_formatter_settings_form($field, $instance, $view
         ),
       );
       $element['extra_css'] = array(
-        '#title' => t('Extra CSS decleration'),
+        '#title' => t('Extra CSS declaration'),
         '#type' => 'textfield',
         '#size' => 40,
         '#default_value' => $settings['extra_css'],
@@ -112,7 +112,7 @@ function _addthis_display_element_validate_services($element, &$form_state, $for
 
   // Return error.
   if ($bad) {
-    form_error($element, t('The declared services are incorrect or non existing.'));
+    form_error($element, t('The declared services are incorrect or nonexistent.'));
   }
 }
 
@@ -146,9 +146,8 @@ function addthis_displays_field_formatter_settings_summary($field, $instance, $v
 
 /**
  * Implements hook_field_formatter_view().
- *
- * Calling the helper function addthis_render_formatter_view with literally all the arguments.
  */
 function addthis_displays_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  // We use the helper function addthis_render_formatter_view with litteraly all the arguments.
   return addthis_render_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display);
 }
