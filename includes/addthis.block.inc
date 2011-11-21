@@ -19,11 +19,14 @@ function addthis_block_info() {
 
 /**
  * Implements hook_block_view().
+ *
+ * #block key allows alter hooks to react on this information. Someone might
+ * want to change this specific display.
  */
 function addthis_block_view($block_name = '') {
   if ($block_name == AddThis::BLOCK_NAME) {
     $widget_type = AddThis::getInstance()->getBlockDisplayType();
-    $markup = AddThis::getInstance()->getDisplayMarkup($widget_type);
+    $markup = AddThis::getInstance()->getDisplayMarkup($widget_type, array('#block' => AddThis::BLOCK_NAME));
     return array(
       'subject' => '',
       'content' => $markup,
@@ -37,8 +40,8 @@ function addthis_block_view($block_name = '') {
 function addthis_block_configure($delta = '') {
   $form[AddThis::BLOCK_WIDGET_TYPE_KEY] = array(
     '#type' => 'select',
-    '#title' => t('AddThis Display type'),
-    '#options' => AddThis::getInstance()->getWidgetTypes(),
+    '#title' => t('AddThis display type'),
+    '#options' => AddThis::getInstance()->getDisplayTypes(),
     '#default_value' => AddThis::getInstance()->getBlockDisplayType(),
   );
   return $form;

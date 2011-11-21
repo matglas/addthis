@@ -20,6 +20,7 @@ class AddThis {
   // AddThis attribute and parameter names (as defined in AddThis APIs)
   const PROFILE_ID_QUERY_PARAMETER = 'pubid';
   const TITLE_ATTRIBUTE = 'addthis:title';
+  const URL_ATTRIBUTE = 'addthis:url';
 
   // Persistent variable keys
   const ADDRESSBOOK_ENABLED_KEY = 'addthis_addressbook_enabled';
@@ -32,18 +33,14 @@ class AddThis {
   const CUSTOM_CONFIGURATION_CODE_ENABLED_KEY = 'addthis_custom_configuration_code_enabled';
   const CUSTOM_CONFIGURATION_CODE_KEY = 'addthis_custom_configuration_code';
   const ENABLED_SERVICES_KEY = 'addthis_enabled_services';
-  const FACEBOOK_LIKE_ENABLED_KEY = 'addthis_facebook_like_enabled';
   const GOOGLE_ANALYTICS_TRACKING_ENABLED_KEY = 'addthis_google_analytics_tracking_enabled';
   const GOOGLE_ANALYTICS_SOCIAL_TRACKING_ENABLED_KEY = 'addthis_google_analytics_social_tracking_enabled';
-  const GOOGLE_PLUS_ONE_ENABLED_KEY = 'addthis_google_plus_one_enabled';
-  const LARGE_ICONS_ENABLED_KEY = 'addthis_large_icons_enabled';
-  const NUMBER_OF_PREFERRED_SERVICES_KEY = 'addthis_number_of_preferred_services';
+  const FACEBOOK_LIKE_COUNT_SUPPORT_ENABLED = 'addthis_facebook_like_count_support_enabled';
   const OPEN_WINDOWS_ENABLED_KEY = 'addthis_open_windows_enabled';
   const PROFILE_ID_KEY = 'addthis_profile_id';
   const SERVICES_CSS_URL_KEY = 'addthis_services_css_url';
   const SERVICES_JSON_URL_KEY = 'addthis_services_json_url';
   const STANDARD_CSS_ENABLED_KEY = 'addthis_standard_css_enabled';
-  const TWITTER_ENABLED_KEY = 'addthis_twitter_enabled';
   const UI_DELAY_KEY = 'addthis_ui_delay';
   const UI_HEADER_BACKGROUND_COLOR_KEY = 'addthis_ui_header_background_color';
   const UI_HEADER_COLOR_KEY = 'addthis_ui_header_color';
@@ -62,11 +59,10 @@ class AddThis {
   const ADMIN_INCLUDE_FILE = 'includes/addthis.admin.inc';
 
   // Widget types
-  const WIDGET_TYPE_COMPACT_BUTTON = 'addthis_compact_button';
   const WIDGET_TYPE_DISABLED = 'addthis_disabled';
-  const WIDGET_TYPE_LARGE_BUTTON = 'addthis_large_button';
-  const WIDGET_TYPE_SHARECOUNT = 'addthis_sharecount';
-  const WIDGET_TYPE_TOOLBOX = 'addthis_toolbox';
+
+  // Styles
+  const CSS_32x32 = 'addthis_32x32_style';
 
   private static $instance;
 
@@ -89,67 +85,198 @@ class AddThis {
     $this->json = $json;
   }
 
-  //@TODO: Refactor all WidgetType names into DisplayType
-  // A widget type is the element shown to edit a value.
-  // We use the widget as a type way to define the way to Display.
-  // Therefore we need to keep a good descriptive name as DisplayType.
-
-  /*
-   * Get all the DisplayTypes that are available.
-   */
-  public function getWidgetTypes() {
+  public function getDefaultFormatterTypes() {
     return array(
       self::WIDGET_TYPE_DISABLED => t('Disabled'),
-      self::WIDGET_TYPE_COMPACT_BUTTON => t('Compact button'),
-      self::WIDGET_TYPE_LARGE_BUTTON => t('Large button'),
-      self::WIDGET_TYPE_TOOLBOX => t('Toolbox'),
-      self::WIDGET_TYPE_SHARECOUNT => t('Sharecount'),
+    );
+    // @todo Get all display types available and
+    // provide a array with their names.
+  }
+
+  public function getDisplayTypes() {
+    $displays = array();
+    foreach ($display_impl = _addthis_field_info_formatter_field_type() as $key => $display) {
+      $displays[$key] = t(check_plain($display['label']));
+    }
+    return $displays;
+  }
+
+  /*
+   * Get markup for a given display type.
+   *
+   * When $options does not contain #entity, link to the current URL.
+   * When $options does not contain #display, use default settings.
+   */
+  public function getDisplayMarkup($display, $options = array()) {
+    if (empty($display)) {
+      return array();
+    }
+
+    $formatters = _addthis_field_info_formatter_field_type();
+
+    if (!array_key_exists($display, $formatters)) {
+      return array();
+    }
+
+    // The display type exists. Now get it and get the markup.
+    $display_information = $formatters[$display];
+
+    // Theme function might only give a display name and
+    // render on default implementation.
+    if (!isset($options['#display']) || $options['#display']['type'] != $display) {
+      $options['#display'] = $display_information;
+    }
+
+    // When #entity and #entity_type exist, use the entity's URL.
+    if (isset($options['#entity']) && isset($options['#entity_type'])) {
+      $uri = entity_uri($options['#entity_type'], $options['#entity']);
+      $uri['options'] += array(
+        'absolute' => TRUE,
+      );
+
+      // @todo Add a hook to alter the uri also based on fields from the
+      // entity (such as custom share link). Pass $options and $uri. Return
+      // a uri object to which we can reset it. Maybe use the alter structure.
+
+      $options['#url'] = url($uri['path'], $uri['options']);
+    }
+    // @todo Hash the options array and cache the markup.
+    // This will save all the extra calls to modules and alters.
+
+    // Allow other modules to alter markup options.
+    drupal_alter('addthis_markup_options', $options);
+
+    $markup = array(
+      '#display' => $options['#display'],
+    );
+    // Get all hook implementation to verify later if we can call it.
+    $addthis_display_markup_implementations = module_implements('addthis_display_markup');
+
+    // Look for a targeted implementation to call.
+    // This should be the default implementation that is called.
+    if (function_exists($display_information['module'] . '_addthis_display_markup__' . $display)) {
+      $markup += call_user_func_array($display_information['module'] . '_addthis_display_markup__' . $display, array($options));
+    } elseif (in_array($display_information['module'], $addthis_display_markup_implementations)) {
+      $markup += module_invoke($display_information['module'], 'addthis_display_markup', $display, $options);
+    }
+    // Allow other modules to alter markup.
+    drupal_alter('addthis_markup', $markup);
+    return $markup;
+  }
+
+  public function getServices() {
+    $rows = array();
+    $services = $this->json->decode($this->getServicesJsonUrl());
+    if (empty($services)) {
+      drupal_set_message(t('AddThis services could not be loaded from ' . $this->getServicesJsonUrl()), 'warning');
+    }
+    else {
+      foreach ($services['data'] as $service) {
+        $serviceCode = check_plain($service['code']);
+        $serviceName = check_plain($service['name']);
+        $rows[$serviceCode] = '<span class="addthis_service_icon icon_' . $serviceCode . '"></span> ' . $serviceName;
+      }
+    }
+    return $rows;
+  }
+
+  public function addWidgetJs() {
+    $async_parameter = self::isWidgetJsAsync() ? '?async=1' : '';
+    $url = self::getWidgetUrl() . $async_parameter;
+    if (self::isWidgetJsAsync()) {
+      drupal_add_js(
+        array(
+        'addthis' => array(
+          'widget_url' => $url,
+        ),
+      ),
+        'setting'
+      );
+    }
+    else {
+      // Add AddThis.com resources
+      drupal_add_js(
+        $url,
+        array(
+        'type' => 'external',
+        'group' => JS_LIBRARY,
+        'every_page' => TRUE,
+        'weight' => 9,
+      )
+      );
+    }
+    // Add local internal behaviours
+    if (self::isWidgetJsAsync()) {
+      drupal_add_js(
+        drupal_get_path('module', 'addthis') . '/addthis.js',
+        array(
+        'group' => JS_DEFAULT,
+        'weight' => 10,
+        'every_page' => TRUE,
+        'preprocess' => TRUE,
+      )
+      );
+    }
+  }
+
+  public function addConfigurationOptionsJs() {
+    if ($this->isCustomConfigurationCodeEnabled()) {
+      $configurationOptionsJavascript = $this->getCustomConfigurationCode();
+    }
+    else {
+      $enabledServices = $this->getServiceNamesAsCommaSeparatedString() . 'more';
+
+      global $language;
+      $configuration = array(
+        'services_compact' => $enabledServices,
+        'data_track_clickback' => $this->isClickbackTrackingEnabled(),
+        'ui_508_compliant' => $this->get508Compliant(),
+        'ui_click' => $this->isClickToOpenCompactMenuEnabled(),
+        'ui_cobrand' => $this->getCoBrand(),
+        'ui_delay' => $this->getUiDelay(),
+        'ui_header_background' => $this->getUiHeaderBackgroundColor(),
+        'ui_header_color' => $this->getUiHeaderColor(),
+        'ui_open_windows' => $this->isOpenWindowsEnabled(),
+        'ui_use_css' => $this->isStandardCssEnabled(),
+        'ui_use_addressbook' => $this->isAddressbookEnabled(),
+        'ui_language' => $language->language,
+      );
+      if (module_exists('googleanalytics')) {
+        if ($this->isGoogleAnalyticsTrackingEnabled()) {
+          $configuration['data_ga_property'] = variable_get('googleanalytics_account', '');
+          $configuration['data_ga_social'] = $this->isGoogleAnalyticsSocialTrackingEnabled();
+        }
+      }
+      drupal_alter('addthis_configuration', $configuration);
+
+      $configurationOptionsJavascript = 'var addthis_config = ' . drupal_json_encode($configuration);
+    }
+    drupal_add_js(
+      $configurationOptionsJavascript,
+      array(
+      'type' => 'inline',
+      'scope' => 'footer',
+      'every_page' => TRUE,
+    )
     );
   }
 
-  /*
-   * Return me the markup for a certain display type.
-   *
-   * Variables contains #entity and #settings as keys when applicable.
-   * When #entity is not there we link to the current url. When #settings
-   * is not there we use the default settings.
-   */
-  public function getDisplayMarkup($display, $variables = NULL) {
-    $formatters = addthis_field_info_formatter_field_type();
+  public function getAddThisAttributesMarkup($options) {
+    if (isset($options)) {
+      $attributes = array();
 
-    if (array_key_exists($display, $formatters)) {
-      // The display type is found. Now get it and get the markup.
-      $display_inf = $formatters[$display];
-
-      // Get all hook implementation to verify later if we can call it.
-      $implementations = module_implements('addthis_display_markup');
-
-      $markup = array();
-      // First we look for a targeted implementation to call.
-      if (function_exists($display_inf['module'] . '_addthis_display_markup__' . $display)) {
-        $markup = call_user_func_array($display_inf['module'] . '_addthis_display_markup__' . $display, array(NULL));
-
-      // This should be the default implementation that is called.
-      } elseif (in_array($display_inf['module'], $implementations)) {
-        $markup = module_invoke($display_inf['module'], 'addthis_display_markup', $display);
-
-      // When we end up here somebody did something wrong in there module.
+      if (isset($options['#entity'])) {
+        $attributes += $this->getAttributeTitle($options['#entity']);
       }
-      return $markup;
+      $attributes += $this->getAttributeUrl($options);
 
-    } else {
-      // Return empty
-      return array();
+      return $attributes;
     }
-    // If no display is found or something went wrong we go here.
     return array();
   }
 
-  /*
-   * Get the type DisplayType used for our AddThis block.
-   */
   public function getBlockDisplayType() {
-    return variable_get(self::BLOCK_WIDGET_TYPE_KEY, self::WIDGET_TYPE_COMPACT_BUTTON);
+    return variable_get(self::BLOCK_WIDGET_TYPE_KEY, self::WIDGET_TYPE_DISABLED);
   }
 
   public function getProfileId() {
@@ -164,117 +291,12 @@ class AddThis {
     return check_url(variable_get(AddThis::SERVICES_JSON_URL_KEY, self::DEFAULT_SERVICES_JSON_URL));
   }
 
-  public function getServices() {
-    $rows = array();
-    $services = $this->json->decode($this->getServicesJsonUrl());
-    if (empty($services)) {
-      drupal_set_message(t('AddThis services could not be loaded from ' . $this->getServicesJsonUrl()), 'warning');
-    } else {
-      foreach ($services['data'] AS $service) {
-        $serviceCode = check_plain($service['code']);
-        $serviceName = check_plain($service['name']);
-        $rows[$serviceCode] = '<span class="addthis_service_icon icon_' . $serviceCode . '"></span> ' . $serviceName;
-      }
-    }
-    return $rows;
-  }
-
   public function getEnabledServices() {
     return variable_get(self::ENABLED_SERVICES_KEY, array());
   }
 
-  public function getWidgetJsAsync() {
+  public function isWidgetJsAsync() {
     return variable_get(self::WIDGET_JS_ASYNC, self::DEFAULT_WIDGET_JS_ASYNC);
-  }
-
-  public function addStylesheets() {
-    drupal_add_css($this->getServicesCssUrl(), 'external');
-    drupal_add_css($this->getAdminCssFilePath(), 'file');
-  }
-
-  public function addWidgetJs() {
-    // Define if we load async or not.
-    $url = self::getWidgetUrl() . (self::getWidgetJsAsync() ? '?async=1' : '');
-    if (self::getWidgetJsAsync()) {
-      drupal_add_js(
-        array(
-          'addthis' => array(
-            'widget_url' => $url,
-          )
-        ),
-        'setting'
-      );
-    }
-    else {
-      // Add AddThis.com resources
-      drupal_add_js(
-        $url,
-        array(
-          'type' => 'external',
-          'group' => JS_LIBRARY,
-          'every_page' => TRUE,
-          'weight' => 9
-        )
-      );
-    }
-    // Add local internal behaviours
-    if (self::getWidgetJsAsync()) {
-      drupal_add_js(
-        drupal_get_path('module', 'addthis') . '/addthis.js',
-        array(
-          'group' => JS_DEFAULT,
-          'weight' => 10,
-          'every_page' => TRUE,
-          'preprocess' => TRUE
-        )
-      );
-    }
-  }
-
-  public function addConfigurationOptionsJs() {
-    if ($this->isCustomConfigurationCodeEnabled()) {
-      $javascript = $this->getCustomConfigurationCode();
-    }
-    else {
-      $enabledServices = $this->getServiceNamesAsCommaSeparatedString() . 'more';
-
-      global $language;
-      $configuration = array(
-        'services_compact' => $enabledServices,
-        'data_track_clickback' => $this->isClickbackTrackingEnabled(),
-        'ui_508_compliant' => $this->get508Compliant(),
-        'ui_click' => $this->isClickToOpenCompactMenuEnabled(),
-        'ui_cobrand' =>  $this->getCoBrand(),
-        'ui_delay' => $this->getUiDelay(),
-        'ui_header_background' => $this->getUiHeaderBackgroundColor(),
-        'ui_header_color' => $this->getUiHeaderColor(),
-        'ui_open_windows' => $this->isOpenWindowsEnabled(),
-        'ui_use_css' => $this->isStandardCssEnabled(),
-        'ui_use_addressbook' => $this->isAddressbookEnabled(),
-        'ui_language' => $language->language
-      );
-      if (module_exists('googleanalytics')) {
-        if ($this->isGoogleAnalyticsTrackingEnabled()) {
-          $configuration['data_ga_property'] = variable_get('googleanalytics_account', '');
-          $configuration['data_ga_social'] = $this->isGoogleAnalyticsSocialTrackingEnabled();
-        }
-      }
-      // @todo provide hook to alter the default configuration.
-
-      $javascript = 'var addthis_config = ' . drupal_json_encode($configuration);
-    }
-    drupal_add_js(
-      $javascript,
-      array(
-      'type' => 'inline',
-      'scope' => 'footer',
-      'every_page' => TRUE
-      )
-    );
-  }
-
-  public function areLargeIconsEnabled() {
-    return (boolean) variable_get(self::LARGE_ICONS_ENABLED_KEY, TRUE);
   }
 
   public function isClickToOpenCompactMenuEnabled() {
@@ -283,18 +305,6 @@ class AddThis {
 
   public function isOpenWindowsEnabled() {
     return (boolean) variable_get(self::OPEN_WINDOWS_ENABLED_KEY, FALSE);
-  }
-
-  public function isFacebookLikeEnabled() {
-    return (boolean) variable_get(self::FACEBOOK_LIKE_ENABLED_KEY, FALSE);
-  }
-
-  public function isGooglePlusOneEnabled() {
-    return (boolean) variable_get(self::GOOGLE_PLUS_ONE_ENABLED_KEY, FALSE);
-  }
-
-  public function isTwitterEnabled() {
-    return (boolean) variable_get(self::TWITTER_ENABLED_KEY, FALSE);
   }
 
   public function getUiDelay() {
@@ -329,12 +339,8 @@ class AddThis {
     return check_url(variable_get(self::BOOKMARK_URL_KEY, self::DEFAULT_BOOKMARK_URL));
   }
 
-  public function getNumberOfPreferredServices() {
-    return variable_get(self::NUMBER_OF_PREFERRED_SERVICES_KEY, self::DEFAULT_NUMBER_OF_PREFERRED_SERVICES);
-  }
-
   public function getCoBrand() {
-    return variable_get(self::CO_BRAND_KEY);
+    return variable_get(self::CO_BRAND_KEY, '');
   }
 
   public function get508Compliant() {
@@ -357,75 +363,43 @@ class AddThis {
     return (boolean) variable_get(self::GOOGLE_ANALYTICS_SOCIAL_TRACKING_ENABLED_KEY, FALSE);
   }
 
-  public function getAddThisAttributesMarkup($entity) {
-    if (is_object($entity)) {
-      $attributes = array();
+  public function isGoogleAnalyticsTrackingEnabled() {
+    return (boolean) variable_get(self::GOOGLE_ANALYTICS_TRACKING_ENABLED_KEY, FALSE);
+  }
 
-      // Add title
-      $attributes += $this->getAddThisTitleAttributeMarkup($entity);
+  public function isFacebookLikeCountSupportEnabled() {
+    return (boolean) variable_get(self::FACEBOOK_LIKE_COUNT_SUPPORT_ENABLED, TRUE);
+  }
 
-      // Return the array with attributes
-      return $attributes;
+  public function isGoogleAnalyticsSocialTrackingEnabled() {
+    return (boolean) variable_get(self::GOOGLE_ANALYTICS_SOCIAL_TRACKING_ENABLED_KEY, FALSE);
+  }
+
+  public function addStylesheets() {
+    drupal_add_css($this->getServicesCssUrl(), 'external');
+    drupal_add_css($this->getAdminCssFilePath(), 'file');
+  }
+
+  public function getFullBookmarkUrl() {
+    return $this->getBaseBookmarkUrl() . $this->getProfileIdQueryParameterPrefixedWithAmp();
+  }
+
+  private function getAttributeTitle($entity) {
+    if (isset($entity->title)) {
+      return array(
+        self::TITLE_ATTRIBUTE => (check_plain($entity->title)  . ' - ' . variable_get('site_name')),
+      );
     }
     return array();
   }
 
-  private function getAddThisTitleAttributeMarkup($entity) {
-    return array(
-      self::TITLE_ATTRIBUTE => (check_plain($entity->title)  . ' - ' . variable_get('site_name'))
-    );
-  }
-
-  public function getLargeButtonsClass() {
-    return $this->areLargeIconsEnabled() ? ' addthis_32x32_style ' : '';
-  }
-
-  public function getTwitterButtonMarkup() {
-    $element = NULL;
-    if ($this->isTwitterEnabled()) {
-      $element = array(
-        '#theme' => 'addthis_element',
-        '#tag' => 'a',
-        '#value' => '',
-        '#attributes' => array(
-          'class' => array('addthis_button_tweet')
-        ),
+  private function getAttributeUrl($options) {
+    if (isset($options['#url'])) {
+      return array(
+        self::URL_ATTRIBUTE => $options['#url'],
       );
     }
-    return $element;
-  }
-
-  public function getFacebookLikeButtonMarkup() {
-    $element = NULL;
-    if ($this->isFacebookLikeEnabled()) {
-      $element = array(
-        '#theme' => 'addthis_element',
-        '#tag' => 'a',
-        '#value' => '',
-        '#attributes' => array(
-          'class' => array(
-           'addthis_button_facebook_like'
-          ),
-          'fb:like:layout' => 'button_count'
-        )
-      );
-    }
-    return $element;
-  }
-
-  public function getGooglePlusOneButtonMarkup() {
-    $element = NULL;
-    if ($this->isGooglePlusOneEnabled()) {
-      $element = array(
-        '#theme' => 'addthis_element',
-        '#tag' => 'a',
-        '#value' => '',
-        '#attributes' => array(
-          'class' => array('addthis_button_google_plusone')
-        )
-      );
-    }
-    return $element;
+    return array();
   }
 
   private function getServiceNamesAsCommaSeparatedString() {
@@ -441,13 +415,6 @@ class AddThis {
 
   private function getAdminCssFilePath() {
     return drupal_get_path('module', self::MODULE_NAME) . '/' . self::ADMIN_CSS_FILE;
-  }
-
-  /*
-   * Helper function. Get a bookmark url appended with the ProfileId
-   */
-  public function getFullBookmarkUrl() {
-    return $this->getBaseBookmarkUrl() . $this->getProfileIdQueryParameterPrefixedWithAmp();
   }
 
   private function getProfileIdQueryParameter($prefix) {

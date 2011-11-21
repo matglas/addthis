@@ -1,0 +1,6 @@
+name = AddThis Displays
+description = Adds the AddThis display types to render several basic types of AddThis buttons.
+core = 7.x
+package = Fields
+dependencies[] = addthis
+files[] = addthis_displays.field.inc
