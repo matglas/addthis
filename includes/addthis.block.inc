@@ -40,7 +40,7 @@ function addthis_block_view($block_name = '') {
 function addthis_block_configure($delta = '') {
   $form[AddThis::BLOCK_WIDGET_TYPE_KEY] = array(
     '#type' => 'select',
-    '#title' => t('AddThis Display type'),
+    '#title' => t('AddThis display type'),
     '#options' => AddThis::getInstance()->getDisplayTypes(),
     '#default_value' => AddThis::getInstance()->getBlockDisplayType(),
   );

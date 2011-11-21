@@ -67,7 +67,7 @@ function addthis_admin_settings_form($form_state) {
   $form['visual_settings_fieldset']['fieldset_compact_menu'][AddThis::CLICK_TO_OPEN_COMPACT_MENU_ENABLED_KEY] = array(
     '#type' => 'checkbox',
     '#title' => t('Open compact menu on click'),
-    '#description' => t('Default behavior is open compact menu on hover.'),
+    '#description' => t('Default behavior is to open compact menu on hover.'),
     '#default_value' => AddThis::getInstance()->isClickToOpenCompactMenuEnabled(),
     '#required' => FALSE,
   );
@@ -98,7 +98,7 @@ function addthis_admin_settings_form($form_state) {
   $form['visual_settings_fieldset']['fieldset_additionals'][AddThis::STANDARD_CSS_ENABLED_KEY] = array(
       '#type' => 'checkbox',
       '#title' => t('Use standard AddThis stylesheet'),
-      '#description' => t('If not checked, AddThis will not load standard CSS file, allowing you to style everything yourself without incurring the cost of an additonal load.'),
+      '#description' => t('If not checked, AddThis will not load standard CSS file, allowing you to style everything yourself without incurring the cost of an additional load.'),
       '#default_value' => AddThis::getInstance()->isStandardCssEnabled(),
       '#required' => FALSE,
   );
@@ -131,7 +131,7 @@ function addthis_admin_settings_form($form_state) {
     $form['fieldset_analytics']['can_track_notice'] = array(
       '#theme' => 'html_tag',
       '#tag' => 'div',
-      '#value' => t('For click analytics/statistics you have to provide a ProfileID at top of this configuration page from <a href="http://www.addthis.com">AddThis.com</a>.'),
+      '#value' => t('For click analytics and statistics you have to provide a ProfileID at top of this configuration page from <a href="http://www.addthis.com">AddThis.com</a>.'),
       '#attributes' => array('class' => array('messages', 'warning')),
     );
   }
@@ -163,12 +163,12 @@ function addthis_admin_settings_form($form_state) {
 
   $rdf_enabled = module_exists('rdf');
   if (!$rdf_enabled) {
-    $rdf_description = t('<span class="admin-disabled">The RDF module needs to be enabled to support Facebook Like tracking support.<br>Enabled the module here on the <a href="!modules">modules</a> page.</span>',
+    $rdf_description = t('<span class="admin-disabled">The RDF module needs to be enabled to support Facebook Like tracking support.<br>Enable the module on <a href="!modules">modules</a> page.</span>',
       array('!modules' => base_path() . 'admin/modules')
     );
   }
   else {
-    $rdf_description = t('Check to track Facebook Like tracking support. Always global.');
+    $rdf_description = t('Check to enable Facebook Like tracking support. Always global.');
   }
   // Facebook Like tracking requires a namespace to be added.
   $form['fieldset_analytics'][AddThis::FACEBOOK_LIKE_COUNT_SUPPORT_ENABLED] = array(
@@ -184,7 +184,7 @@ function addthis_admin_settings_form($form_state) {
   $form['enabled_services_fieldset'] = array(
     '#type' => 'fieldset',
     '#title' => t('Enabled services'),
-    '#description' => t('The sharing services you select here will be in the compact menu. If you select nothing AddThis will provide a list of frequently used services. This list is updated regularily.'),
+    '#description' => t('The sharing services you select here will be displayed in the compact menu. If you select no services, AddThis will provide a list of frequently used services. This list is updated regularly.'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
