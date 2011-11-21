@@ -31,8 +31,6 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
     $this->addThisShouldBeAbleToBeUsedAsField();
 
-    $this->addThisShouldBeAbleToBeUsedAsBlock();
-
     $this->addThisSystemSettingsShouldBeAbleToBeSaved();
   }
 
@@ -66,57 +64,11 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $this->addThisShouldNotHaveConfigurableFieldLevelSettings($label);
 
     $this->drupalGet('admin/structure/types/manage/article/display');
-
-    $this->addThisShouldProvideWidgetTypeCompactButton();
-
-    $this->addThisShouldProvideWidgetTypeDisabled();
-
-    $this->addThisShouldProvideWidgetTypeLargeButton();
-
-    $this->addThisShouldProvideWidgetTypeSharecount();
-
-    $this->addThisShouldProvideWidgetTypeToolbox();
   }
 
   private function addThisShouldNotHaveConfigurableFieldLevelSettings($label) {
     $this->assertText(t("@name has no field settings.", array('@name' => $label)),
                      'AddThis-module should not have configurable field level settings.');
-  }
-
-  private function addThisShouldProvideWidgetTypeCompactButton() {
-    $this->assertText('Compact button', 'AddThis-module should provide widget type "Compact button"');
-  }
-
-  private function addThisShouldProvideWidgetTypeDisabled() {
-    $this->assertText('Disabled', 'AddThis-module should provide widget type "Disabled"');
-  }
-
-  private function addThisShouldProvideWidgetTypeLargeButton() {
-    $this->assertText('Large button', 'AddThis-module should provide widget type "Large button"');
-  }
-
-  private function addThisShouldProvideWidgetTypeSharecount() {
-    $this->assertText('Sharecount', 'AddThis-module should provide widget type "Sharecount"');
-  }
-
-  private function addThisShouldProvideWidgetTypeToolbox() {
-    $this->assertText('Toolbox', 'AddThis-module should provide widget type "Toolbox"');
-  }
-
-  private function addThisShouldBeAbleToBeUsedAsBlock() {
-    $this->drupalGet('admin/structure/block');
-    $this->assertRaw(t('AddThis'), 'AddThis should be able to be used as a block.');
-
-    $this->addThisBlockSettingsShouldBeAbleToBeSaved();
-  }
-
-  private function addThisBlockSettingsShouldBeAbleToBeSaved() {
-    $edit = array();
-    $edit[AddThis::BLOCK_WIDGET_TYPE_KEY] = AddThis::WIDGET_TYPE_COMPACT_BUTTON;
-
-    $this->drupalPost('admin/structure/block/manage/addthis/addthis_block/configure', $edit, t('Save block'));
-
-    $this->assertText(t('The block configuration has been saved.'), 'AddThis block settings should be able to be saved.');
   }
 
   private function addThisSystemSettingsShouldBeAbleToBeSaved() {
@@ -146,15 +98,9 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $coBrand = TestHelper::generateRandomLowercaseString();
     $edit[AddThis::CO_BRAND_KEY] = $coBrand;
 
-    $edit[AddThis::LARGE_ICONS_ENABLED_KEY] = TRUE;
-
     $edit[AddThis::COMPLIANT_508_KEY] = TRUE;
 
     $edit[AddThis::CLICKBACK_TRACKING_ENABLED_KEY] = TRUE;
-    
-    $edit[AddThis::GOOGLE_ANALYTICS_TRACKING_ENABLED_KEY] = TRUE;
-    
-    $edit[AddThis::GOOGLE_ANALYTICS_SOCIAL_TRACKING_ENABLED_KEY] = TRUE;
 
     $edit[AddThis::ADDRESSBOOK_ENABLED_KEY] = TRUE;
 
@@ -192,15 +138,9 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
     $this->addThisCoBrandShouldBeAbleToBeSaved($coBrand);
 
-    $this->addThisLargeToolboxIconsSettingShouldBeAbleToBeSaved();
-
     $this->addThis508CompliantSettingShouldBeAbleToBeSaved();
 
     $this->addThisClickbackTrackingEnabledSettingShouldBeAbleToBeSaved();
-
-    $this->addThisGoogleAnalyticsTrackingEnabledSettingShouldBeAbleToBeSaved();
-
-    $this->addThisGoogleAnalyticsSocialTrackingEnabledSettingShouldBeAbleToBeSaved();
 
     $this->addThisClickToOpenCompactMenuEnabledSettingShouldBeAbleToBeSaved();
 
@@ -232,11 +172,6 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
                              'AddThis javascript widget URL should be able to be saved.');
   }
 
-  private function addThisLargeToolboxIconsSettingShouldBeAbleToBeSaved() {
-    $this->assertFieldChecked('edit-addthis-large-icons-enabled',
-                              'AddThis large toolbox icons setting should be able to be saved.');
-  }
-
   private function addThis508CompliantSettingShouldBeAbleToBeSaved() {
     $this->assertFieldChecked('edit-addthis-508-compliant',
                               'AddThis 508 compliant setting should be able to be saved.');
@@ -245,16 +180,6 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
   private function addThisClickbackTrackingEnabledSettingShouldBeAbleToBeSaved() {
     $this->assertFieldChecked('edit-addthis-clickback-tracking-enabled',
                               'AddThis clickback tracking enabled setting should be able to be saved.');
-  }
-
-  private function addThisGoogleAnalyticsTrackingEnabledSettingShouldBeAbleToBeSaved() {
-    $this->assertFieldChecked('edit-addthis-google-analytics-tracking-enabled',
-                              'AddThis Google Analytics tracking enabled setting should be able to be saved.');
-  }
-
-  private function addThisGoogleAnalyticsSocialTrackingEnabledSettingShouldBeAbleToBeSaved() {
-    $this->assertFieldChecked('edit-addthis-google-analytics-tracking-enabled',
-                              'AddThis Google Analytics social tracking enabled setting should be able to be saved.');
   }
 
   private function addThisClickToOpenCompactMenuEnabledSettingShouldBeAbleToBeSaved() {
@@ -277,24 +202,9 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
                               'AddThis Facebook Like enabled setting should be able to be saved.');
   }
 
-  private function addThisGooglePlusOneEnabledSettingShouldBeAbleToBeSaved() {
-    $this->assertFieldChecked('edit-addthis-google-plus-one-enabled',
-                              'AddThis Google +1 enabled setting should be able to be saved.');
-  }
-
-  private function addThisTwitterEnabledSettingShouldBeAbleToBeSaved() {
-    $this->assertFieldChecked('edit-addthis-twitter-enabled',
-                              'AddThis Twitter enabled setting should be able to be saved.');
-  }
-
   private function addThisAddressbookEnabledSettingShouldBeAbleToBeSaved() {
     $this->assertFieldChecked('edit-addthis-addressbook-enabled',
                               'AddThis addressbook enabled setting should be able to be saved.');
-  }
-
-  private function addThisNumberOfPreferredServicesShouldBeAbleToBeSaved($numberOfPreferredServices) {
-    $this->assertFieldByName(AddThis::NUMBER_OF_PREFERRED_SERVICES_KEY, $numberOfPreferredServices,
-                             'The number of preferred services should be able to be saved.');
   }
 
   private function addThisCustomConfigurationCodeEnabledSettingShouldBeAbleToBeSaved() {
