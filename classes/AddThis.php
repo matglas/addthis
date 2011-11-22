@@ -354,25 +354,17 @@ class AddThis {
   public function isAddressbookEnabled() {
     return (boolean) variable_get(self::ADDRESSBOOK_ENABLED_KEY, FALSE);
   }
-  
-  public function isGoogleAnalyticsTrackingEnabled() {
-    return (boolean) variable_get(self::GOOGLE_ANALYTICS_TRACKING_ENABLED_KEY, FALSE);
-  }
-  
-  public function isGoogleAnalyticsSocialTrackingEnabled() {
-    return (boolean) variable_get(self::GOOGLE_ANALYTICS_SOCIAL_TRACKING_ENABLED_KEY, FALSE);
-  }
 
   public function isGoogleAnalyticsTrackingEnabled() {
     return (boolean) variable_get(self::GOOGLE_ANALYTICS_TRACKING_ENABLED_KEY, FALSE);
+  }
+
+  public function isGoogleAnalyticsSocialTrackingEnabled() {
+    return (boolean) variable_get(self::GOOGLE_ANALYTICS_SOCIAL_TRACKING_ENABLED_KEY, FALSE);
   }
 
   public function isFacebookLikeCountSupportEnabled() {
     return (boolean) variable_get(self::FACEBOOK_LIKE_COUNT_SUPPORT_ENABLED, TRUE);
-  }
-
-  public function isGoogleAnalyticsSocialTrackingEnabled() {
-    return (boolean) variable_get(self::GOOGLE_ANALYTICS_SOCIAL_TRACKING_ENABLED_KEY, FALSE);
   }
 
   public function addStylesheets() {
