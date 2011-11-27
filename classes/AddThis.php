@@ -47,6 +47,12 @@ class AddThis {
   const WIDGET_JS_URL_KEY = 'addthis_widget_js_url';
   const WIDGET_JS_ASYNC = 'addthis_widget_async';
 
+  // Twitter
+  const TWITTER_VIA_KEY = 'addthis_twitter_via';
+  const TWITTER_VIA_DEFAULT = 'AddThis';
+  const TWITTER_TEMPLATE_KEY = 'addthis_twitter_template';
+  const TWITTER_TEMPLATE_DEFAULT = '{{title}} {{url}} via @AddThis';
+
   // External resources
   const DEFAULT_BOOKMARK_URL = 'http://www.addthis.com/bookmark.php?v=250';
   const DEFAULT_SERVICES_CSS_URL = 'http://cache.addthiscdn.com/icons/v1/sprites/services.css';
@@ -247,9 +253,13 @@ class AddThis {
           $configuration['data_ga_social'] = $this->isGoogleAnalyticsSocialTrackingEnabled();
         }
       }
+      $configuration['templates']['twitter'] = $this->getTwitterTemplate();
       drupal_alter('addthis_configuration', $configuration);
 
-      $configurationOptionsJavascript = 'var addthis_config = ' . drupal_json_encode($configuration);
+      $templates = array('templates' => $configuration['templates']);
+      unset($configuration['templates']);
+      $configurationOptionsJavascript = 'var addthis_config = ' . drupal_json_encode($configuration) . "\n";
+      $configurationOptionsJavascript .= 'var addthis_share = ' . drupal_json_encode($templates);
     }
     drupal_add_js(
       $configurationOptionsJavascript,
@@ -345,6 +355,14 @@ class AddThis {
 
   public function get508Compliant() {
     return (boolean) variable_get(self::COMPLIANT_508_KEY, FALSE);
+  }
+
+  public function getTwitterVia() {
+    return variable_get(self::TWITTER_VIA_KEY, self::TWITTER_VIA_DEFAULT);
+  }
+
+  public function getTwitterTemplate() {
+    return variable_get(self::TWITTER_TEMPLATE_KEY, self::TWITTER_TEMPLATE_DEFAULT);
   }
 
   public function isClickbackTrackingEnabled() {

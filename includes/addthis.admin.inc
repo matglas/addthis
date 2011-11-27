@@ -198,6 +198,33 @@ function addthis_admin_settings_form($form_state) {
     '#columns' => 3,
   );
 
+  // Third party settings.
+  $form['third_party_fieldset'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Third party settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['third_party_fieldset']['twitter_service'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Twitter'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['third_party_fieldset']['twitter_service'][AddThis::TWITTER_VIA_KEY] = array(
+    '#type' => 'textfield',
+    '#title' => t('Send via'),
+    '#description' => t('When sending a tweet this is the screen name of the user to attribute the Tweet to. (Relates to Tweet Button)'),
+    '#default_value' => AddThis::getInstance()->getTwitterVia(),
+    '#size' => 15,
+  );
+  $form['third_party_fieldset']['twitter_service'][AddThis::TWITTER_TEMPLATE_KEY] = array(
+    '#type' => 'textfield',
+    '#title' => t('Template text'),
+    '#description' => t('The {{title}} and {{url}} are replaced from the Twitter Button.'),
+    '#default_value' => AddThis::getInstance()->getTwitterTemplate(),
+  );
+
   // Service URL's settings.
   $form['service_urls_fieldset'] = array(
       '#type' => 'fieldset',

@@ -68,7 +68,8 @@ function addthis_displays_addthis_display_markup__addthis_basic_toolbox($options
         break;
       case 'tweet':
         $items[$service]['#attributes'] += array(
-          'tw:count' => ($orientation ? 'horizontal' : 'vertical')
+          'tw:count' => ($orientation ? 'horizontal' : 'vertical'),
+          'tw:via' => AddThis::getInstance()->getTwitterVia(),
         );
         break;
     }
