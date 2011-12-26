@@ -123,8 +123,12 @@ class AddThis {
 
     // Theme function might only give a display name and
     // render on default implementation.
-    if (!isset($options['#display']) || $options['#display']['type'] != $display) {
-      $options['#display'] = $display_information;
+    if (!isset($options['#display']) ||
+        (isset($options['#display']['type']) && $options['#display']['type'] != $display))
+    {
+      $options['#display'] = isset($options['#display']) ? $options['#display'] : array();
+      $options['#display'] = array_merge($options['#display'], $display_information);
+      $options['#display']['type'] = $display;
     }
 
     // When #entity and #entity_type exist, use the entity's URL.
