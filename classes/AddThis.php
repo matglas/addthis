@@ -445,6 +445,14 @@ class AddThis {
   }
 
   private function getWidgetUrl() {
-    return check_url($this->getBaseWidgetJsUrl() . $this->getProfileIdQueryParameterPrefixedWithHash());
+    return check_url($this->validateSecureUrl($this->getBaseWidgetJsUrl()) . $this->getProfileIdQueryParameterPrefixedWithHash());
+  }
+
+  private function validateSecureUrl($url) {
+    global $base_root;
+    if (strpos($base_root, 'https://') !== FALSE) {
+      return 'https' . substr($url, 0, 4);
+    }
+    return $url;
   }
 }
