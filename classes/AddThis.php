@@ -79,6 +79,7 @@ class AddThis {
    * @return AddThis
    */
   public static function getInstance() {
+    module_load_include('php', 'addthis', 'classes/AddThisJson');
     if (!isset(self::$instance)) {
       $addThis = new AddThis();
       $addThis->setJson(new AddThisJson());
