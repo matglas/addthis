@@ -451,7 +451,7 @@ class AddThis {
   private function validateSecureUrl($url) {
     global $base_root;
     if (strpos($base_root, 'https://') !== FALSE) {
-      return 'https' . substr($url, 0, 4);
+      $url = (strpos($url, 'http://') === 0 ? 'https://' . substr($url, 7) : $url);
     }
     return $url;
   }
