@@ -148,6 +148,6 @@ function addthis_displays_field_formatter_settings_summary($field, $instance, $v
  * Implements hook_field_formatter_view().
  */
 function addthis_displays_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-  // We use the helper function addthis_render_formatter_view with litteraly all the arguments.
+  // We use the helper function addthis_render_formatter_view with literally all the arguments.
   return addthis_render_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display);
 }

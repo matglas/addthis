@@ -96,8 +96,6 @@ class AddThis {
     return array(
       self::WIDGET_TYPE_DISABLED => t('Disabled'),
     );
-    // @todo Get all display types available and
-    // provide a array with their names.
   }
 
   public function getDisplayTypes() {
