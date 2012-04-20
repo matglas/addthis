@@ -8,11 +8,27 @@
           addthis.init();
         }
       );
+      // Trigger ready on ajax attach.
       if (context != window.document && window.addthis != null) {
         window.addthis.ost = 0;
         window.addthis.ready();
       }
+      // Attach on onchange
+      $('.addthis-display-type', context).change(Drupal.addThis.displayType.onChange);
     }
   };
+
+  Drupal.addThis = {
+
+    displayType: {
+      
+      onChange: function() {
+        var $trigger = $(this);
+        console.debug(this);
+      }
+      
+    }
+    
+  }
 
 }(jQuery));
