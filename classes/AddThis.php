@@ -69,6 +69,7 @@ class AddThis {
 
   // Styles
   const CSS_32x32 = 'addthis_32x32_style';
+  const CSS_16x16 = 'addthis_16x16_style';
 
   private static $instance;
 
