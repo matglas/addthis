@@ -6,15 +6,17 @@
  */
 
 /**
- * Implements hook_TYPE_alter.
+ * Implements hook_TYPE_alter().
  *
  * @param array $options
  *   $options contains an array with configurations settings for used in the
  *   creation of the markup. The following elements may be in here.
  *
- *   - '#entity_type': The entity type this markup is define when called by a field.
+ *   - '#entity_type': The entity type this markup is define when called by a
+ *                     field.
  *   - '#entity': Is the entity object when called by a field.
- *   - '#display': Is always defined and provide all the formatter configuration.
+ *   - '#display': Is always defined and provide all the formatter
+ *                 configuration.
  *   - '#url': The link to the entity when the entity has a url.
  */
 function hook_addthis_markup_options_alter(&$options) {
@@ -35,7 +37,7 @@ function hook_addthis_markup_options_alter(&$options) {
 }
 
 /**
- * Implements hook_TYPE_alter.
+ * Implements hook_TYPE_alter().
  *
  * @param array $markup
  *   $markup contains an array with the structure of the addthis markup.

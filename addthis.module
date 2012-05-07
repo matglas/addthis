@@ -106,7 +106,7 @@ function addthis_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form
 }
 
 /**
- * Implements hook_rdf_namespaces()
+ * Implements hook_rdf_namespaces().
  */
 function addthis_rdf_namespaces() {
   if (AddThis::getInstance()->isFacebookLikeCountSupportEnabled()) {
@@ -165,8 +165,9 @@ function theme_addthis_wrapper($variables) {
 }
 
 /**
- * Theme the elements that are created in the AddThis module. This is
- * created with hook_addthis_element.
+ * Theme the elements that are created in the AddThis module.
+ *
+ * This is created with hook_addthis_element.
  */
 function theme_addthis_element($variables) {
   $element = $variables['addthis_element'];

@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Defines field implementations.
+ */
+
+/**
  * Implements hook_field_formatter_info().
  */
 function addthis_displays_field_formatter_info() {
@@ -28,7 +33,7 @@ function addthis_displays_field_formatter_info() {
 }
 
 /**
- * Implementss hook_field_formatter_settings_form()
+ * Implementss hook_field_formatter_settings_form().
  */
 function addthis_displays_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
   $display = $instance['display'][$view_mode];

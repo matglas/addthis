@@ -163,7 +163,7 @@ function addthis_admin_settings_form($form_state) {
 
   $rdf_enabled = module_exists('rdf');
   if (!$rdf_enabled) {
-    $rdf_description = t('<span class="admin-disabled">The RDF module needs to be enabled to support Facebook Like tracking support.<br>Enable the module on <a href="!modules">modules</a> page.</span>',
+    $rdf_description = t('<span class="admin-disabled">The RDF module needs to be enabled to support Facebook Like tracking support.<br />Enable the module on <a href="!modules">modules</a> page.</span>',
       array('!modules' => base_path() . 'admin/modules')
     );
   }
@@ -174,7 +174,7 @@ function addthis_admin_settings_form($form_state) {
   $form['fieldset_analytics'][AddThis::FACEBOOK_LIKE_COUNT_SUPPORT_ENABLED] = array(
         '#type' => 'checkbox',
         '#title' => t('Enable Facebook Like tracking'),
-        '#description' => $rdf_description,
+        '#description' => filter_xss($rdf_description, array('span')),
         '#default_value' => AddThis::getInstance()->isFacebookLikeCountSupportEnabled(),
         '#required' => FALSE,
         '#disabled' => !$rdf_enabled,

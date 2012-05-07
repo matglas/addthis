@@ -101,10 +101,11 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $edit[AddThis::COMPLIANT_508_KEY] = TRUE;
 
     $edit[AddThis::CLICKBACK_TRACKING_ENABLED_KEY] = TRUE;
-    
-    $edit[AddThis::GOOGLE_ANALYTICS_TRACKING_ENABLED_KEY] = TRUE;
-    
-    $edit[AddThis::GOOGLE_ANALYTICS_SOCIAL_TRACKING_ENABLED_KEY] = TRUE;
+
+    // Can only be tested with Google Analytics module installed.
+    //$edit_basic[AddThis::GOOGLE_ANALYTICS_TRACKING_ENABLED_KEY] = TRUE;
+
+    //$edit_basic[AddThis::GOOGLE_ANALYTICS_SOCIAL_TRACKING_ENABLED_KEY] = TRUE;
 
     $edit[AddThis::ADDRESSBOOK_ENABLED_KEY] = TRUE;
 
@@ -146,9 +147,10 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
     $this->addThisClickbackTrackingEnabledSettingShouldBeAbleToBeSaved();
 
-    $this->addThisGoogleAnalyticsTrackingEnabledSettingShouldBeAbleToBeSaved();
+    // Can only be tested with Google Analytics module installed.
+    //$this->addThisGoogleAnalyticsTrackingEnabledSettingShouldBeAbleToBeSaved();
 
-    $this->addThisGoogleAnalyticsSocialTrackingEnabledSettingShouldBeAbleToBeSaved();
+    //$this->addThisGoogleAnalyticsSocialTrackingEnabledSettingShouldBeAbleToBeSaved();
 
     $this->addThisClickToOpenCompactMenuEnabledSettingShouldBeAbleToBeSaved();
 

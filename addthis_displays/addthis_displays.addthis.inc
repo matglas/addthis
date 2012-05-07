@@ -1,7 +1,12 @@
 <?php
 
+/**
+ * @file
+ * Implements AddThis markup functions.
+ */
+
 function addthis_displays_addthis_display_markup($display, $variables = NULL) {
-  return null;
+  return NULL;
 }
 
 /**
