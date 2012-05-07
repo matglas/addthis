@@ -48,62 +48,66 @@ function addthis_block_configure($delta = '') {
     '#default_value' => AddThis::getInstance()->getBlockDisplayType(),
     '#attributes' => array('class' => array('addthis-display-type')),
   );
-  
-  dpm('block_config');
-  $form['addthis'] = array();
-  $form['addthis'] += _addthis_block_display_type_form($form, $form_state, AddThis::getInstance()->getBlockDisplayType());
-  $form['addthis']['#prefix'] = '<div id="addthis-display-type-settings">';
-  $form['addthis']['#suffix'] = '</div>';
-  
-  // @see field_ui_display_overview_form:975 - 1091
+
+  $display_test = 'addthis_basic_button';
+  $display_test = 'addthis_basic_toolbox';
+  $form['addthis_test'] = array();
+  $form['addthis_test'] += _addthis_block_display_type_form($form, $form_state, $display_test);
+
+  // @see field_ui_display_overview_form(). :975 - 1091
   //drupal_get_form($form_id);
   return $form;
 }
 
 function _addthis_block_display_type_form($form, &$form_state, $display_type) {
-  dpm($form, 'start');
   $new_form = array();
-  
+
   module_load_include('inc', 'field_ui', 'field_ui.admin');
   $name = 'addthis_settings';
 
-  /*
-  $formatter_options = AddThis::getInstance()->getDisplayTypes();
-  $new_form[$name] = array(
-    'type' => array(
-      '#type' => 'select',
-      '#title' => t('Formatter for @title', array('@title' => 'AddThis block')),
-      '#title_display' => 'invisible',
-      '#options' => $formatter_options,
-      '#default_value' => $display_type,
-      '#parents' => array('settings', AddThis::BLOCK_WIDGET_TYPE_KEY),
-      '#attributes' => array('class' => array('addthis-display-type')),
-    ),
-    'settings_edit_form' => array(),
-  );
-  */
+  $list_types = FALSE;
+  if ($list_types) {
+    $formatter_options = AddThis::getInstance()->getDisplayTypes();
+    $new_form = array(
+      'type' => array(
+        '#type' => 'select',
+        '#title' => t('Formatter for @title', array('@title' => 'AddThis block')),
+        '#title_display' => 'invisible',
+        '#options' => $formatter_options,
+        '#default_value' => $display_type,
+        '#parents' => array('settings', AddThis::BLOCK_WIDGET_TYPE_KEY),
+        '#attributes' => array('class' => array('addthis-display-type')),
+      ),
+      // The settings elements will be added here.
+      'settings_edit_form' => array(),
+    );
+  }
 
   // Formatter settings.
 
   // Check the currently selected formatter, and merge persisted values for
   // formatter settings.
-  dpm($form_state, 'form_state');
   if (isset($form_state['values'][AddThis::BLOCK_WIDGET_TYPE_KEY])) {
     $formatter_type = $form_state['values'][AddThis::BLOCK_WIDGET_TYPE_KEY];
   }
   else {
     $formatter_type = $display_type;
   }
+  dpm($form_state, 'form_state:' . $formatter_type);
 
   // Get the settings if set.
-  if (isset($form_state['values']['settings'][$name]['settings'])) {
-    $settings = $form_state['values']['settings'][$name]['settings'];
+  if (isset($form_state['values'][$name])) {
+    $settings = $form_state['values'][$name];
+    dpm($settings, 'settings:from:values');
   }
   else {
     $settings = array();
+    dpm($settings, 'settings:null');
   }
-  $settings += field_info_formatter_settings($formatter_type);
-  dpm($settings, 'settings');
+  $formatter_settings = field_info_formatter_settings($formatter_type);
+  dpm($formatter_settings, 'settings:formatter only');
+  $settings += $formatter_settings;
+  dpm($settings, 'settings:plus formatter');
 
   $field = array();
   $instance = array();
@@ -118,7 +122,7 @@ function _addthis_block_display_type_form($form, &$form_state, $display_type) {
   $base_button = array(
     '#submit' => array('addthis_block_display_type_submit'),
     '#ajax' => array(
-      'callback' => 'addthis_block_display_type_submit',
+      'callback' => 'addthis_block_display_type_submit_js',
       'wrapper' => 'addthis-display-type-settings',
       'effect' => 'fade',
     ),
@@ -127,7 +131,7 @@ function _addthis_block_display_type_form($form, &$form_state, $display_type) {
 
   // We are currently editing this field's formatter settings. Display the
   // settings form and submit buttons.
-  $new_form[$name]['settings_edit_form'] = array();
+  $new_form['settings_edit_form'] = array();
 
   $settings_form = array();
   $function = $formatter['module'] . '_field_formatter_settings_form';
@@ -137,11 +141,11 @@ function _addthis_block_display_type_form($form, &$form_state, $display_type) {
   dpm($settings_form, 'settings_form');
 
   if ($settings_form) {
-    $new_form[$name]['settings_edit_form'] = array(
+    $new_form['settings_edit_form'] = array(
       '#tree' => TRUE,
       '#type' => 'container',
       '#attributes' => array('class' => array('addhis-display-settings-form')),
-      '#parents' => array('settings', $name),
+      '#parents' => array($name),
       'label' => array(
         '#markup' => t('Format settings:') . ' <span class="formatter-name">' . $formatter['label'] . '</span>',
       ),
@@ -150,37 +154,41 @@ function _addthis_block_display_type_form($form, &$form_state, $display_type) {
         '#type' => 'actions',
         'save_settings' => $base_button + array(
           '#type' => 'submit',
-          '#name' => $name . '_settings_update',
+          '#name' => $name . '_update',
           '#value' => t('Update'),
           '#op' => 'update',
         ),
       ),
+      '#prefix' => '<div id="addthis-display-type-settings">',
+      '#suffix' => '</div>'
     );
     $new_form[$name]['#attributes']['class'][] = 'addthis-display-settings-editing';
   }
-  
+
  return $new_form;
 }
 
 function addthis_block_display_type_submit($form, &$form_state) {
-  $trigger = $form_state['triggering_element'];
-  $op = $trigger['#op'];
-  
-  dpm('ajax form');
   $form['rebuild'] = TRUE;
-  return _addthis_block_display_type_form($form, $form_state, NULL);
+  return $form;
 }
 
 function addthis_block_display_type_submit_js($form, &$form_state) {
-  dpm($form_state['values'], 'values');
+  $triggering_element = isset($form_state['triggering_element']) ? $form_state['triggering_element'] : NULL;
+
+  if (isset($triggering_element) && $triggering_element['op'] == 'update') {
+    $new_display_type = $form_state['values'][AddThis::BLOCK_WIDGET_TYPE_KEY];
+    $form['addthis_test'] = _addthis_block_display_type_form($form, $form_state, $new_display_type);
+    //dpm($form_state['values']['addthis_settings']['settings']);
+  }
+
   $form['rebuild'] = TRUE;
-  return $form;
+  return $form['addthis_test'];
 }
 
 /**
  * Implements hook_block_save().
  */
 function addthis_block_save($delta = '', $edit = array()) {
-  dpm('block_save');
   variable_set(AddThis::BLOCK_WIDGET_TYPE_KEY, $edit[AddThis::BLOCK_WIDGET_TYPE_KEY]);
 }
