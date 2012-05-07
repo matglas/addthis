@@ -41,7 +41,6 @@ function addthis_block_configure($delta = '') {
   $form = array();
   $form_state = array();
 
-  /*
   $form[AddThis::BLOCK_WIDGET_TYPE_KEY] = array(
     '#type' => 'select',
     '#title' => t('AddThis display type'),
@@ -49,10 +48,10 @@ function addthis_block_configure($delta = '') {
     '#default_value' => AddThis::getInstance()->getBlockDisplayType(),
     '#attributes' => array('class' => array('addthis-display-type')),
   );
-   */
   
   dpm('block_config');
-  $form['addthis'] = _addthis_block_display_type_form($form, $form_state, AddThis::getInstance()->getBlockDisplayType());
+  $form['addthis'] = array();
+  $form['addthis'] += _addthis_block_display_type_form($form, $form_state, AddThis::getInstance()->getBlockDisplayType());
   $form['addthis']['#prefix'] = '<div id="addthis-display-type-settings">';
   $form['addthis']['#suffix'] = '</div>';
   
@@ -63,15 +62,14 @@ function addthis_block_configure($delta = '') {
 
 function _addthis_block_display_type_form($form, &$form_state, $display_type) {
   dpm($form, 'start');
-  if (isset($form['settings']['addthis'])) {
-    dpm('is loading new');
-  }
+  $new_form = array();
   
   module_load_include('inc', 'field_ui', 'field_ui.admin');
   $name = 'addthis_settings';
 
+  /*
   $formatter_options = AddThis::getInstance()->getDisplayTypes();
-  $form[$name] = array(
+  $new_form[$name] = array(
     'type' => array(
       '#type' => 'select',
       '#title' => t('Formatter for @title', array('@title' => 'AddThis block')),
@@ -83,28 +81,34 @@ function _addthis_block_display_type_form($form, &$form_state, $display_type) {
     ),
     'settings_edit_form' => array(),
   );
-  
+  */
+
   // Formatter settings.
 
   // Check the currently selected formatter, and merge persisted values for
   // formatter settings.
-  if (isset($form_state['values']['settings'][AddThis::BLOCK_WIDGET_TYPE_KEY])) {
-    $formatter_type = $form_state['values']['settings'][AddThis::BLOCK_WIDGET_TYPE_KEY];
+  dpm($form_state, 'form_state');
+  if (isset($form_state['values'][AddThis::BLOCK_WIDGET_TYPE_KEY])) {
+    $formatter_type = $form_state['values'][AddThis::BLOCK_WIDGET_TYPE_KEY];
   }
   else {
     $formatter_type = $display_type;
   }
-  if (isset($form_state['values']['settings'][$name])) {
-    $settings = $form_state['values']['settings'][$name];
+
+  // Get the settings if set.
+  if (isset($form_state['values']['settings'][$name]['settings'])) {
+    $settings = $form_state['values']['settings'][$name]['settings'];
   }
   else {
     $settings = array();
   }
   $settings += field_info_formatter_settings($formatter_type);
+  dpm($settings, 'settings');
 
   $field = array();
   $instance = array();
   $view_mode = 'block';
+
   $instance['display'][$view_mode]['type'] = $formatter_type;
   $formatter = field_info_formatter_types($formatter_type);
   $instance['display'][$view_mode]['module'] = $formatter['module'];
@@ -123,16 +127,18 @@ function _addthis_block_display_type_form($form, &$form_state, $display_type) {
 
   // We are currently editing this field's formatter settings. Display the
   // settings form and submit buttons.
-  $form[$name]['settings_edit_form'] = array();
+  $new_form[$name]['settings_edit_form'] = array();
 
   $settings_form = array();
   $function = $formatter['module'] . '_field_formatter_settings_form';
   if (function_exists($function)) {
-    $settings_form = $function($field, $instance, $view_mode, $form, $form_state);
+    $settings_form = $function($field, $instance, $view_mode, $new_form, $form_state);
   }
+  dpm($settings_form, 'settings_form');
 
   if ($settings_form) {
-    $form[$name]['settings_edit_form'] = array(
+    $new_form[$name]['settings_edit_form'] = array(
+      '#tree' => TRUE,
       '#type' => 'container',
       '#attributes' => array('class' => array('addhis-display-settings-form')),
       '#parents' => array('settings', $name),
@@ -150,9 +156,10 @@ function _addthis_block_display_type_form($form, &$form_state, $display_type) {
         ),
       ),
     );
-    $form[$name]['#attributes']['class'][] = 'addthis-display-settings-editing';
+    $new_form[$name]['#attributes']['class'][] = 'addthis-display-settings-editing';
   }
-  return $form;
+  
+ return $new_form;
 }
 
 function addthis_block_display_type_submit($form, &$form_state) {
@@ -160,10 +167,8 @@ function addthis_block_display_type_submit($form, &$form_state) {
   $op = $trigger['#op'];
   
   dpm('ajax form');
-  _addthis_block_display_type_form($form, $form_state, NULL);
-  
   $form['rebuild'] = TRUE;
-  return $form;
+  return _addthis_block_display_type_form($form, $form_state, NULL);
 }
 
 function addthis_block_display_type_submit_js($form, &$form_state) {
