@@ -51,7 +51,7 @@ function addthis_displays_field_formatter_settings_form($field, $instance, $view
         '#type' => 'select',
         '#default_value' => $settings['buttons_size'],
         '#options' => array(
-          'addthis_16x16_style' => t('Small (16x16)'),
+          AddThis::CSS_16x16 => t('Small (16x16)'),
           AddThis::CSS_32x32 => t('Big (32x32)'),
         ),
       );
