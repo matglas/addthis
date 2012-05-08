@@ -112,6 +112,7 @@ function addthis_displays_addthis_display_markup__addthis_basic_button($options 
     '#tag' => 'img',
     '#attributes' => array(
       'src' => $button_img,
+      'alt' => t('Share page with AddThis'),
     ),
   );
   $element[] = $image;
