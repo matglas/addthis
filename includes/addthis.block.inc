@@ -62,6 +62,17 @@ function addthis_block_configure($delta = '') {
 function _addthis_block_display_type_form($form, &$form_state, $display_type) {
   $new_form = array();
 
+  if (isset($form_state)) {
+    $new_form['test'] = array(
+      '#markup' => 'new:' . $display_type,
+    );
+  } else {
+    $new_form['test'] = array(
+      '#markup' => 'update:' . $display_type,
+    );
+  }
+
+  /*
   module_load_include('inc', 'field_ui', 'field_ui.admin');
   $name = 'addthis_settings';
 
@@ -162,10 +173,32 @@ function _addthis_block_display_type_form($form, &$form_state, $display_type) {
       '#prefix' => '<div id="addthis-display-type-settings">',
       '#suffix' => '</div>'
     );
-    $new_form[$name]['#attributes']['class'][] = 'addthis-display-settings-editing';
+    $new_form['settings_edit_form']['#attributes']['class'][] = 'addthis-display-settings-editing';
   }
+  */
 
- return $new_form;
+  // Base button element for the various formatter settings actions.
+  $base_button = array(
+    '#submit' => array('addthis_block_display_type_submit'),
+    '#ajax' => array(
+      'callback' => 'addthis_block_display_type_submit_js',
+      'wrapper' => 'addthis-display-type-settings',
+      'effect' => 'fade',
+    ),
+  );
+  $new_form['#theme_wrappers'] = array('container');
+  $new_form['#id'] = 'addthis-display-type-settings';
+  $new_form['actions'] = array(
+    '#type' => 'actions',
+    'save_settings' => $base_button + array(
+      '#type' => 'submit',
+      '#name' => 'update',
+      '#value' => t('Update'),
+      '#op' => 'update',
+    )
+  );
+
+  return $new_form;
 }
 
 function addthis_block_display_type_submit($form, &$form_state) {
@@ -176,13 +209,12 @@ function addthis_block_display_type_submit($form, &$form_state) {
 function addthis_block_display_type_submit_js($form, &$form_state) {
   $triggering_element = isset($form_state['triggering_element']) ? $form_state['triggering_element'] : NULL;
 
-  if (isset($triggering_element) && $triggering_element['op'] == 'update') {
+  dpm($form_state);
+  if (isset($triggering_element) && $triggering_element['#op'] == 'update') {
     $new_display_type = $form_state['values'][AddThis::BLOCK_WIDGET_TYPE_KEY];
     $form['addthis_test'] = _addthis_block_display_type_form($form, $form_state, $new_display_type);
-    //dpm($form_state['values']['addthis_settings']['settings']);
+    dpm(_addthis_block_display_type_form($form, $form_state, $new_display_type));
   }
-
-  $form['rebuild'] = TRUE;
   return $form['addthis_test'];
 }
 

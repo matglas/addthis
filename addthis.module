@@ -78,6 +78,14 @@ function addthis_menu() {
     'file' => AddThis::ADMIN_INCLUDE_FILE,
     'weight' => 10
   );
+  $menu_items['admin/config/user-interface/addthistest'] = array(
+  'title' => 'AddThis Test',
+    'description' => 'AddThis Ajax test.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('addthis_testa_form'),
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+  );
   return $menu_items;
 }
 
@@ -200,4 +208,52 @@ function theme_addthis_element($variables) {
   }
   $output .= '</' . $element['#tag'] . ">\n";
   return $output;
+}
+
+/**
+ * Ajax form test
+ */
+
+
+function addthis_testa_form($form, &$form_state) {
+  $form = array();
+
+  $form += array(
+    '#type' => 'container',
+    '#id' => 'addthis_testa'
+  );
+  $form['addthis_settings'] = array(
+    '#markup' => '<div>test</div>'
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#name' => 'Send',
+    '#value' => 'Send',
+    '#op' => 'send',
+    '#submit' => 'addthis_testa_form_submit',
+    '#ajax' => array(
+      'callback' => 'addthis_testa_form_submit_js',
+      'wrapper' => 'addthis_testa',
+      'name' => 'send',
+    )
+  );
+
+  return $form;
+}
+
+function addthis_testa_form_submit($form, &$form_state) {
+  $form['addthis_settings'] = array(
+    '#markup' => '<div>test2</div>'
+  );
+  dpm($form);
+
+  $form['rebuild'] = TRUE;
+  return $form;
+}
+
+function addthis_testa_form_submit_js($form, &$form_state) {
+  $form['addthis_settings'] = array(
+    '#markup' => '<div>test3</div>'
+  );
+  return $form;
 }
