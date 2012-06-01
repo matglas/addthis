@@ -216,13 +216,36 @@ function theme_addthis_element($variables) {
 
 
 function addthis_settings_form($form, &$form_state, $display_type = NULL, $display_settings = NULL) {
+  $no_js = TRUE;
+
   $display_type = 'addthis_basic_toolbox';
+  if (isset($form_state['values']['addthis_type'])) {
+    $display_type = $form_state['values']['addthis_type'];
+  }
 
-  $form = array();
+  // TODO I don't know if this is wise.
+  //   We should override all the values. A lot is now added (+=).
+  if (!isset($form)) {
+    $form = array();
+  }
 
+  // Container used as the replace for ajax.
+  $form['#type'] = 'container';
+  $form['#id'] = 'addthis_settings';
+
+  // The list of formatters
+  $formatter_options = AddThis::getInstance()->getDisplayTypes();
   $form += array(
-    '#type' => 'container',
-    '#id' => 'addthis_settings'
+    'type' => array(
+      '#type' => 'select',
+      '#title' => t('Formatter for @title', array('@title' => 'AddThis block')),
+      '#title_display' => 'invisible',
+      '#options' => $formatter_options,
+      '#default_value' => $display_type,
+      '#parents' => array('addthis_type'),
+      '#attributes' => array('class' => array('addthis-display-type')),
+    ),
+    'settings' => array()
   );
 
   // Formatter settings.
@@ -249,22 +272,28 @@ function addthis_settings_form($form, &$form_state, $display_type = NULL, $displ
   $function = $formatter['module'] . '_field_formatter_settings_form';
   if (function_exists($function)) {
     $settings_form = $function($field, $instance, $view_mode, $form, $form_state);
+    $settings_form['#tree'] = TRUE;
+    $settings_form['#parents'] = array('addthis_settings');
   }
 
-  $form += $settings_form;
+  $form['settings'] += $settings_form;
 
   $form['submit'] = array(
     '#type' => 'submit',
     '#name' => 'Send',
     '#value' => 'Send',
     '#op' => 'send',
-    '#submit' => 'addthis_settings_form_submit',
+    '#submit' => array('addthis_settings_form_submit'),
     '#ajax' => array(
       'callback' => 'addthis_settings_form_submit_js',
       'wrapper' => 'addthis_settings',
       'name' => 'send',
     )
   );
+
+  if ($no_js) {
+    unset($form['submit']['#ajax']);
+  }
 
   return $form;
 }
