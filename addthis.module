@@ -82,7 +82,7 @@ function addthis_menu() {
   'title' => 'AddThis Test',
     'description' => 'AddThis Ajax test.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('addthis_settings_form'),
+    'page arguments' => array('addthis_preset_example'),
     'access callback' => TRUE,
     'type' => MENU_NORMAL_ITEM,
   );
@@ -210,23 +210,48 @@ function theme_addthis_element($variables) {
   return $output;
 }
 
+function addthis_preset_example($form = array(), &$form_state) {
+
+  $form['preset_name'] = array(
+    '#type' => 'machine_name',
+    '#default_value' => '',
+    '#maxlength' => 21,
+    '#machine_name' => array(
+      'exists' => FALSE,
+    ),
+    '#required' => FALSE,
+  );
+
+  $form['addthis_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Display settings',
+  );
+  $element = _addthis_settings_form(isset($form['addthis_settings']['form']) ? $form['addthis_settings']['form'] : array(), $form_state);
+  $form['addthis_settings']['form'] = $element;
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#name' => 'save',
+    '#value' => 'Save',
+    '#op' => 'save',
+  );
+
+  return $form;
+}
+
+function addthis_preset_example_submit($form, &$form_state) {
+  dpm($form);
+}
+
 /**
- * Ajax form test
+ * Create a addthis settings form.
  */
+function _addthis_settings_form($form = array(), &$form_state, $display_type = NULL, $display_settings = NULL) {
+  $no_js = FALSE;
 
-
-function addthis_settings_form($form, &$form_state, $display_type = NULL, $display_settings = NULL) {
-  $no_js = TRUE;
-
-  $display_type = 'addthis_basic_toolbox';
-  if (isset($form_state['values']['addthis_type'])) {
-    $display_type = $form_state['values']['addthis_type'];
-  }
-
-  // TODO I don't know if this is wise.
-  //   We should override all the values. A lot is now added (+=).
-  if (!isset($form)) {
-    $form = array();
+  $display_type = (isset($display_type)) ? $display_type : 'addthis_disabled';
+  if (isset($form_state['values']['addthis_settings']['type'])) {
+    $display_type = $form_state['values']['addthis_settings']['type'];
   }
 
   // Container used as the replace for ajax.
@@ -235,18 +260,31 @@ function addthis_settings_form($form, &$form_state, $display_type = NULL, $displ
 
   // The list of formatters
   $formatter_options = AddThis::getInstance()->getDisplayTypes();
-  $form += array(
-    'type' => array(
-      '#type' => 'select',
-      '#title' => t('Formatter for @title', array('@title' => 'AddThis block')),
-      '#title_display' => 'invisible',
-      '#options' => $formatter_options,
-      '#default_value' => $display_type,
-      '#parents' => array('addthis_type'),
-      '#attributes' => array('class' => array('addthis-display-type')),
-    ),
-    'settings' => array()
+  $form['type'] = array(
+    '#type' => 'select',
+    '#title' => t('Formatter for @title', array('@title' => 'AddThis block')),
+    '#title_display' => 'invisible',
+    '#options' => $formatter_options,
+    '#default_value' => $display_type,
+    '#parents' => array('addthis_settings', 'type'),
+    '#attributes' => array('class' => array('addthis-display-type')),
   );
+
+  $form['choose'] = array(
+    '#type' => 'submit',
+    '#name' => 'Switch display',
+    '#value' => 'Switch display',
+    '#op' => 'switch_display',
+    '#submit' => array('_addthis_settings_form_submit'),
+    '#ajax' => array(
+      'callback' => '_addthis_settings_form_submit_callback',
+      'wrapper' => 'addthis_settings',
+      'name' => 'swithc_dislay',
+    )
+  );
+  if ($no_js) {
+    unset($form['choose']['#ajax']);
+  }
 
   // Formatter settings.
 
@@ -273,36 +311,19 @@ function addthis_settings_form($form, &$form_state, $display_type = NULL, $displ
   if (function_exists($function)) {
     $settings_form = $function($field, $instance, $view_mode, $form, $form_state);
     $settings_form['#tree'] = TRUE;
-    $settings_form['#parents'] = array('addthis_settings');
+    $settings_form['#parents'] = array('addthis_settings', 'settings');
   }
 
-  $form['settings'] += $settings_form;
-
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#name' => 'Send',
-    '#value' => 'Send',
-    '#op' => 'send',
-    '#submit' => array('addthis_settings_form_submit'),
-    '#ajax' => array(
-      'callback' => 'addthis_settings_form_submit_js',
-      'wrapper' => 'addthis_settings',
-      'name' => 'send',
-    )
-  );
-
-  if ($no_js) {
-    unset($form['submit']['#ajax']);
-  }
+  $form['settings'] = $settings_form;
 
   return $form;
 }
 
-function addthis_settings_form_submit($form, &$form_state) {
+function _addthis_settings_form_submit($form, &$form_state) {
   $form_state['rebuild'] = TRUE;
 }
 
-function addthis_settings_form_submit_js($form, &$form_state) {
+function _addthis_settings_form_submit_callback($form, &$form_state) {
   $form_state['rebuild'] = TRUE;
   return $form;
 }
