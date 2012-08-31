@@ -240,7 +240,8 @@ function addthis_preset_example($form = array(), &$form_state) {
 }
 
 function addthis_preset_example_submit($form, &$form_state) {
-  dpm($form);
+  dpm($form, 'form');
+  dpm($form_state, 'form_state');
 }
 
 /**
@@ -325,5 +326,5 @@ function _addthis_settings_form_submit($form, &$form_state) {
 
 function _addthis_settings_form_submit_callback($form, &$form_state) {
   $form_state['rebuild'] = TRUE;
-  return $form;
+  return $form['addthis_settings']['form'];
 }
