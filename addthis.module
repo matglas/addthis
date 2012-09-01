@@ -257,6 +257,7 @@ function _addthis_settings_form($form = array(), &$form_state, $display_type = N
 
   // Container used as the replace for ajax.
   $form['#type'] = 'container';
+  $form['#attributes'] = array();
   $form['#id'] = 'addthis_settings';
 
   // The list of formatters
@@ -280,7 +281,7 @@ function _addthis_settings_form($form = array(), &$form_state, $display_type = N
     '#ajax' => array(
       'callback' => '_addthis_settings_form_submit_callback',
       'wrapper' => 'addthis_settings',
-      'name' => 'swithc_dislay',
+      'name' => 'switch_display',
     )
   );
   if ($no_js) {

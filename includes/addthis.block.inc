@@ -52,12 +52,17 @@ function addthis_block_configure($delta = '') {
   );
   */
 
+  $form['addthis_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Display settings',
+  );
   $element = _addthis_settings_form(
     isset($form['addthis_settings']['form']) ? $form['addthis_settings']['form'] : array(),
     $form_state
   );
+  $element['choose']['#submit'] = array('_addthis_settings_form_block_submit');
+  $element['choose']['#ajax']['callback'] = '_addthis_settings_form_block_submit_callback';
   $form['addthis_settings']['form'] = $element;
-  dpm($form);
 
   // @see field_ui_display_overview_form(). :975 - 1091
   //drupal_get_form($form_id);
@@ -69,4 +74,26 @@ function addthis_block_configure($delta = '') {
  */
 function addthis_block_save($delta = '', $edit = array()) {
   variable_set(AddThis::BLOCK_WIDGET_TYPE_KEY, $edit[AddThis::BLOCK_WIDGET_TYPE_KEY]);
+}
+
+function _addthis_settings_form_block_submit($form, &$form_state) {
+  $form_state['rebuild'] = TRUE;
+}
+
+function _addthis_settings_form_block_submit_callback($form, &$form_state) {
+  $form_state['rebuild'] = TRUE;
+
+  // Look at submitted display type and change the form.
+  if (isset($form_state['values']['addthis_settings']['type'])) {
+    $type = $form_state['values']['addthis_settings']['type'];
+    $element = _addthis_settings_form(
+      isset($form['addthis_settings']['form']) ? $form['addthis_settings']['form'] : array(),
+      $form_state
+    );
+    $element['choose']['#submit'] = array('_addthis_settings_form_block_submit');
+    $element['choose']['#ajax']['callback'] = '_addthis_settings_form_block_submit_callback';
+    $form['addthis_settings']['form'] = $element;
+  }
+
+  return $form['addthis_settings']['form'];
 }
