@@ -61,6 +61,13 @@ function addthis_displays_addthis_display_markup__addthis_basic_toolbox($options
     //   You can't add this bubble style now.
     $orientation = ($options['#display']['settings']['counter_orientation'] == 'horizontal' ? TRUE : FALSE);
     switch ($service) {
+      case 'addthis':
+        $items[$service]['#attributes'] = array(
+            'class' => array(
+              'addthis_counter addthis_pill_style'
+            )
+        );
+        break;  
       case 'facebook_like':
         $items[$service]['#attributes'] += array(
           'fb:like:layout' => ($orientation ? 'button_count' : 'box_count')
@@ -68,7 +75,7 @@ function addthis_displays_addthis_display_markup__addthis_basic_toolbox($options
         break;
       case 'google_plusone':
         $items[$service]['#attributes'] += array(
-          'g:plusone:size' => ($orientation ? 'standard' : 'tall')
+          'g:plusone:size' => ($orientation ? 'medium' : 'tall')
         );
         break;
       case 'tweet':
