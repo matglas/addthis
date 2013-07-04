@@ -59,21 +59,37 @@ function addthis_displays_addthis_display_markup__addthis_basic_toolbox($options
     // @todo Fix a way to use addthis_bubble_style.
     //   There is a conflict now with using the class addthis_button_[service].
     //   You can't add this bubble style now.
+    // $options['#display']['settings']['buttons_size']
+    $buttonbig = ($options['#display']['settings']['buttons_size'] == AddThis::CSS_32x32 ? TRUE : FALSE);
+    $bubblecounts = ($options['#display']['settings']['counter_enabled'] == 'true' ? TRUE : FALSE);
     $orientation = ($options['#display']['settings']['counter_orientation'] == 'horizontal' ? TRUE : FALSE);
     switch ($service) {
+      case 'addthis':
+        $items[$service]['#attributes'] = array(
+            'class' => array(
+              'addthis_counter addthis_pill_style'
+            )
+        );
+        break;  
       case 'facebook_like':
         $items[$service]['#attributes'] += array(
           'fb:like:layout' => ($orientation ? 'button_count' : 'box_count')
         );
         break;
       case 'google_plusone':
+        //TODO Integrate annotation & size options.
         $items[$service]['#attributes'] += array(
-          'g:plusone:size' => ($orientation ? 'standard' : 'tall')
+          'g:plusone:size' => ($buttonbig ? 'tall' : 'medium'),
+          //('small' : 'medium' : 'standard' : 'tall')
+          'g:plusone:annotation' => ($bubblecounts ? 'bubble' : 'none')
+          //( 'none' : 'inline' : 'bubble')
         );
         break;
       case 'tweet':
         $items[$service]['#attributes'] += array(
-          'tw:count' => ($orientation ? 'horizontal' : 'vertical'),
+          //TODO Integrate count options.
+          'tw:count' => ($bubblecounts ? ($orientation ? 'horizontal' : 'vertical') : 'none'),
+          //($orientation ? 'none' : 'horizontal' : 'vertical'),
           'tw:via' => AddThis::getInstance()->getTwitterVia(),
         );
         break;
