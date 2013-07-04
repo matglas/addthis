@@ -17,6 +17,7 @@ function addthis_displays_field_formatter_info() {
     'settings' => array(
       'share_services' => 'facebook,twitter',
       'buttons_size' => 'addthis_16x16_style',
+      'counter_enabled' => 'false',
       'counter_orientation' => 'horizontal',
       'extra_css' => '',
     ),
@@ -59,6 +60,16 @@ function addthis_displays_field_formatter_settings_form($field, $instance, $view
           AddThis::CSS_16x16 => t('Small (16x16)'),
           AddThis::CSS_32x32 => t('Big (32x32)'),
         ),
+      );
+      $element['counter_enabled'] = array(
+        '#title' => t('Enable button counters'),
+        '#description' => t('Enable service counters where appropriate.'),
+        '#type' => 'select',
+        '#default_value' => $settings['counter_enabled'],
+        '#options' => array(
+          'true' => t('Enable'),
+          'false' => t('Disable'),
+        )
       );
       $element['counter_orientation'] = array(
         '#title' => t('Counter orientation'),
