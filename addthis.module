@@ -212,6 +212,11 @@ function theme_addthis_element($variables) {
 
 function addthis_preset_example($form = array(), &$form_state) {
 
+  $addthis_settings = variable_get('addthis_preset_settings', array());
+  if (isset($form_state['values']['addthis_settings'])) {
+    $addthis_settings = $form_state['values']['addthis_settings'];
+  }
+
   $form['preset_name'] = array(
     '#type' => 'machine_name',
     '#default_value' => '',
@@ -226,7 +231,14 @@ function addthis_preset_example($form = array(), &$form_state) {
     '#type' => 'fieldset',
     '#title' => 'Display settings',
   );
-  $element = _addthis_settings_form(isset($form['addthis_settings']['form']) ? $form['addthis_settings']['form'] : array(), $form_state);
+
+  // Create a addthis settings form based on the available configuration.
+  $element = _addthis_settings_form(
+    isset($form['addthis_settings']['form']) ? $form['addthis_settings']['form'] : array(),
+    $form_state,
+    isset($addthis_settings['type']) ? $addthis_settings['type'] : NULL,
+    isset($addthis_settings['settings']) ? $addthis_settings['settings'] : NULL
+    );
   $form['addthis_settings']['form'] = $element;
 
   $form['submit'] = array(
@@ -239,18 +251,30 @@ function addthis_preset_example($form = array(), &$form_state) {
   return $form;
 }
 
+/**
+ * Submit handler.
+ */
 function addthis_preset_example_submit($form, &$form_state) {
-  dpm($form, 'form');
-  dpm($form_state, 'form_state');
+  // We need to save the information here because it does not get passed to the
+  // form when finished.
+
+  // Save the addthis settings for this preset.
+  variable_set('addthis_preset_settings', $form_state['values']['addthis_settings']);
+
+  return $form;
 }
 
 /**
  * Create a addthis settings form.
  */
 function _addthis_settings_form($form = array(), &$form_state, $display_type = NULL, $display_settings = NULL) {
+  // Toggle variables
   $no_js = FALSE;
 
+
+  // Default display type if not set in the parameters.
   $display_type = (isset($display_type)) ? $display_type : 'addthis_disabled';
+  // Load setting type from the form_state.
   if (isset($form_state['values']['addthis_settings']['type'])) {
     $display_type = $form_state['values']['addthis_settings']['type'];
   }
@@ -307,6 +331,7 @@ function _addthis_settings_form($form = array(), &$form_state, $display_type = N
   $formatter = field_info_formatter_types($formatter_type);
   $instance['display'][$view_mode]['module'] = $formatter['module'];
   $instance['display'][$view_mode]['settings'] = $settings;
+
 
   $settings_form = array();
   $function = $formatter['module'] . '_field_formatter_settings_form';
