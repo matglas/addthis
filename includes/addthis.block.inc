@@ -56,13 +56,19 @@ function addthis_block_configure($delta = '') {
     '#type' => 'fieldset',
     '#title' => 'Display settings',
   );
+
+  // Create a addthis settings form based on the available configuration.
   $element = _addthis_settings_form(
     isset($form['addthis_settings']['form']) ? $form['addthis_settings']['form'] : array(),
-    $form_state
+    $form_state,
+    isset($addthis_settings['type']) ? $addthis_settings['type'] : NULL,
+    isset($addthis_settings['settings']) ? $addthis_settings['settings'] : NULL
   );
   $element['choose']['#submit'] = array('_addthis_settings_form_block_submit');
   $element['choose']['#ajax']['callback'] = '_addthis_settings_form_block_submit_callback';
   $form['addthis_settings']['form'] = $element;
+
+  return $form;
 
   // @see field_ui_display_overview_form(). :975 - 1091
   //drupal_get_form($form_id);
