@@ -38,12 +38,40 @@ function addthis_block_view($block_name = '') {
  * Implements hook_block_configure().
  */
 function addthis_block_configure($delta = '') {
+  // We miss the form and form_state.
+  $form = array();
+  $form_state = array();
+
+  /*
   $form[AddThis::BLOCK_WIDGET_TYPE_KEY] = array(
     '#type' => 'select',
     '#title' => t('AddThis display type'),
     '#options' => AddThis::getInstance()->getDisplayTypes(),
     '#default_value' => AddThis::getInstance()->getBlockDisplayType(),
+    '#attributes' => array('class' => array('addthis-display-type')),
   );
+  */
+
+  $form['addthis_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Display settings',
+  );
+
+  // Create a addthis settings form based on the available configuration.
+  $element = _addthis_settings_form(
+    isset($form['addthis_settings']['form']) ? $form['addthis_settings']['form'] : array(),
+    $form_state,
+    isset($addthis_settings['type']) ? $addthis_settings['type'] : NULL,
+    isset($addthis_settings['settings']) ? $addthis_settings['settings'] : NULL
+  );
+  $element['choose']['#submit'] = array('_addthis_settings_form_block_submit');
+  $element['choose']['#ajax']['callback'] = '_addthis_settings_form_block_submit_callback';
+  $form['addthis_settings']['form'] = $element;
+
+  return $form;
+
+  // @see field_ui_display_overview_form(). :975 - 1091
+  //drupal_get_form($form_id);
   return $form;
 }
 
@@ -52,4 +80,64 @@ function addthis_block_configure($delta = '') {
  */
 function addthis_block_save($delta = '', $edit = array()) {
   variable_set(AddThis::BLOCK_WIDGET_TYPE_KEY, $edit[AddThis::BLOCK_WIDGET_TYPE_KEY]);
+}
+
+function _addthis_settings_form_block_submit($form, &$form_state) {
+  $form_state['rebuild'] = TRUE;
+}
+
+function _addthis_settings_form_block_submit_callback($form, &$form_state) {
+  $form_state['rebuild'] = TRUE;
+
+  // Look at submitted display type and change the form.
+  if (isset($form_state['values']['addthis_settings']['type'])) {
+    $type = $form_state['values']['addthis_settings']['type'];
+    $element = _addthis_settings_form(
+      isset($form['addthis_settings']['form']) ? $form['addthis_settings']['form'] : array(),
+      $form_state
+    );
+    $element['choose']['#submit'] = array('_addthis_settings_form_block_submit');
+    $element['choose']['#ajax']['callback'] = '_addthis_settings_form_block_submit_callback';
+    $form['addthis_settings']['form'] = $element;
+  }
+
+  return $form['addthis_settings']['form'];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function addthis_form_block_admin_configure_alter(&$form, &$form_state) {
+  /*
+  $form[AddThis::BLOCK_WIDGET_TYPE_KEY] = array(
+    '#type' => 'select',
+    '#title' => t('AddThis display type'),
+    '#options' => AddThis::getInstance()->getDisplayTypes(),
+    '#default_value' => AddThis::getInstance()->getBlockDisplayType(),
+    '#attributes' => array('class' => array('addthis-display-type')),
+  );
+  */
+
+  if ($form['module']['#value'] == 'addthis' && $form['delta']['#value'] == 'addthis_block') {
+
+    $form['settings']['addthis_settings'] = array(
+      '#type' => 'fieldset',
+      '#title' => 'Display settings',
+    );
+
+    // Create a addthis settings form based on the available configuration.
+    $element = _addthis_settings_form(
+      isset($form['addthis_settings']['form']) ? $form['addthis_settings']['form'] : array(),
+      $form_state,
+      isset($addthis_settings['type']) ? $addthis_settings['type'] : NULL,
+      isset($addthis_settings['settings']) ? $addthis_settings['settings'] : NULL
+    );
+    $element['choose']['#submit'] = array('_addthis_settings_form_block_submit');
+    $element['choose']['#ajax']['callback'] = '_addthis_settings_form_block_submit_callback';
+    $form['settings']['addthis_settings']['form'] = $element;
+
+    array_unshift($form['#submit'], '_addthis_settings_form_block_submit');
+  }
+
+  return $form;
 }
