@@ -319,7 +319,7 @@ function _addthis_settings_form($form = array(), &$form_state, $display_type = N
   $formatter_type = $display_type;
 
   // Get the settings if set.
-  $settings = array();
+  $settings = $display_settings;
   $formatter_settings = field_info_formatter_settings($formatter_type);
   $settings += $formatter_settings;
 
