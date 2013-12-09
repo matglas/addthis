@@ -193,13 +193,13 @@ class AddThis {
   }
 
   public function addWidgetJs() {
-    $async_parameter = self::isWidgetJsAsync() ? '?async=1' : '';
+    $async_parameter = self::isWidgetJsAsync() ? '&async=1' : '';
     $url = self::getWidgetUrl() . $async_parameter;
     if (self::isWidgetJsAsync()) {
       drupal_add_js(
         array(
         'addthis' => array(
-          'widget_url' => $url,
+          'widget_url' => $url . "&domready=1",
         ),
       ),
         'setting'
