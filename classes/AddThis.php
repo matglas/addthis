@@ -86,9 +86,13 @@ class AddThis {
       $addThis->setJson(new AddThisJson());
       self::$instance = $addThis;
     }
+
     return self::$instance;
   }
 
+  /**
+   * Set the json object.
+   */
   public function setJson(AddThisJson $json) {
     $this->json = $json;
   }
@@ -123,6 +127,10 @@ class AddThis {
     if (!array_key_exists($display, $formatters)) {
       return array();
     }
+
+    // Load resources.
+    self::$instance->includeWidgetJs();
+    self::$instance->addConfigurationOptionsJs();
 
     // The display type exists. Now get it and get the markup.
     $display_information = $formatters[$display];
@@ -229,6 +237,23 @@ class AddThis {
       )
       );
     }
+  }
+
+  /**
+   * Load function for widget information.
+   *
+   * Loading widget information only once.
+   */
+  public function includeWidgetJs() {
+    static $loaded;
+
+    if (!isset($loaded)) {
+      $loaded = TRUE;
+      $this::addWidgetJs();
+
+      return TRUE;
+    }
+    return FALSE;
   }
 
   public function addConfigurationOptionsJs() {
