@@ -10,9 +10,11 @@
       );
       if (context != window.document && window.addthis != null) {
         window.addthis.ost = 0;
-        window.addthis.ready();
+        if(typeof window.addthis.ready === 'function') {
+          window.addthis.ready();
+        }
       }
     }
-  };
-
-}(jQuery));
+  }
+}
+(jQuery));
