@@ -25,8 +25,18 @@ function addthis_block_info() {
  */
 function addthis_block_view($block_name = '') {
   if ($block_name == AddThis::BLOCK_NAME) {
+
     $widget_type = AddThis::getInstance()->getBlockDisplayType();
-    $markup = AddThis::getInstance()->getDisplayMarkup($widget_type, array('#block' => AddThis::BLOCK_NAME));
+    $widget_settings = AddThis::getInstance()->getBlockDisplaySettings();
+
+    $block_options = array(
+      '#block' => AddThis::BLOCK_NAME,
+      '#display' => array(
+        'settings' => $widget_settings,
+        )
+      );
+
+    $markup = AddThis::getInstance()->getDisplayMarkup($widget_type, $block_options);
     return array(
       'subject' => '',
       'content' => $markup,
@@ -50,13 +60,20 @@ function addthis_block_configure($delta = '') {
  * Implements hook_block_save().
  */
 function addthis_block_save($delta = '', $edit = array()) {
-  // variable_set(AddThis::BLOCK_WIDGET_TYPE_KEY, $edit[AddThis::BLOCK_WIDGET_TYPE_KEY]);
+  variable_set(AddThis::BLOCK_WIDGET_TYPE_KEY, $edit['addthis_settings']['type']);
+  variable_set(AddThis::BLOCK_WIDGET_SETTINGS_KEY, $edit['addthis_settings']['settings']);
 }
 
+/**
+ * Callback submit.
+ */
 function _addthis_settings_form_block_submit($form, &$form_state) {
   $form_state['rebuild'] = TRUE;
 }
 
+/**
+ * Callback to return ajax replace part.
+ */
 function _addthis_settings_form_block_submit_callback($form, &$form_state) {
   return $form['settings']['addthis_settings']['form'];
 }
@@ -65,15 +82,6 @@ function _addthis_settings_form_block_submit_callback($form, &$form_state) {
  * Implements hook_form_FORM_ID_alter().
  */
 function addthis_form_block_admin_configure_alter(&$form, &$form_state) {
-  /*
-  $form[AddThis::BLOCK_WIDGET_TYPE_KEY] = array(
-    '#type' => 'select',
-    '#title' => t('AddThis display type'),
-    '#options' => AddThis::getInstance()->getDisplayTypes(),
-    '#default_value' => AddThis::getInstance()->getBlockDisplayType(),
-    '#attributes' => array('class' => array('addthis-display-type')),
-  );
-  */
 
   if ($form['module']['#value'] == 'addthis' && $form['delta']['#value'] == 'addthis_block') {
     form_load_include($form_state, 'inc', 'addthis', 'addthis.block');
@@ -83,6 +91,10 @@ function addthis_form_block_admin_configure_alter(&$form, &$form_state) {
       '#type' => 'fieldset',
       '#title' => 'Display settings',
     );
+
+    // Retrieve settings.
+    $addthis_settings['type'] = AddThis::getInstance()->getBlockDisplayType();
+    $addthis_settings['settings'] = AddThis::getInstance()->getBlockDisplaySettings();
 
     // Create a addthis settings form based on the available configuration.
     $element = _addthis_settings_form(
