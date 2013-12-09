@@ -198,10 +198,10 @@ class AddThis {
     if (self::isWidgetJsAsync()) {
       drupal_add_js(
         array(
-        'addthis' => array(
+          'addthis' => array(
           'widget_url' => $url,
+          ),
         ),
-      ),
         'setting'
       );
     }
@@ -210,11 +210,11 @@ class AddThis {
       drupal_add_js(
         $url,
         array(
-        'type' => 'external',
-        'group' => JS_LIBRARY,
-        'every_page' => TRUE,
-        'weight' => 9,
-      )
+          'type' => 'external',
+          'scope' => 'footer',
+          'every_page' => FALSE,
+          'weight' => 9,
+        )
       );
     }
     // Add local internal behaviours

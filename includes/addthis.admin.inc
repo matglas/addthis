@@ -309,5 +309,11 @@ function addthis_admin_settings_advanced_form($form_state) {
     '#required' => FALSE,
     '#description' => t('AddThis custom configuration code. See format at <a href="http://addthis.com/" target="_blank">AddThis.com</a>'),
   );
+  $form['advanced_settings_fieldset'][AddThis::WIDGET_JS_ASYNC] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Load Widget javascript Asynchronous'),
+    '#default_value' => AddThis::getInstance()->isWidgetJsAsync(),
+    '#required' => FALSE,
+  );
   return system_settings_form($form);
 }
