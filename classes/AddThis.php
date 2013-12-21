@@ -280,6 +280,7 @@ class AddThis {
 
       global $language;
       $configuration = array(
+        'pubid' => $this->getProfileId(),
         'services_compact' => $enabledServices,
         'data_track_clickback' => $this->isClickbackTrackingEnabled(),
         'ui_508_compliant' => $this->get508Compliant(),
