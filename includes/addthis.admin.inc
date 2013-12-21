@@ -309,5 +309,15 @@ function addthis_admin_settings_advanced_form($form_state) {
     '#required' => FALSE,
     '#description' => t('AddThis custom configuration code. See format at <a href="http://addthis.com/" target="_blank">AddThis.com</a>'),
   );
+  $form['advanced_settings_fieldset'][AddThis::WIDGET_JS_LOAD_TYPE] = array(
+    '#type' => 'select',
+    '#title' => t('When to load the widget js.'),
+    '#options' => array(
+      'domready' => t('When DOM is ready.'),
+      'async' => t('When async loaded is finished.'),
+    ),
+    '#default_value' => AddThis::getInstance()->getWidgetJsLoadType(),
+    '#required' => FALSE,
+  );
   return system_settings_form($form);
 }

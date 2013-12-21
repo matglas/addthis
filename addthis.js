@@ -2,9 +2,9 @@
 
   Drupal.behaviors.addthis = {
     attach: function(context, settings) {
-      $.getScript(
-        Drupal.settings.addthis.widget_url,
-        function(data, textStatus) {
+
+      if (typeof Drupal.settings.addthis.load_type != 'undefined') {
+        if (Drupal.settings.addthis.load_type == 'async') {
           addthis.init();
         }
       );
@@ -14,6 +14,7 @@
           window.addthis.ready();
         }
       }
+
     }
   }
 }
