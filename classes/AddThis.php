@@ -446,13 +446,32 @@ class AddThis {
     return $this->getProfileIdQueryParameter('#');
   }
 
+  /**
+   * Get the url for the AddThis Widget.
+   */
   private function getWidgetUrl() {
-    return check_url($this->validateSecureUrl($this->getBaseWidgetJsUrl()) . $this->getProfileIdQueryParameterPrefixedWithHash());
+    $url = ($this->currentlyOnHttps() ?
+      $this->getBaseWidgetJsUrl() : // Not https url.
+      $this->transformToSecureUrl($this->getBaseWidgetJsUrl()) // Transformed to https url.
+    );
+    return check_url($url . $this->getProfileIdQueryParameterPrefixedWithHash());
   }
 
-  private function validateSecureUrl($url) {
+  /**
+   * Request if we are currently on a https connection.
+   *
+   * @return True if we are currently on a https connection.
+   */
+  public function currentlyOnHttps() {
     global $base_root;
-    if (strpos($base_root, 'https://') !== FALSE) {
+    return (strpos($base_root, 'https://') !== FALSE) ? TRUE : FALSE;
+  }
+
+  /**
+   * Transform a url to secure url with https prefix.
+   */
+  public function transformToSecureUrl($url) {
+    if ($this->currentlyOnHttps()) {
       $url = (strpos($url, 'http://') === 0 ? 'https://' . substr($url, 7) : $url);
     }
     return $url;
