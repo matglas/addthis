@@ -58,7 +58,7 @@ class AddThis {
   const DEFAULT_SERVICES_CSS_URL = 'http://cache.addthiscdn.com/icons/v1/sprites/services.css';
   const DEFAULT_SERVICES_JSON_URL = 'http://cache.addthiscdn.com/services/v1/sharing.en.json';
   const DEFAULT_WIDGET_JS_URL = 'http://s7.addthis.com/js/300/addthis_widget.js';
-  const DEFAULT_WIDGET_JS_LOAD_TYPE = 'domready';
+  const DEFAULT_WIDGET_JS_LOAD_TYPE = 'async';
 
   // Internal resources
   const ADMIN_CSS_FILE = 'addthis.admin.css';
@@ -200,9 +200,12 @@ class AddThis {
     return $rows;
   }
 
+  /**
+   * Add the AddThis Widget JavaScript to the page.
+   */
   public function addWidgetJs() {
     $load_type = '&' . self::getWidgetJsLoadType() . '=1';
-    $url = self::getWidgetUrl() . $load_type;
+    $url = self::getWidgetUrl() . (self::getWidgetJsLoadType() != 'include' ? $load_type : '');
 
     switch (self::getWidgetJsLoadType()) {
 
@@ -234,9 +237,18 @@ class AddThis {
           $url,
           array(
             'type' => 'external',
-            'group' => JS_LIBRARY,
-            'every_page' => TRUE,
-            'weight' => 9,
+            'scope' => 'footer',
+          )
+        );
+        break;
+
+      // Load as include in the page.
+      default:
+        drupal_add_js(
+          $url,
+          array(
+            'type' => 'external',
+            'scope' => 'footer',
           )
         );
         break;
@@ -246,10 +258,8 @@ class AddThis {
     drupal_add_js(
       drupal_get_path('module', 'addthis') . '/addthis.js',
       array(
-        'group' => JS_DEFAULT,
-        'weight' => 10,
-        'every_page' => TRUE,
-        'preprocess' => TRUE,
+        'type' => 'file',
+        'scope' => 'footer',
       )
     );
   }
