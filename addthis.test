@@ -92,7 +92,7 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 
     $edit_basic[AddThis::COMPLIANT_508_KEY] = TRUE;
 
-    $edit[AddThis::CLICKBACK_TRACKING_ENABLED_KEY] = TRUE;
+    $edit_basic[AddThis::CLICKBACK_TRACKING_ENABLED_KEY] = TRUE;
 
     // Can only be tested with Google Analytics module installed.
     //$edit_basic[AddThis::GOOGLE_ANALYTICS_TRACKING_ENABLED_KEY] = TRUE;
