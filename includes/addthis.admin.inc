@@ -313,8 +313,9 @@ function addthis_admin_settings_advanced_form($form_state) {
     '#type' => 'select',
     '#title' => t('When to load the widget js.'),
     '#options' => array(
-      'domready' => t('When DOM is ready.'),
-      'async' => t('When async loaded is finished.'),
+      'async' => t('When the page loads, but load assets asynchronously. (default)'),
+      'include' => t('When the page loads.'),
+      'domready' => t('When the DOM is ready at the script dynamicly.'),
     ),
     '#default_value' => AddThis::getInstance()->getWidgetJsLoadType(),
     '#required' => FALSE,
