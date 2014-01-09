@@ -100,14 +100,6 @@ function addthis_permission() {
 }
 
 /**
- * Implements hook_page_alter().
- */
-function addthis_page_alter(&$page) {
-  AddThis::getInstance()->addWidgetJs();
-  AddThis::getInstance()->addConfigurationOptionsJs();
-}
-
-/**
  * Implements hook_form_FORM_ID_alter().
  *
  * Hide the instance fieldset because there aren't any values per instance.
