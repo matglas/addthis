@@ -45,7 +45,7 @@ class AddThis {
   const UI_HEADER_BACKGROUND_COLOR_KEY = 'addthis_ui_header_background_color';
   const UI_HEADER_COLOR_KEY = 'addthis_ui_header_color';
   const WIDGET_JS_URL_KEY = 'addthis_widget_js_url';
-  const WIDGET_JS_ASYNC = 'addthis_widget_async';
+  const WIDGET_JS_LOAD_TYPE = 'addthis_widget_load_type';
 
   // Twitter
   const TWITTER_VIA_KEY = 'addthis_twitter_via';
@@ -58,7 +58,7 @@ class AddThis {
   const DEFAULT_SERVICES_CSS_URL = 'http://cache.addthiscdn.com/icons/v1/sprites/services.css';
   const DEFAULT_SERVICES_JSON_URL = 'http://cache.addthiscdn.com/services/v1/sharing.en.json';
   const DEFAULT_WIDGET_JS_URL = 'http://s7.addthis.com/js/300/addthis_widget.js';
-  const DEFAULT_WIDGET_JS_ASYNC = TRUE;
+  const DEFAULT_WIDGET_JS_LOAD_TYPE = 'async';
 
   // Internal resources
   const ADMIN_CSS_FILE = 'addthis.admin.css';
@@ -200,43 +200,68 @@ class AddThis {
     return $rows;
   }
 
+  /**
+   * Add the AddThis Widget JavaScript to the page.
+   */
   public function addWidgetJs() {
-    $async_parameter = self::isWidgetJsAsync() ? '?async=1' : '';
-    $url = self::getWidgetUrl() . $async_parameter;
-    if (self::isWidgetJsAsync()) {
-      drupal_add_js(
-        array(
-        'addthis' => array(
-          'widget_url' => $url,
-        ),
-      ),
-        'setting'
-      );
+    $load_type = '&' . self::getWidgetJsLoadType() . '=1';
+    $url = self::getWidgetUrl() . (self::getWidgetJsLoadType() != 'include' ? $load_type : '');
+
+    switch (self::getWidgetJsLoadType()) {
+
+      // Load as DOM is ready.
+      case 'domready':
+        drupal_add_js(
+          array(
+            'addthis' => array(
+              'widget_url' => $url,
+              'load_type' => self::getWidgetJsLoadType(),
+            ),
+          ),
+          'setting'
+        );
+        break;
+
+      // Load as async.
+      case 'async':
+        drupal_add_js(
+          array(
+            'addthis' => array(
+              'load_type' => self::getWidgetJsLoadType(),
+            ),
+          ),
+          'setting'
+        );
+
+        drupal_add_js(
+          $url,
+          array(
+            'type' => 'external',
+            'scope' => 'footer',
+          )
+        );
+        break;
+
+      // Load as include in the page.
+      default:
+        drupal_add_js(
+          $url,
+          array(
+            'type' => 'external',
+            'scope' => 'footer',
+          )
+        );
+        break;
     }
-    else {
-      // Add AddThis.com resources
-      drupal_add_js(
-        $url,
-        array(
-        'type' => 'external',
-        'group' => JS_LIBRARY,
-        'every_page' => TRUE,
-        'weight' => 9,
+
+    // Add local internal behaviours.
+    drupal_add_js(
+      drupal_get_path('module', 'addthis') . '/addthis.js',
+      array(
+        'type' => 'file',
+        'scope' => 'footer',
       )
-      );
-    }
-    // Add local internal behaviours
-    if (self::isWidgetJsAsync()) {
-      drupal_add_js(
-        drupal_get_path('module', 'addthis') . '/addthis.js',
-        array(
-        'group' => JS_DEFAULT,
-        'weight' => 10,
-        'every_page' => TRUE,
-        'preprocess' => TRUE,
-      )
-      );
-    }
+    );
   }
 
   /**
@@ -265,6 +290,7 @@ class AddThis {
 
       global $language;
       $configuration = array(
+        'pubid' => $this->getProfileId(),
         'services_compact' => $enabledServices,
         'data_track_clickback' => $this->isClickbackTrackingEnabled(),
         'ui_508_compliant' => $this->get508Compliant(),
@@ -336,8 +362,14 @@ class AddThis {
     return variable_get(self::ENABLED_SERVICES_KEY, array());
   }
 
-  public function isWidgetJsAsync() {
-    return variable_get(self::WIDGET_JS_ASYNC, self::DEFAULT_WIDGET_JS_ASYNC);
+  /**
+   * Return the type of loading.
+   *
+   * @return string
+   *   Retuns domready or async.
+   */
+  public function getWidgetJsLoadType() {
+    return variable_get(self::WIDGET_JS_LOAD_TYPE, self::DEFAULT_WIDGET_JS_LOAD_TYPE);
   }
 
   public function isClickToOpenCompactMenuEnabled() {
