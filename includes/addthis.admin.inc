@@ -281,10 +281,10 @@ function addthis_admin_settings_advanced_form($form_state) {
       '#required' => TRUE,
   );
   $form['service_urls_fieldset'][AddThis::WIDGET_JS_URL_KEY] = array(
-      '#type' => 'textfield',
-      '#title' => t('AddThis javascript widget URL'),
-      '#default_value' => AddThis::getInstance()->getBaseWidgetJsUrl(),
-      '#required' => TRUE,
+    '#type' => 'textfield',
+    '#title' => t('AddThis javascript widget URL'),
+    '#default_value' => AddThis::getInstance()->getBaseWidgetJsUrl(),
+    '#required' => TRUE,
   );
 
   // Advanced settings.

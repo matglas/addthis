@@ -17,12 +17,12 @@ class AddThis {
   const STYLE_KEY = 'addthis_style';
   const WIDGET_TYPE = 'addthis_button_widget';
 
-  // AddThis attribute and parameter names (as defined in AddThis APIs)
+  // AddThis attribute and parameter names (as defined in AddThis APIs).
   const PROFILE_ID_QUERY_PARAMETER = 'pubid';
   const TITLE_ATTRIBUTE = 'addthis:title';
   const URL_ATTRIBUTE = 'addthis:url';
 
-  // Persistent variable keys
+  // Persistent variable keys.
   const ADDRESSBOOK_ENABLED_KEY = 'addthis_addressbook_enabled';
   const BLOCK_WIDGET_TYPE_KEY = 'addthis_block_widget_type';
   const BOOKMARK_URL_KEY = 'addthis_bookmark_url';
@@ -47,27 +47,27 @@ class AddThis {
   const WIDGET_JS_URL_KEY = 'addthis_widget_js_url';
   const WIDGET_JS_LOAD_TYPE = 'addthis_widget_load_type';
 
-  // Twitter
+  // Twitter.
   const TWITTER_VIA_KEY = 'addthis_twitter_via';
   const TWITTER_VIA_DEFAULT = 'AddThis';
   const TWITTER_TEMPLATE_KEY = 'addthis_twitter_template';
   const TWITTER_TEMPLATE_DEFAULT = '{{title}} {{url}} via @AddThis';
 
-  // External resources
+  // External resources.
   const DEFAULT_BOOKMARK_URL = 'http://www.addthis.com/bookmark.php?v=300';
   const DEFAULT_SERVICES_CSS_URL = 'http://cache.addthiscdn.com/icons/v1/sprites/services.css';
   const DEFAULT_SERVICES_JSON_URL = 'http://cache.addthiscdn.com/services/v1/sharing.en.json';
   const DEFAULT_WIDGET_JS_URL = 'http://s7.addthis.com/js/300/addthis_widget.js';
   const DEFAULT_WIDGET_JS_LOAD_TYPE = 'async';
 
-  // Internal resources
+  // Internal resources.
   const ADMIN_CSS_FILE = 'addthis.admin.css';
   const ADMIN_INCLUDE_FILE = 'includes/addthis.admin.inc';
 
-  // Widget types
+  // Widget types.
   const WIDGET_TYPE_DISABLED = 'addthis_disabled';
 
-  // Styles
+  // Styles.
   const CSS_32x32 = 'addthis_32x32_style';
   const CSS_16x16 = 'addthis_16x16_style';
 
@@ -77,14 +77,17 @@ class AddThis {
   private $json;
 
   /**
+   * Get the singleton instance of the AddThis class.
+   *
    * @return AddThis
+   *   Instance of AddThis.
    */
   public static function getInstance() {
     module_load_include('php', 'addthis', 'classes/AddThisJson');
     if (!isset(self::$instance)) {
-      $addThis = new AddThis();
-      $addThis->setJson(new AddThisJson());
-      self::$instance = $addThis;
+      $add_this = new AddThis();
+      $add_this->setJson(new AddThisJson());
+      self::$instance = $add_this;
     }
 
     return self::$instance;
