@@ -75,7 +75,7 @@ function addthis_admin_settings_form($form_state) {
   // Enabled services settings.
   $form['fieldset_compact_menu']['enabled_services_fieldset'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Enabled services'),
+    '#title' => t('Compact menu enabled services'),
     '#description' => t('The sharing services you select here will be displayed in the compact menu. If you select no services, AddThis will provide a list of frequently used services. This list is updated regularly. <b>Notice that this setting does not define what services should be display in a toolbox.</b>'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
