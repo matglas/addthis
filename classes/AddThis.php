@@ -25,6 +25,7 @@ class AddThis {
   // Persistent variable keys.
   const ADDRESSBOOK_ENABLED_KEY = 'addthis_addressbook_enabled';
   const BLOCK_WIDGET_TYPE_KEY = 'addthis_block_widget_type';
+  const BLOCK_WIDGET_SETTINGS_KEY = 'addthis_block_widget_settings';
   const BOOKMARK_URL_KEY = 'addthis_bookmark_url';
   const CLICKBACK_TRACKING_ENABLED_KEY = 'addthis_clickback_tracking_enabled';
   const CLICK_TO_OPEN_COMPACT_MENU_ENABLED_KEY = 'addthis_click_to_open_compact_menu_enabled';
@@ -347,6 +348,10 @@ class AddThis {
 
   public function getBlockDisplayType() {
     return variable_get(self::BLOCK_WIDGET_TYPE_KEY, self::WIDGET_TYPE_DISABLED);
+  }
+
+  public function getBlockDisplaySettings() {
+    return variable_get(self::BLOCK_WIDGET_SETTINGS_KEY, array());
   }
 
   public function getProfileId() {
