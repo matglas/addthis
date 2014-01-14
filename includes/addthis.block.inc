@@ -24,6 +24,7 @@ function addthis_block_info() {
  * want to change this specific display.
  */
 function addthis_block_view($block_name = '') {
+
   if ($block_name == AddThis::BLOCK_NAME) {
 
     $widget_type = AddThis::getInstance()->getBlockDisplayType();
@@ -33,8 +34,8 @@ function addthis_block_view($block_name = '') {
       '#block' => AddThis::BLOCK_NAME,
       '#display' => array(
         'settings' => $widget_settings,
-        )
-      );
+      )
+    );
 
     $markup = AddThis::getInstance()->getDisplayMarkup($widget_type, $block_options);
     return array(
@@ -48,10 +49,7 @@ function addthis_block_view($block_name = '') {
  * Implements hook_block_configure().
  */
 function addthis_block_configure($delta = '') {
-  // We miss the form and form_state.
-
-  // @see field_ui_display_overview_form(). :975 - 1091
-  //drupal_get_form($form_id);
+  AddThis::getInstance()->includeWidgetJs();
 
   return array();
 }
@@ -103,8 +101,11 @@ function addthis_form_block_admin_configure_alter(&$form, &$form_state) {
       isset($addthis_settings['type']) ? $addthis_settings['type'] : NULL,
       isset($addthis_settings['settings']) ? $addthis_settings['settings'] : NULL
     );
-    $element['choose']['#submit'] = array('_addthis_settings_form_block_submit');
-    $element['choose']['#ajax']['callback'] = '_addthis_settings_form_block_submit_callback';
+
+    // Change the submit and callback because our handling is different and the
+    // form structure is different form the default implementation.
+    $element['type']['#submit'] = array('_addthis_settings_form_block_submit');
+    $element['type']['#ajax']['callback'] = '_addthis_settings_form_block_submit_callback';
     $form['settings']['addthis_settings']['form'] = $element;
 
     array_unshift($form['#submit'], '_addthis_settings_form_block_submit');

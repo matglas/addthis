@@ -5,7 +5,9 @@
  * in a separate AddThis-class to keep the .module-file clean.
  */
 
-module_load_include('inc', 'addthis', 'includes/addthis.block');
+if (module_exists('block')) {
+  module_load_include('inc', 'addthis', 'includes/addthis.block');
+}
 module_load_include('inc', 'addthis', 'includes/addthis.field');
 
 /**
@@ -95,14 +97,6 @@ function addthis_permission() {
       'description' => t('Perform advanced maintenance tasks for AddThis.'),
     ),
   );
-}
-
-/**
- * Implements hook_page_alter().
- */
-function addthis_page_alter(&$page) {
-  AddThis::getInstance()->addWidgetJs();
-  AddThis::getInstance()->addConfigurationOptionsJs();
 }
 
 /**
@@ -222,7 +216,7 @@ function _addthis_settings_form($form = array(), &$form_state, $display_type = N
   $form['#attributes'] = array();
   $form['#id'] = 'addthis_settings';
 
-  // The list of formatters
+  // The list of formatters.
   $formatter_options = AddThis::getInstance()->getDisplayTypes();
   $form['type'] = array(
     '#type' => 'select',
@@ -232,22 +226,23 @@ function _addthis_settings_form($form = array(), &$form_state, $display_type = N
     '#default_value' => $display_type,
     '#parents' => array('addthis_settings', 'type'),
     '#attributes' => array('class' => array('addthis-display-type')),
-  );
-
-  $form['choose'] = array(
-    '#type' => 'submit',
-    '#name' => 'Switch display',
-    '#value' => 'Switch display',
-    '#op' => 'switch_display',
-    '#submit' => array('_addthis_settings_form_submit'),
     '#ajax' => array(
       'callback' => '_addthis_settings_form_submit_callback',
       'wrapper' => 'addthis_settings',
       'name' => 'switch_display',
+      'event' => 'change',
     )
   );
+
   if ($no_js) {
-    unset($form['choose']['#ajax']);
+    $form['choose'] = array(
+      '#type' => 'submit',
+      '#name' => 'Switch display',
+      '#value' => 'Switch display',
+      '#op' => 'switch_display',
+      '#id' => 'switch-display',
+      '#submit' => array('_addthis_settings_form_submit'),
+    );
   }
 
   // Formatter settings.
@@ -269,7 +264,6 @@ function _addthis_settings_form($form = array(), &$form_state, $display_type = N
   $formatter = field_info_formatter_types($formatter_type);
   $instance['display'][$view_mode]['module'] = $formatter['module'];
   $instance['display'][$view_mode]['settings'] = $settings;
-
 
   $settings_form = array();
   $function = $formatter['module'] . '_field_formatter_settings_form';
