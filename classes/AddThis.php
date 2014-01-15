@@ -85,6 +85,8 @@ class AddThis {
    */
   public static function getInstance() {
     module_load_include('php', 'addthis', 'classes/AddThisJson');
+    module_load_include('php', 'addthis', 'classes/AddThisWidgetJs');
+
     if (!isset(self::$instance)) {
       $add_this = new AddThis();
       $add_this->setJson(new AddThisJson());
@@ -208,8 +210,14 @@ class AddThis {
    * Add the AddThis Widget JavaScript to the page.
    */
   public function addWidgetJs() {
-    $load_type = '&' . self::getWidgetJsLoadType() . '=1';
-    $url = self::getWidgetUrl() . (self::getWidgetJsLoadType() != 'include' ? $load_type : '');
+    $widgetjs = new AddThisWidgetJs(self::getWidgetUrl());
+    $widgetjs->addAttribute('pubid', $this->getProfileId());
+
+    if (self::getWidgetJsLoadType() != 'include') {
+      $widgetjs->addAttribute(self::getWidgetJsLoadType(), '1');
+    }
+
+    $url = $widgetjs->getFullUrl();
 
     switch (self::getWidgetJsLoadType()) {
 
@@ -519,7 +527,7 @@ class AddThis {
       $this->getBaseWidgetJsUrl() : // Not https url.
       $this->transformToSecureUrl($this->getBaseWidgetJsUrl()) // Transformed to https url.
     );
-    return check_url($url . $this->getProfileIdQueryParameterPrefixedWithHash());
+    return check_url($url);
   }
 
   /**
