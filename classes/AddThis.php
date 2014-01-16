@@ -286,7 +286,7 @@ class AddThis {
 
     if (!isset($loaded)) {
       $loaded = TRUE;
-      $this::addWidgetJs();
+      $this->addWidgetJs();
 
       return TRUE;
     }
