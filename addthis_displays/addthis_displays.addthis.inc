@@ -93,7 +93,7 @@ function addthis_displays_addthis_display_markup__addthis_basic_button($options 
   $settings = $options['#display']['settings'];
 
   $button_img = 'http://s7.addthis.com/static/btn/sm-share-en.gif';
-  if (isset($settings['button_size']) && $settings['button_size'] == 'big') {
+  if (isset($settings['buttons_size']) && $settings['buttons_size'] == 'big') {
     $button_img = 'http://s7.addthis.com/static/btn/v2/lg-share-en.gif';
   }
   $button_img = $addthis->transformToSecureUrl($button_img);

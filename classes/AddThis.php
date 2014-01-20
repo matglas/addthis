@@ -368,11 +368,10 @@ class AddThis {
     $settings = variable_get(self::BLOCK_WIDGET_SETTINGS_KEY, NULL);
 
     if ($settings == NULL && $this->getBlockDisplayType() != self::WIDGET_TYPE_DISABLED) {
-      return field_info_formatter_settings($this->getBlockDisplayType());
+      $settings = field_info_formatter_settings($this->getBlockDisplayType());
     }
-    else {
-      return array();
-    }
+
+    return $settings;
   }
 
   public function getProfileId() {
