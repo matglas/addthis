@@ -38,15 +38,15 @@ class AddThis {
   const GOOGLE_ANALYTICS_SOCIAL_TRACKING_ENABLED_KEY = 'addthis_google_analytics_social_tracking_enabled';
   const FACEBOOK_LIKE_COUNT_SUPPORT_ENABLED = 'addthis_facebook_like_count_support_enabled';
   const OPEN_WINDOWS_ENABLED_KEY = 'addthis_open_windows_enabled';
-  const PROFILE_ID_KEY = 'addthis_profile_id';
+  const PROFILE_ID_KEY = 'addthis_profile_id'; // Global config.
   const SERVICES_CSS_URL_KEY = 'addthis_services_css_url';
   const SERVICES_JSON_URL_KEY = 'addthis_services_json_url';
   const STANDARD_CSS_ENABLED_KEY = 'addthis_standard_css_enabled';
   const UI_DELAY_KEY = 'addthis_ui_delay';
   const UI_HEADER_BACKGROUND_COLOR_KEY = 'addthis_ui_header_background_color';
   const UI_HEADER_COLOR_KEY = 'addthis_ui_header_color';
-  const WIDGET_JS_URL_KEY = 'addthis_widget_js_url';
-  const WIDGET_JS_LOAD_TYPE = 'addthis_widget_load_type';
+  const WIDGET_JS_URL_KEY = 'addthis_widget_js_url'; // Global config.
+  const WIDGET_JS_LOAD_TYPE = 'addthis_widget_load_type'; // Global config.
 
   // Twitter.
   const TWITTER_VIA_KEY = 'addthis_twitter_via';
@@ -58,8 +58,8 @@ class AddThis {
   const DEFAULT_BOOKMARK_URL = 'http://www.addthis.com/bookmark.php?v=300';
   const DEFAULT_SERVICES_CSS_URL = 'http://cache.addthiscdn.com/icons/v1/sprites/services.css';
   const DEFAULT_SERVICES_JSON_URL = 'http://cache.addthiscdn.com/services/v1/sharing.en.json';
-  const DEFAULT_WIDGET_JS_URL = 'http://s7.addthis.com/js/300/addthis_widget.js';
-  const DEFAULT_WIDGET_JS_LOAD_TYPE = 'async';
+  const DEFAULT_WIDGET_JS_URL = 'http://s7.addthis.com/js/300/addthis_widget.js'; // Global config.
+  const DEFAULT_WIDGET_JS_LOAD_TYPE = 'async'; // Global config.
 
   // Internal resources.
   const ADMIN_CSS_FILE = 'addthis.admin.css';
