@@ -4,8 +4,6 @@
  * AddThis configuration for the Global settings.
  */
 
-require_once __DIR__ . '/AddThisConfig.php';
-
 class AddThisGlobalConfig extends AddThisConfig {
 
   const PROFILE_ID_KEY = 'addthis_profile_id';

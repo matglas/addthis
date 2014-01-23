@@ -7,6 +7,10 @@ dependencies[] = field
 
 files[] = addthis.test
 files[] = classes/AddThis.php
-files[] = classes/AddThisJson.php
+files[] = classes/Configuration/AddThisConfig.php
+files[] = classes/Configuration/AddThisGlobalConfig.php
+files[] = classes/Displays/AddThisDisplayInterface.php
+files[] = classes/Util/AddThisWidgetJs.php
+files[] = classes/Util/AddThisJson.php
 
 configure = admin/config/user-interface/addthis
