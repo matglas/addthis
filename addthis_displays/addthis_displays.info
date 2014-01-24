@@ -3,4 +3,5 @@ description = Adds the AddThis display types to render several basic types of Ad
 core = 7.x
 package = Sharing
 dependencies[] = addthis
-files[] = addthis_displays.field.inc
+
+files[] = classes/Displays/AddThisDisplayToolsbox.php
