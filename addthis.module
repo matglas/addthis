@@ -199,10 +199,15 @@ function theme_addthis_element($variables) {
 /**
  * Create a addthis settings form.
  */
-function _addthis_settings_form($form = array(), &$form_state, $display_type = NULL, $display_settings = NULL) {
-  // Toggle variables
-  $no_js = FALSE;
+function _addthis_settings_form($form = array(), &$form_state = array(), $display_type = NULL, $display_settings = array()) {
 
+  // Check display setting to be not null.
+  if (!isset($display_settings) || (isset($display_settings) && !is_array($display))) {
+    $display_settings = array();
+  }
+
+  // Toggle variables.
+  $no_js = FALSE;
 
   // Default display type if not set in the parameters.
   $display_type = (isset($display_type)) ? $display_type : 'addthis_disabled';
