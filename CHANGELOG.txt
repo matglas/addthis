@@ -1,3 +1,9 @@
+# 7.x-4.0-alpha4
+Fixed two nasty bugs in 7.x-4.0-alpha3.
+
+- Undefined index: button_size & Undefined index: extra_css. [#2174975]
+- Double colon :: changed to -> because addWidgetJs was not static. [#2174771]
+
 # 7.x-4.0-alpha3
 
 Major changes
