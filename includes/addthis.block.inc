@@ -59,7 +59,9 @@ function addthis_block_configure($delta = '') {
  */
 function addthis_block_save($delta = '', $edit = array()) {
   variable_set(AddThis::BLOCK_WIDGET_TYPE_KEY, $edit['addthis_settings']['type']);
-  variable_set(AddThis::BLOCK_WIDGET_SETTINGS_KEY, $edit['addthis_settings']['settings']);
+  if ($edit['addthis_settings']['type'] != 'addthis_disabled') {
+    variable_set(AddThis::BLOCK_WIDGET_SETTINGS_KEY, $edit['addthis_settings']['settings']);
+  }
 }
 
 /**
