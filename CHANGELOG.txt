@@ -1,3 +1,9 @@
+# 7.x-4.0-alpha5
+Some undefined index where fixed on the block save for disabled display.
+
+- Unsupported operand types on block save. [#2181367]
+- Minor changes to the documentation.
+
 # 7.x-4.0-alpha4
 Fixed two nasty bugs in 7.x-4.0-alpha3.
 
