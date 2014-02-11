@@ -56,10 +56,16 @@ function addthis_block_configure($delta = '') {
 
 /**
  * Implements hook_block_save().
+ *
+ * @todo Refactor settings save validation to appropriate class/method.
+ *   There should come classes for each render type that also handle the saving
+ *   of the settings data.
  */
 function addthis_block_save($delta = '', $edit = array()) {
   variable_set(AddThis::BLOCK_WIDGET_TYPE_KEY, $edit['addthis_settings']['type']);
-  variable_set(AddThis::BLOCK_WIDGET_SETTINGS_KEY, $edit['addthis_settings']['settings']);
+  if ($edit['addthis_settings']['type'] != 'addthis_disabled') {
+    variable_set(AddThis::BLOCK_WIDGET_SETTINGS_KEY, $edit['addthis_settings']['settings']);
+  }
 }
 
 /**

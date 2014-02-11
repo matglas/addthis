@@ -32,6 +32,8 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
     $this->addThisShouldBeAbleToBeUsedAsField();
 
     $this->addThisSystemSettingsShouldBeAbleToBeSaved();
+
+    $this->addThisBlockSettingsPageShouldBeLoading();
   }
 
   private function addThisShouldProvideHelp() {
@@ -272,6 +274,12 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
   private function createAndLoginUser() {
     $this->user = $this->createAdminUser();
     $this->drupalLogin($this->user);
+  }
+
+  private function addThisBlockSettingsPageShouldBeLoading() {
+    $this->drupalGet('admin/structure/block/manage/addthis/addthis_block/configure');
+    $this->assertNoPattern('|[Ff]atal|', 'No fatal error found.');
+    $this->assertResponse(200);
   }
 
   private function createAdminUser() {
