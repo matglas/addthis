@@ -4,6 +4,9 @@
  * An AddThis-class.
  */
 
+/**
+ * @todo Refactor all Global config into AddThisGlobalConfig.
+ */
 class AddThis {
 
   const BLOCK_NAME = 'addthis_block';
