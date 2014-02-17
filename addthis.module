@@ -5,6 +5,9 @@
  * in a separate AddThis-class to keep the .module-file clean.
  */
 
+const ADDTHIS_PERMISSION_ADMINISTER_ADDTHIS = 'administer addthis';
+const ADDTHIS_PERMISSION_ADMINISTER_ADVANCED_ADDTHIS = 'administer advanced addthis';
+
 if (module_exists('block')) {
   module_load_include('inc', 'addthis', 'includes/addthis.block');
 }
@@ -88,11 +91,11 @@ function addthis_menu() {
  */
 function addthis_permission() {
   return array(
-    AddThis::PERMISSION_ADMINISTER_ADDTHIS => array(
+    ADDTHIS_PERMISSION_ADMINISTER_ADDTHIS => array(
       'title' => t('Administer AddThis'),
       'description' => t('Perform maintenance tasks for AddThis.'),
     ),
-    AddThis::PERMISSION_ADMINISTER_ADVANCED_ADDTHIS => array(
+    ADDTHIS_PERMISSION_ADMINISTER_ADVANCED_ADDTHIS => array(
       'title' => t('Administer advanced AddThis'),
       'description' => t('Perform advanced maintenance tasks for AddThis.'),
     ),

@@ -15,8 +15,6 @@ class AddThis {
   const DEFAULT_NUMBER_OF_PREFERRED_SERVICES = 4;
   const FIELD_TYPE = 'addthis';
   const MODULE_NAME = 'addthis';
-  const PERMISSION_ADMINISTER_ADDTHIS = 'administer addthis';
-  const PERMISSION_ADMINISTER_ADVANCED_ADDTHIS = 'administer advanced addthis';
   const STYLE_KEY = 'addthis_style';
   const WIDGET_TYPE = 'addthis_button_widget';
 
