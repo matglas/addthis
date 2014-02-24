@@ -7,7 +7,8 @@ dependencies[] = field
 
 files[] = addthis.test
 files[] = classes/AddThis.php
-files[] = classes/Configuration/AddThisConfig.php
+files[] = classes/Configuration/AddThisConfigInterface.php
+files[] = classes/Configuration/AddThisConfigVariables.php
 files[] = classes/Configuration/AddThisGlobalConfig.php
 files[] = classes/AddThisJson.php
 
