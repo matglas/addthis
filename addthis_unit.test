@@ -1,0 +1,44 @@
+<?php
+
+class AddThisUnitTestCase extends DrupalTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'AddThis Unit Test.',
+      'description' => 'Testing the AddThis classes',
+      'group' => 'AddThis'
+      );
+  }
+
+  public function setUp() {
+    parent::setUp(array('addthis'));
+  }
+
+  public function testGlobalVariables() {
+
+    // We use the DrupalTestCase bacause we use variable get for this
+    // functionality.
+
+    $config = new AddThisTestConfigVariables();
+
+    // Test the get function.
+    $result = ($config->get('Name') == 'testname');
+    $this->assert($result, 'Property get returns a correct default value.');
+
+    // Test the set function.
+    $test_name = $this->randomName();
+    $config->set('Name', $test_name);
+    $result = ($config->get('Name') == $test_name);
+    $this->assert($result, 'Property get returns a correct set value.');
+
+  }
+
+}
+
+class AddThisTestConfigVariables extends AddThisConfigVariables {
+
+  public function __construct() {
+    parent::addProperty('Name', 'testname');
+  }
+
+}
