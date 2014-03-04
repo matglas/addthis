@@ -375,6 +375,11 @@ class AddThis {
     return $settings;
   }
 
+
+  /**
+   * @todo Remove function.
+   *       Depricated in favor of AddThisGlobalConfig.
+   */
   public function getProfileId() {
     return check_plain(variable_get(AddThis::PROFILE_ID_KEY));
   }
@@ -387,6 +392,9 @@ class AddThis {
     return check_url(variable_get(AddThis::SERVICES_JSON_URL_KEY, self::DEFAULT_SERVICES_JSON_URL));
   }
 
+  /**
+   * @todo Remove function
+   */
   public function getEnabledServices() {
     return variable_get(self::ENABLED_SERVICES_KEY, array());
   }

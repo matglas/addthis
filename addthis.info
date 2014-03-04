@@ -6,6 +6,7 @@ package = Sharing
 dependencies[] = field
 
 files[] = addthis.test
+files[] = addthis_unit.test
 files[] = classes/AddThis.php
 files[] = classes/Configuration/AddThisConfigInterface.php
 files[] = classes/Configuration/AddThisConfigVariables.php
