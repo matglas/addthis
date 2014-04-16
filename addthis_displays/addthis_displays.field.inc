@@ -49,7 +49,11 @@ function addthis_displays_field_formatter_settings_form($field, $instance, $view
         '#default_value' => $settings['share_services'],
         '#required' => TRUE,
         '#element_validate' => array('_addthis_display_element_validate_services'),
-        '#description' => t('Specify the names of the sharing services and seperate them with a , (comma). <a href="http://www.addthis.com/services/list">The names on this list are valid.</a>'),
+        '#description' =>
+          t('Specify the names of the sharing services and seperate them with a , (comma). <a href="http://www.addthis.com/services/list" target="_blank">The names on this list are valid.</a>') . 
+          t('Elements that are available but not ont the services list are (!services).',
+            array('!services' => 'bubble_style, pill_style, tweet, facebook_send, twitter_follow_native, google_plusone, stumbleupon_badge')
+        ),
       );
       $element['buttons_size'] = array(
         '#title' => t('Buttons size'),
