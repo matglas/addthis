@@ -110,7 +110,7 @@ function _addthis_display_element_validate_services($element, &$form_state, $for
   $services = trim($element['#value']);
   $services = str_replace(' ', '', $services);
 
-  if (!preg_match('/^[a-z\_\,]+$/', $services)) {
+  if (!preg_match('/^[a-z\_\,0-9]+$/', $services)) {
     $bad = TRUE;
   }
   // @todo Validate the service names against AddThis.com. Give a notice when there are bad names.
