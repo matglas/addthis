@@ -8,7 +8,9 @@
 
         if (typeof Drupal.settings.addthis.load_type != 'undefined') {
           if (Drupal.settings.addthis.load_type == 'async') {
-            addthis.init();
+            if (typeof addthis != 'undefined') {
+              addthis.init();
+            }
           }
           if (Drupal.settings.addthis.load_type == 'domready') {
             $.getScript(
