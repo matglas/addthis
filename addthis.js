@@ -18,11 +18,11 @@
               function(data, textStatus) {});
           }
           // Trigger ready on ajax attach.
-          if (context != window.document && window.addthis != null) {
-            window.addthis.ost = 0;
-            if (window.addthis.ready == 'function') {
-              window.addthis.ready();
-            }
+          if (context != window.document &&
+              typeof window.addthis != 'undefined' &&
+              typeof window.addthis.toolbox == 'function')
+          {
+              window.addthis.toolbox('.addthis_toolbox');
           }
         }
       }
