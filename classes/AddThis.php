@@ -325,10 +325,16 @@ class AddThis {
       $configuration['templates']['twitter'] = $this->getTwitterTemplate();
       drupal_alter('addthis_configuration', $configuration);
 
-      $templates = array('templates' => $configuration['templates']);
+      $addthis_share = array(
+        'templates' => $configuration['templates'],
+      );
       unset($configuration['templates']);
+      if (isset($configuration['addthis_share'])) {
+        $addthis_share = array_merge($addthis_share, $configuration['addthis_share']);
+        unset($configuration['addthis_share']);
+      }
       $configurationOptionsJavascript = 'var addthis_config = ' . drupal_json_encode($configuration) . "\n";
-      $configurationOptionsJavascript .= 'var addthis_share = ' . drupal_json_encode($templates);
+      $configurationOptionsJavascript .= 'var addthis_share = ' . drupal_json_encode($addthis_share);
     }
     drupal_add_js(
       $configurationOptionsJavascript,
