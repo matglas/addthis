@@ -325,6 +325,12 @@ class AddThis {
       $configuration['templates']['twitter'] = $this->getTwitterTemplate();
       drupal_alter('addthis_configuration', $configuration);
 
+      // The $addthis_share variable is not passed through the alter to support
+      // legacy implementation of the templates variable.
+      //
+      // Any additional values passed back into the $configuration variable will
+      // be merged with the $addthis_share.
+      //
       $addthis_share = array(
         'templates' => $configuration['templates'],
       );
