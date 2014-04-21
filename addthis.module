@@ -80,15 +80,6 @@ function addthis_menu() {
     'file' => AddThis::ADMIN_INCLUDE_FILE,
     'weight' => 10
   );
-  $menu_items['admin/config/user-interface/addthis/global'] = array(
-    'title' => t('Global display settings'),
-    'type' => MENU_LOCAL_TASK,
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('addthis_admin_settings_global_form'),
-    'access arguments' => array(AddThis::PERMISSION_ADMINISTER_ADDTHIS),
-    'file' => AddThis::ADMIN_INCLUDE_FILE,
-    'weight' => 11
-  );
   return $menu_items;
 }
 
