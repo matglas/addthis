@@ -34,6 +34,11 @@ class AddThis {
   const CUSTOM_CONFIGURATION_CODE_ENABLED_KEY = 'addthis_custom_configuration_code_enabled';
   const CUSTOM_CONFIGURATION_CODE_KEY = 'addthis_custom_configuration_code';
   const ENABLED_SERVICES_KEY = 'addthis_enabled_services';
+  const EXCLUDED_SERVICES_KEY = 'addthis_excluded_services';
+  const GLOBAL_TOOLBOX_SERVICES_KEY = 'addthis_global_toolbox_services';
+  const GLOBAL_TOOLBOX_BUTTON_SIZE_KEY = 'addthis_global_toolbox_button_size';
+  const GLOBAL_TOOLBOX_COUNTER_ORIENTATION_KEY = 'addthis_global_toolbox_counter_orientation';
+  const GLOBAL_TOOLBOX_EXTRA_CSS_KEY = 'addthis_global_toolbox_extra_CSS';
   const GOOGLE_ANALYTICS_TRACKING_ENABLED_KEY = 'addthis_google_analytics_tracking_enabled';
   const GOOGLE_ANALYTICS_SOCIAL_TRACKING_ENABLED_KEY = 'addthis_google_analytics_social_tracking_enabled';
   const FACEBOOK_LIKE_COUNT_SUPPORT_ENABLED = 'addthis_facebook_like_count_support_enabled';
@@ -298,12 +303,14 @@ class AddThis {
       $configurationOptionsJavascript = $this->getCustomConfigurationCode();
     }
     else {
-      $enabledServices = $this->getServiceNamesAsCommaSeparatedString() . 'more';
+      $enabledServices = $this->getServiceNamesAsCommaSeparatedString($this->getEnabledServices()) . 'more';
+      $excludedServices = $this->getServiceNamesAsCommaSeparatedString($this->getExcludedServices());
 
       global $language;
       $configuration = array(
         'pubid' => $this->getProfileId(),
         'services_compact' => $enabledServices,
+        'services_exclude' => $excludedServices,
         'data_track_clickback' => $this->isClickbackTrackingEnabled(),
         'ui_508_compliant' => $this->get508Compliant(),
         'ui_click' => $this->isClickToOpenCompactMenuEnabled(),
@@ -400,6 +407,10 @@ class AddThis {
 
   public function getEnabledServices() {
     return variable_get(self::ENABLED_SERVICES_KEY, array());
+  }
+
+  public function getExcludedServices() {
+    return variable_get(self::EXCLUDED_SERVICES_KEY, array());
   }
 
   /**
@@ -515,15 +526,15 @@ class AddThis {
     return array();
   }
 
-  private function getServiceNamesAsCommaSeparatedString() {
-    $enabledServiceNames = array_values($this->getEnabledServices());
-    $enabledServicesAsCommaSeparatedString = '';
-    foreach ($enabledServiceNames as $enabledServiceName) {
-      if ($enabledServiceName != '0') {
-        $enabledServicesAsCommaSeparatedString .= $enabledServiceName . ',';
+  private function getServiceNamesAsCommaSeparatedString($services) {
+    $serviceNames = array_values($services);
+    $servicesAsCommaSeparatedString = '';
+    foreach ($serviceNames as $serviceName) {
+      if ($serviceName != '0') {
+        $servicesAsCommaSeparatedString .= $serviceName . ',';
       }
     }
-    return $enabledServicesAsCommaSeparatedString;
+    return $servicesAsCommaSeparatedString;
   }
 
   private function getAdminCssFilePath() {

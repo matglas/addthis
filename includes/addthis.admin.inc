@@ -120,6 +120,23 @@ function addthis_admin_settings_form($form_state) {
     '#required' => FALSE,
   );
 
+  // Excluded Services.
+  $form['fieldset_excluded_services'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Excluded services'),
+    '#description' => t('The sharing services you select here will be excluded from all AddThis menus. This applies globally.'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['fieldset_excluded_services'][AddThis::EXCLUDED_SERVICES_KEY] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Excluded services'),
+    '#options' => AddThis::getInstance()->getServices(),
+    '#default_value' => AddThis::getInstance()->getExcludedServices(),
+    '#required' => FALSE,
+    '#columns' => 3,
+  );
+
   // Analytics settings.
   $profile_id = AddThis::getInstance()->getProfileId();
   $can_track_clicks = empty($profile_id) ? FALSE : TRUE;
@@ -323,6 +340,56 @@ function addthis_admin_settings_advanced_form($form_state) {
     ),
     '#default_value' => AddThis::getInstance()->getWidgetJsLoadType(),
     '#required' => FALSE,
+  );
+  return system_settings_form($form);
+}
+
+/**
+ * Form handler for admin_settings_global_form.
+ */
+function addthis_admin_settings_global_form($form_state) {
+
+  $form['global_toolbox_settings_fieldset'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Global toolbox settings'),
+    '#access' => user_access(AddThis::PERMISSION_ADMINISTER_ADVANCED_ADDTHIS),
+    '#collapsible' => FALSE,
+    '#collapsed' => FALSE,
+  );
+  $form['global_toolbox_settings_fieldset'][AddThis::GLOBAL_TOOLBOX_SERVICES_KEY] = array(
+    '#title' => t('Services'),
+    '#type' => 'textfield',
+    '#size' => 80,
+    '#default_value' => variable_get(AddThis::GLOBAL_TOOLBOX_SERVICES_KEY, 'twitter,facebook,compact'),
+    '#required' => TRUE,
+    '#element_validate' => array('_addthis_display_element_validate_services'),
+    '#description' => t('Specify the names of the sharing services and seperate them with a , (comma). <a href="http://www.addthis.com/services/list">The names on this list are valid.</a>'),
+  );
+  $form['global_toolbox_settings_fieldset'][AddThis::GLOBAL_TOOLBOX_BUTTON_SIZE_KEY] = array(
+    '#title' => t('Buttons size'),
+    '#type' => 'select',
+    '#default_value' => variable_get(AddThis::GLOBAL_TOOLBOX_BUTTON_SIZE_KEY, AddThis::CSS_16x16),
+    '#options' => array(
+      AddThis::CSS_16x16 => t('Small (16x16)'),
+      AddThis::CSS_32x32 => t('Big (32x32)'),
+    ),
+  );
+  $form['global_toolbox_settings_fieldset'][AddThis::GLOBAL_TOOLBOX_COUNTER_ORIENTATION_KEY] = array(
+    '#title' => t('Counter orientation'),
+    '#description' => t('Specify the way service counters are oriented.'),
+    '#type' => 'select',
+    '#default_value' => variable_get(AddThis::GLOBAL_TOOLBOX_COUNTER_ORIENTATION_KEY, 'FALSE'),
+    '#options' => array(
+      'horizontal' => t('Horizontal'),
+      'vertical' => t('Vertical'),
+    )
+  );
+  $form['global_toolbox_settings_fieldset'][AddThis::GLOBAL_TOOLBOX_EXTRA_CSS_KEY] = array(
+    '#title' => t('Extra CSS declaration'),
+    '#type' => 'textfield',
+    '#size' => 40,
+    '#default_value' => variable_get(AddThis::GLOBAL_TOOLBOX_EXTRA_CSS_KEY, NULL),
+    '#description' => t('Specify extra CSS classes to apply to the toolbox'),
   );
   return system_settings_form($form);
 }

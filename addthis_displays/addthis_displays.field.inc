@@ -21,6 +21,10 @@ function addthis_displays_field_formatter_info() {
       'extra_css' => '',
     ),
   );
+  $formatters['addthis_global_toolbox'] = array(
+    'label' => t('Global Basic Toolbox'),
+    'field types' => array(AddThis::FIELD_TYPE),
+  );
   $formatters['addthis_basic_button'] = array(
     'label' => t('Basic Button'),
     'field types' => array(AddThis::FIELD_TYPE),

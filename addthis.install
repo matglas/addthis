@@ -44,6 +44,11 @@ function addthis_uninstall() {
   variable_del(AddThis::CUSTOM_CONFIGURATION_CODE_ENABLED_KEY);
   variable_del(AddThis::CUSTOM_CONFIGURATION_CODE_KEY);
   variable_del(AddThis::ENABLED_SERVICES_KEY);
+  variable_del(AddThis::EXCLUDED_SERVICES_KEY);
+  variable_del(AddThis::GLOBAL_TOOLBOX_SERVICES_KEY);
+  variable_del(AddThis::GLOBAL_TOOLBOX_BUTTON_SIZE_KEY);
+  variable_del(AddThis::GLOBAL_TOOLBOX_COUNTER_ORIENTATION_KEY);
+  variable_del(AddThis::GLOBAL_TOOLBOX_EXTRA_CSS_KEY);
   variable_del(AddThis::OPEN_WINDOWS_ENABLED_KEY);
   variable_del(AddThis::PROFILE_ID_KEY);
   variable_del(AddThis::SERVICES_CSS_URL_KEY);
