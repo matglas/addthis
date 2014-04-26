@@ -120,6 +120,23 @@ function addthis_admin_settings_form($form_state) {
     '#required' => FALSE,
   );
 
+  // Excluded Services.
+  $form['fieldset_excluded_services'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Excluded services'),
+    '#description' => t('The sharing services you select here will be excluded from all AddThis menus. This applies globally.'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['fieldset_excluded_services'][AddThis::EXCLUDED_SERVICES_KEY] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Excluded services'),
+    '#options' => AddThis::getInstance()->getServices(),
+    '#default_value' => AddThis::getInstance()->getExcludedServices(),
+    '#required' => FALSE,
+    '#columns' => 3,
+  );
+
   // Analytics settings.
   $profile_id = AddThis::getInstance()->getProfileId();
   $can_track_clicks = empty($profile_id) ? FALSE : TRUE;

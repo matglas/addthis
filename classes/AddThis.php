@@ -34,6 +34,7 @@ class AddThis {
   const CUSTOM_CONFIGURATION_CODE_ENABLED_KEY = 'addthis_custom_configuration_code_enabled';
   const CUSTOM_CONFIGURATION_CODE_KEY = 'addthis_custom_configuration_code';
   const ENABLED_SERVICES_KEY = 'addthis_enabled_services';
+  const EXCLUDED_SERVICES_KEY = 'addthis_excluded_services';
   const GOOGLE_ANALYTICS_TRACKING_ENABLED_KEY = 'addthis_google_analytics_tracking_enabled';
   const GOOGLE_ANALYTICS_SOCIAL_TRACKING_ENABLED_KEY = 'addthis_google_analytics_social_tracking_enabled';
   const FACEBOOK_LIKE_COUNT_SUPPORT_ENABLED = 'addthis_facebook_like_count_support_enabled';
@@ -298,12 +299,14 @@ class AddThis {
       $configurationOptionsJavascript = $this->getCustomConfigurationCode();
     }
     else {
-      $enabledServices = $this->getServiceNamesAsCommaSeparatedString() . 'more';
+      $enabledServices = $this->getServiceNamesAsCommaSeparatedString($this->getEnabledServices()) . 'more';
+      $excludedServices = $this->getServiceNamesAsCommaSeparatedString($this->getExcludedServices());
 
       global $language;
       $configuration = array(
         'pubid' => $this->getProfileId(),
         'services_compact' => $enabledServices,
+        'services_exclude' => $excludedServices,
         'data_track_clickback' => $this->isClickbackTrackingEnabled(),
         'ui_508_compliant' => $this->get508Compliant(),
         'ui_click' => $this->isClickToOpenCompactMenuEnabled(),
@@ -325,10 +328,22 @@ class AddThis {
       $configuration['templates']['twitter'] = $this->getTwitterTemplate();
       drupal_alter('addthis_configuration', $configuration);
 
-      $templates = array('templates' => $configuration['templates']);
+      // The $addthis_share variable is not passed through the alter to support
+      // legacy implementation of the templates variable.
+      //
+      // Any additional values passed back into the $configuration variable will
+      // be merged with the $addthis_share.
+      //
+      $addthis_share = array(
+        'templates' => $configuration['templates'],
+      );
       unset($configuration['templates']);
+      if (isset($configuration['addthis_share'])) {
+        $addthis_share = array_merge($addthis_share, $configuration['addthis_share']);
+        unset($configuration['addthis_share']);
+      }
       $configurationOptionsJavascript = 'var addthis_config = ' . drupal_json_encode($configuration) . "\n";
-      $configurationOptionsJavascript .= 'var addthis_share = ' . drupal_json_encode($templates);
+      $configurationOptionsJavascript .= 'var addthis_share = ' . drupal_json_encode($addthis_share);
     }
     drupal_add_js(
       $configurationOptionsJavascript,
@@ -388,6 +403,10 @@ class AddThis {
 
   public function getEnabledServices() {
     return variable_get(self::ENABLED_SERVICES_KEY, array());
+  }
+
+  public function getExcludedServices() {
+    return variable_get(self::EXCLUDED_SERVICES_KEY, array());
   }
 
   /**
@@ -503,15 +522,15 @@ class AddThis {
     return array();
   }
 
-  private function getServiceNamesAsCommaSeparatedString() {
-    $enabledServiceNames = array_values($this->getEnabledServices());
-    $enabledServicesAsCommaSeparatedString = '';
-    foreach ($enabledServiceNames as $enabledServiceName) {
-      if ($enabledServiceName != '0') {
-        $enabledServicesAsCommaSeparatedString .= $enabledServiceName . ',';
+  private function getServiceNamesAsCommaSeparatedString($services) {
+    $serviceNames = array_values($services);
+    $servicesAsCommaSeparatedString = '';
+    foreach ($serviceNames as $serviceName) {
+      if ($serviceName != '0') {
+        $servicesAsCommaSeparatedString .= $serviceName . ',';
       }
     }
-    return $enabledServicesAsCommaSeparatedString;
+    return $servicesAsCommaSeparatedString;
   }
 
   private function getAdminCssFilePath() {
