@@ -38,7 +38,9 @@ class AddThisWidgetJs {
   public function getFullUrl() {
     $querystring_elements = array();
     foreach ($this->attributes as $key => $value) {
-      $querystring_elements[] = $key . '=' . $value;
+      if (!empty($value)) {
+        $querystring_elements[] = $key . '=' . $value;
+      }
     }
 
     $querystring = implode('&', $querystring_elements);

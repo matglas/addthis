@@ -8,7 +8,9 @@
 
         if (typeof Drupal.settings.addthis.load_type != 'undefined') {
           if (Drupal.settings.addthis.load_type == 'async') {
-            addthis.init();
+            if (typeof addthis != 'undefined') {
+              addthis.init();
+            }
           }
           if (Drupal.settings.addthis.load_type == 'domready') {
             $.getScript(
@@ -16,9 +18,11 @@
               function(data, textStatus) {});
           }
           // Trigger ready on ajax attach.
-          if (context != window.document && window.addthis != null) {
-            window.addthis.ost = 0;
-            window.addthis.ready();
+          if (context != window.document &&
+              typeof window.addthis != 'undefined' &&
+              typeof window.addthis.toolbox == 'function')
+          {
+              window.addthis.toolbox('.addthis_toolbox');
           }
         }
       }
