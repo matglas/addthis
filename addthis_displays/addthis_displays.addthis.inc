@@ -52,6 +52,11 @@ function addthis_displays_addthis_display_markup__addthis_basic_toolbox($options
       '#addthis_service' => $service,
     );
 
+    // Add individual counters.
+    if (strpos($service, 'counter_') === 0) {
+      $items[$service]['#attributes']['class'] = array("addthis_$service");
+    }
+
     // Basic implementations of bubble counter orientation.
     // @todo Figure all the bubbles out and add them.
     //   Still missing: tweetme, hyves and stubleupon, google_plusone_badge.
