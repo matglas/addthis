@@ -68,6 +68,11 @@ function addthis_displays_addthis_display_markup__addthis_basic_toolbox($options
           'fb:like:layout' => ($orientation ? 'button_count' : 'box_count')
         );
         break;
+      case 'facebook_share':
+        $items[$service]['#attributes'] += array(
+          'fb:share:layout' => ($orientation ? 'button_count' : 'box_count')
+        );
+        break;
       case 'google_plusone':
         $items[$service]['#attributes'] += array(
           'g:plusone:size' => ($orientation ? 'standard' : 'tall')
