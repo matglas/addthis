@@ -63,6 +63,11 @@ function addthis_displays_addthis_display_markup__addthis_basic_toolbox($options
     //
     $orientation = ($options['#display']['settings']['counter_orientation'] == 'horizontal' ? TRUE : FALSE);
     switch ($service) {
+      case 'linkedin_counter':
+          $items[$service]['#attributes'] += array(
+            'li:counter' => ($orientation ? '' : 'top'),
+          );
+        break;
       case 'facebook_like':
         $items[$service]['#attributes'] += array(
           'fb:like:layout' => ($orientation ? 'button_count' : 'box_count')
