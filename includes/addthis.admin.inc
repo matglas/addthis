@@ -5,12 +5,45 @@
  */
 
 /**
+ * 
+ */
+function addthis_admin_save_share_button($form, &$form_state, $node) {
+
+  // @TODO make save work also on new file. file_save_upload
+
+  // Load the file via file.fid.
+  $file = file_save_upload('share_button_image');
+  // Change status to permanent.
+  $file->status = FILE_STATUS_PERMANENT;
+  // Save.
+  file_save($file);
+  file_usage_add($file, 'addthis', 'share_button', 1); 
+}
+
+/**
  * Form handler for admin_settings_form.
  */
 function addthis_admin_settings_form($form_state) {
   AddThis::getInstance()->addStylesheets();
 
   // Visual settings.
+  $form['fieldset_share_button'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Share Button settings'),
+    '#collapsible' => FALSE,
+    '#collapsed' => TRUE,
+    '#description' => '<p>' . t('Configure the style of the Share button.') . '</p>'
+  );
+  $form['fieldset_share_button']['share_button_image'] = array(
+    '#type' => 'file',
+    '#title' => t('Image'),
+    '#description' => t('The uploaded image will be used for the Share button'),
+    '#default_value' => variable_get('addthis_share_button_fid', ''),
+    '#upload_location' => 'public://addthis/',
+  );
+
+  //$form['#submit'] = isset($form['#submit']) ? array_merge($form['#submit'], array('addthis_admin_save_share_button')) : $form['#submit']);
+
   $form['fieldset_compact_menu'] = array(
     '#type' => 'fieldset',
     '#title' => t('Compact menu'),
