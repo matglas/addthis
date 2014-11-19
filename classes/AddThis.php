@@ -86,7 +86,7 @@ class AddThis {
    */
   public static function getInstance() {
     module_load_include('php', 'addthis', 'classes/AddThisJson');
-    module_load_include('php', 'addthis', 'classes/AddThisWidgetJs');
+    module_load_include('php', 'addthis', 'classes/AddThisWidgetJsArgUtil');
 
     if (!isset(self::$instance)) {
       $add_this = new AddThis();
@@ -211,7 +211,7 @@ class AddThis {
    * Add the AddThis Widget JavaScript to the page.
    */
   public function addWidgetJs() {
-    $widgetjs = new AddThisWidgetJs(self::getWidgetUrl());
+    $widgetjs = new AddThisWidgetJsArgUtil(self::getWidgetUrl());
     $widgetjs->addAttribute('pubid', $this->getProfileId());
 
     if (self::getWidgetJsLoadType() != 'include') {
