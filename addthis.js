@@ -1,10 +1,16 @@
 (function ($) {
+  $(document).ready(function() {
+    console.log('doc ready');
+  });
 
   Drupal.behaviors.addthis = {
     attach: function(context, settings) {
+      console.log('attach');
 
       // If addthis settings are provided a display is loaded.
       if (typeof Drupal.settings.addthis != 'undefined') {
+
+        var settings = Drupal.settings.addthis;
 
         if (typeof Drupal.settings.addthis.load_type != 'undefined') {
           if (Drupal.settings.addthis.load_type == 'async') {
@@ -27,6 +33,17 @@
         }
       }
 
+    },
+
+    // Load the js library when the dom is ready.
+    loadDomready: function() {
+      if (typeof Drupal.settings.addthis.widget_url != 'undefined') {
+        $.getScript(Drupal.settings.addthis.widget_url, scriptReady);
+      }
+    },
+
+    scriptReady: function(data, textStatus) {
+      console.log(data);
     }
   }
 

@@ -78,12 +78,10 @@ class AddThisScriptManager {
     }
     
     // @todo Replace by retrieving settings.
-    $domready = TRUE;
+    $domready = FALSE;
     if ($domready) {
       $widgetJs->addAttribute('domready', 1);
     }
-
-    dpm($widgetJs->getFullUrl());
 
     // Only when the script is not loaded after the DOM is ready we include
     // the script with #attached.

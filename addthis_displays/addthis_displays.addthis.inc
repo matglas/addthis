@@ -15,11 +15,6 @@ function addthis_displays_addthis_display_markup($display, $variables = NULL) {
 function addthis_displays_addthis_display_markup__addthis_basic_toolbox($options = array()) {
   $addthis = AddThis::getInstance();
 
-  // @todo This is test code.
-  $element = array();
-  $script_manager = new AddThisScriptManager();
-  $script_manager->attachWidgetJs($element);
-
   // Create a render array for the widget.
   $element = array(
     // Use #theme_wrappers to include the rendered children. Otherwise the
@@ -36,6 +31,10 @@ function addthis_displays_addthis_display_markup__addthis_basic_toolbox($options
     ),
   );
   $element['#attributes'] += $addthis->getAddThisAttributesMarkup($options);
+
+  // Add the widget script.  
+  $script_manager = new AddThisScriptManager();
+  $script_manager->attachWidgetJs($element);
 
   $services = trim($options['#display']['settings']['share_services']);
   $services = str_replace(' ', '', $services);
