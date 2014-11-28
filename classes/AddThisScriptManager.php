@@ -91,6 +91,18 @@ class AddThisScriptManager {
         'scope' => 'footer',
       );
     }
+
+    // Every setting value passed here overrides previously set values but 
+    // leaves the values that are already set somewhere else and that are not 
+    // passed here.
+    $element['#attached']['js'][] = array(
+      'type' => 'setting',
+      'data' => array(
+        'addthis' => array(
+          // @todo Add valuable addthis settings.
+        )
+      )
+    );
   }
 
 }
