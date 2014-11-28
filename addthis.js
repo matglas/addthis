@@ -1,11 +1,11 @@
 (function ($) {
-  $(document).ready(function() {
-    console.log('doc ready');
-  });
+
 
   Drupal.behaviors.addthis = {
     attach: function(context, settings) {
       console.log('attach');
+
+
 
       // If addthis settings are provided a display is loaded.
       if (typeof Drupal.settings.addthis != 'undefined') {
@@ -37,14 +37,29 @@
 
     // Load the js library when the dom is ready.
     loadDomready: function() {
-      if (typeof Drupal.settings.addthis.widget_url != 'undefined') {
-        $.getScript(Drupal.settings.addthis.widget_url, scriptReady);
-      }
+      // If settings ask for after dom load load the script here.
+      // Call script ready when finished.
     },
 
     scriptReady: function(data, textStatus) {
-      console.log(data);
+      // Called when we script is ready to initalize the share buttons.
+      // Only executed when we set it to async load. Otherwise its already
+      // done.
+    }.
+
+    // Called when a ajax request returned.
+    ajaxLoad: function(context, settings) {
+
     }
+
   }
+
+  // Document ready in case we want to load AddThis into the dom after every
+  // thing is loaded.
+  // 
+  // Is executed once after the attach happend.
+  $(document).ready(function() {
+    Drupal.behaviors.addthis.loadDomready();
+  });
 
 }(jQuery));
