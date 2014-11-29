@@ -4,7 +4,7 @@
  * Class to manage a WidgetJs url.
  */
 
-class AddThisWidgetJsArgUtil {
+class AddThisWidgetJsUrl {
 
   protected $url;
   protected $attributes = array();

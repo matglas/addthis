@@ -8,7 +8,7 @@ dependencies[] = field
 files[] = addthis.test
 files[] = classes/AddThis.php
 files[] = classes/AddThisJson.php
-files[] = classes/AddThisScriptManager.php
-files[] = classes/AddThisWidgetJsArgUtil.php
+files[] = classes/Util/AddThisScriptManager.php
+files[] = classes/Util/AddThisWidgetJsArgUtil.php
 
 configure = admin/config/user-interface/addthis
