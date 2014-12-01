@@ -63,7 +63,7 @@ class AddThisScriptManager {
    *   The element to attach the JavaScript to.
    */
   public function attachWidgetJs(&$element) {
-    $widgetJs = new AddThisWidgetJsArgUtil($this->getWidgetJsUrl());
+    $widgetJs = new AddThisWidgetJsUrl($this->getWidgetJsUrl());
 
     // @todo Replace by settings.
     $pubid = 'as1';
@@ -78,10 +78,18 @@ class AddThisScriptManager {
     }
     
     // @todo Replace by retrieving settings.
-    $domready = FALSE;
+    $domready = TRUE;
     if ($domready) {
       $widgetJs->addAttribute('domready', 1);
     }
+
+    // Always load addthis.js when we start working with addthis.
+    $addthis_js_path = drupal_get_path('module', 'addthis') . '/addthis.js';
+    $element['#attached']['js'][$addthis_js_path] = array(
+        'type' => 'file',
+        // @todo See if we can get this into the header below the settings.
+        'scope' => 'footer',
+      );
 
     // Only when the script is not loaded after the DOM is ready we include
     // the script with #attached.
@@ -99,10 +107,37 @@ class AddThisScriptManager {
       'type' => 'setting',
       'data' => array(
         'addthis' => array(
-          // @todo Add valuable addthis settings.
+          'async' => $async,
+          'domready' => $domready,
+          'widget_url' => $this->getWidgetJsUrl(),
+
+          'addthis_config' => $this->getJsAddThisConfig(),
+          'addthis_share' => $this->getJsAddThisShare(),
         )
       )
     );
+  }
+
+  /**
+   * Get a array with all addthis_config values.
+   */
+  private function getJsAddThisConfig() {
+    // @todo Add static cache.
+
+    // @todo Make the adding of configuration dynamic.
+    //   SRP is lost here.
+    return array('publicid' => 'as1');
+  }
+
+  /**
+   * Get a array with all addthis_share values.
+   */
+  private function getJsAddThisShare() {
+    // @todo Add static cache.
+
+    // @todo Make the adding of configuration dynamic.
+    //   SRP is lost here.
+    return array('twitter' => 'is_on');
   }
 
 }

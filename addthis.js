@@ -1,55 +1,57 @@
-(function ($) {
+/**
+ * @file
+ * AddThis javascript actions.
+ *
+ * @todo Should async be in here?
+ *   Question if we need to do anything with the async setting. The developer
+ *   might need to take action itself with addthis.init().
+ */
 
+(function ($) {
+  // This load the config in time to run any addthis functionality.
+  addthis_config = Drupal.settings.addthis.addthis_config;
+  addthis_share = Drupal.settings.addthis.addthis_share;
 
   Drupal.behaviors.addthis = {
     attach: function(context, settings) {
-      console.log('attach');
 
-
-
-      // If addthis settings are provided a display is loaded.
-      if (typeof Drupal.settings.addthis != 'undefined') {
-
-        var settings = Drupal.settings.addthis;
-
-        if (typeof Drupal.settings.addthis.load_type != 'undefined') {
-          if (Drupal.settings.addthis.load_type == 'async') {
-            if (typeof addthis != 'undefined') {
-              addthis.init();
-            }
-          }
-          if (Drupal.settings.addthis.load_type == 'domready') {
-            $.getScript(
-              Drupal.settings.addthis.widget_url,
-              function(data, textStatus) {});
-          }
-          // Trigger ready on ajax attach.
-          if (context != window.document &&
-              typeof window.addthis != 'undefined' &&
-              typeof window.addthis.toolbox == 'function')
-          {
-              window.addthis.toolbox('.addthis_toolbox');
-          }
-        }
+      // Trigger ready on ajax attach.
+      if (context != window.document) {
+        Drupal.behaviors.addthis.ajaxLoad(context, settings);
       }
 
     },
 
     // Load the js library when the dom is ready.
     loadDomready: function() {
-      // If settings ask for after dom load load the script here.
-      // Call script ready when finished.
+      // If settings asks for loading the script after the dom is loaded, then
+      // load the script here.
+      if (Drupal.settings.addthis.domready) {
+        $.getScript(Drupal.settings.addthis.widget_url, Drupal.behaviors.addthis.scriptReady);
+      }
     },
 
-    scriptReady: function(data, textStatus) {
-      // Called when we script is ready to initalize the share buttons.
-      // Only executed when we set it to async load. Otherwise its already
-      // done.
-    }.
+    // scriptReady: function(data, textStatus) {
+    //   // Called when we script is ready to initalize the share buttons.
+    //   // Only executed when we set it to async load. Otherwise its already
+    //   // done.
+    //   Drupal.behaviors.addthis.initAddThis();
+    // },
+
+    // // Init addthis ourselfs.
+    // initAddThis: function() {
+    //   if (typeof addthis != 'undefined') {
+    //     addthis.init();
+    //   }
+    // },
 
     // Called when a ajax request returned.
     ajaxLoad: function(context, settings) {
-
+      if (typeof window.addthis != 'undefined' &&
+          typeof window.addthis.toolbox == 'function')
+      {
+          window.addthis.toolbox('.addthis_toolbox');
+      }
     }
 
   }

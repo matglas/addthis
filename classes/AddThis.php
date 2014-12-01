@@ -85,8 +85,6 @@ class AddThis {
    *   Instance of AddThis.
    */
   public static function getInstance() {
-    module_load_include('php', 'addthis', 'classes/AddThisJson');
-    module_load_include('php', 'addthis', 'classes/AddThisWidgetJsArgUtil');
 
     if (!isset(self::$instance)) {
       $add_this = new AddThis();
@@ -211,7 +209,7 @@ class AddThis {
    * Add the AddThis Widget JavaScript to the page.
    */
   public function addWidgetJs() {
-    $widgetjs = new AddThisWidgetJsArgUtil(self::getWidgetUrl());
+    $widgetjs = new AddThisWidgetJsUrl(self::getWidgetUrl());
     $widgetjs->addAttribute('pubid', $this->getProfileId());
 
     if (self::getWidgetJsLoadType() != 'include') {
@@ -267,14 +265,14 @@ class AddThis {
         break;
     }
 
-    // Add local internal behaviours.
-    drupal_add_js(
-      drupal_get_path('module', 'addthis') . '/addthis.js',
-      array(
-        'type' => 'file',
-        'scope' => 'footer',
-      )
-    );
+    // // Add local internal behaviours.
+    // drupal_add_js(
+    //   drupal_get_path('module', 'addthis') . '/addthis.js',
+    //   array(
+    //     'type' => 'file',
+    //     'scope' => 'footer',
+    //   )
+    // );
   }
 
   /**
