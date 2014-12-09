@@ -31,20 +31,6 @@
       }
     },
 
-    // scriptReady: function(data, textStatus) {
-    //   // Called when we script is ready to initalize the share buttons.
-    //   // Only executed when we set it to async load. Otherwise its already
-    //   // done.
-    //   Drupal.behaviors.addthis.initAddThis();
-    // },
-
-    // // Init addthis ourselfs.
-    // initAddThis: function() {
-    //   if (typeof addthis != 'undefined') {
-    //     addthis.init();
-    //   }
-    // },
-
     // Called when a ajax request returned.
     ajaxLoad: function(context, settings) {
       if (typeof window.addthis != 'undefined' &&

@@ -62,7 +62,7 @@ class AddThisScriptManager {
    * @param  array $element 
    *   The element to attach the JavaScript to.
    */
-  public function attachWidgetJs(&$element) {
+  public function attachJsToElement(&$element) {
     $widgetJs = new AddThisWidgetJsUrl($this->getWidgetJsUrl());
 
     // @todo Replace by settings.

@@ -134,6 +134,7 @@ class AddThis {
     }
 
     // Load resources.
+    // @todo Replace this with the AddThisScriptManager.
     self::$instance->includeWidgetJs();
     self::$instance->addConfigurationOptionsJs();
 
@@ -216,54 +217,54 @@ class AddThis {
       $widgetjs->addAttribute(self::getWidgetJsLoadType(), '1');
     }
 
-    $url = $widgetjs->getFullUrl();
+    // $url = $widgetjs->getFullUrl();
 
-    switch (self::getWidgetJsLoadType()) {
+    // switch (self::getWidgetJsLoadType()) {
 
-      // Load as DOM is ready.
-      case 'domready':
-        drupal_add_js(
-          array(
-            'addthis' => array(
-              'widget_url' => $url,
-              'load_type' => self::getWidgetJsLoadType(),
-            ),
-          ),
-          'setting'
-        );
-        break;
+    //   // Load as DOM is ready.
+    //   case 'domready':
+    //     drupal_add_js(
+    //       array(
+    //         'addthis' => array(
+    //           'widget_url' => $url,
+    //           'load_type' => self::getWidgetJsLoadType(),
+    //         ),
+    //       ),
+    //       'setting'
+    //     );
+    //     break;
 
-      // Load as async.
-      case 'async':
-        drupal_add_js(
-          array(
-            'addthis' => array(
-              'load_type' => self::getWidgetJsLoadType(),
-            ),
-          ),
-          'setting'
-        );
+    //   // Load as async.
+    //   case 'async':
+    //     drupal_add_js(
+    //       array(
+    //         'addthis' => array(
+    //           'load_type' => self::getWidgetJsLoadType(),
+    //         ),
+    //       ),
+    //       'setting'
+    //     );
 
-        drupal_add_js(
-          $url,
-          array(
-            'type' => 'external',
-            'scope' => 'footer',
-          )
-        );
-        break;
+    //     drupal_add_js(
+    //       $url,
+    //       array(
+    //         'type' => 'external',
+    //         'scope' => 'footer',
+    //       )
+    //     );
+    //     break;
 
-      // Load as include in the page.
-      default:
-        drupal_add_js(
-          $url,
-          array(
-            'type' => 'external',
-            'scope' => 'footer',
-          )
-        );
-        break;
-    }
+    //   // Load as include in the page.
+    //   default:
+    //     drupal_add_js(
+    //       $url,
+    //       array(
+    //         'type' => 'external',
+    //         'scope' => 'footer',
+    //       )
+    //     );
+    //     break;
+    // }
 
     // // Add local internal behaviours.
     // drupal_add_js(
