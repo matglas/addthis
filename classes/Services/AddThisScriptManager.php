@@ -59,37 +59,41 @@ class AddThisScriptManager {
   /**
    * Attach the widget js to the element.
    * 
-   * @param  array $element 
+   * @todo Change the scope of the addthis.js.
+   *   See if we can get the scope of the addthis.js into the header
+   *   just below the settings so that the settings can be used in the loaded
+   *   addthis.js of our module.
+   *
+   * @param array $element
    *   The element to attach the JavaScript to.
    */
   public function attachJsToElement(&$element) {
-    $widgetJs = new AddThisWidgetJsUrl($this->getWidgetJsUrl());
+    $widget_js = new AddThisWidgetJsUrl($this->getWidgetJsUrl());
 
     // @todo Replace by settings.
-    $pubid = 'as1';
+    $pubid = $this->addthis->getProfileId();
     if (isset($pubid) && !empty($pubid) && is_string($pubid)) {
-      $widgetJs->addAttribute('pubid', $pubid);
+      $widget_js->addAttribute('pubid', $pubid);
     }
 
     // @todo Replace by settings.
-    $async = TRUE;
+    $async = FALSE;
     if ($async) {
-      $widgetJs->addAttribute('async', 1);
+      $widget_js->addAttribute('async', 1);
     }
-    
+
     // @todo Replace by retrieving settings.
     $domready = TRUE;
     if ($domready) {
-      $widgetJs->addAttribute('domready', 1);
+      $widget_js->addAttribute('domready', 1);
     }
 
     // Always load addthis.js when we start working with addthis.
     $addthis_js_path = drupal_get_path('module', 'addthis') . '/addthis.js';
     $element['#attached']['js'][$addthis_js_path] = array(
-        'type' => 'file',
-        // @todo See if we can get this into the header below the settings.
-        'scope' => 'footer',
-      );
+      'type' => 'file',
+      'scope' => 'footer',
+    );
 
     // Only when the script is not loaded after the DOM is ready we include
     // the script with #attached.
@@ -100,8 +104,8 @@ class AddThisScriptManager {
       );
     }
 
-    // Every setting value passed here overrides previously set values but 
-    // leaves the values that are already set somewhere else and that are not 
+    // Every setting value passed here overrides previously set values but
+    // leaves the values that are already set somewhere else and that are not
     // passed here.
     $element['#attached']['js'][] = array(
       'type' => 'setting',
@@ -120,24 +124,70 @@ class AddThisScriptManager {
 
   /**
    * Get a array with all addthis_config values.
+   *
+   * Allow alter through 'addthis_configuration'.
+   *
+   * @todo Add static cache.
+   *
+   * @todo Make the adding of configuration dynamic.
+   *   SRP is lost here.
    */
   private function getJsAddThisConfig() {
-    // @todo Add static cache.
+    global $language;
 
-    // @todo Make the adding of configuration dynamic.
-    //   SRP is lost here.
-    return array('publicid' => 'as1');
+    $enabled_services = $this->addthis->getServiceNamesAsCommaSeparatedString($this->addthis->getEnabledServices()) . 'more';
+    $excluded_services = $this->addthis->getServiceNamesAsCommaSeparatedString($this->addthis->getExcludedServices());
+
+    $configuration = array(
+      'pubid' => $this->addthis->getProfileId(),
+      'services_compact' => $enabled_services,
+      'services_exclude' => $excluded_services,
+      'data_track_clickback' => $this->addthis->isClickbackTrackingEnabled(),
+      'ui_508_compliant' => $this->addthis->get508Compliant(),
+      'ui_click' => $this->addthis->isClickToOpenCompactMenuEnabled(),
+      'ui_cobrand' => $this->addthis->getCoBrand(),
+      'ui_delay' => $this->addthis->getUiDelay(),
+      'ui_header_background' => $this->addthis->getUiHeaderBackgroundColor(),
+      'ui_header_color' => $this->addthis->getUiHeaderColor(),
+      'ui_open_windows' => $this->addthis->isOpenWindowsEnabled(),
+      'ui_use_css' => $this->addthis->isStandardCssEnabled(),
+      'ui_use_addressbook' => $this->addthis->isAddressbookEnabled(),
+      'ui_language' => $language->language,
+    );
+    if (module_exists('googleanalytics')) {
+      if ($this->addthis->isGoogleAnalyticsTrackingEnabled()) {
+        $configuration['data_ga_property'] = variable_get('googleanalytics_account', '');
+        $configuration['data_ga_social'] = $this->addthis->isGoogleAnalyticsSocialTrackingEnabled();
+      }
+    }
+
+    drupal_alter('addthis_configuration', $configuration);
+    return $configuration;
   }
 
   /**
    * Get a array with all addthis_share values.
+   *
+   * Allow alter through 'addthis_configuration_share'.
+   *
+   * @todo Add static cache.
+   *
+   * @todo Make the adding of configuration dynamic.
+   *   SRP is lost here.
    */
   private function getJsAddThisShare() {
-    // @todo Add static cache.
 
-    // @todo Make the adding of configuration dynamic.
-    //   SRP is lost here.
-    return array('twitter' => 'is_on');
+    $configuration = $this->getJsAddThisConfig();
+
+    if (isset($configuration['templates'])) {
+      $addthis_share = array(
+        'templates' => $configuration['templates'],
+      );
+    }
+    $addthis_share['templates']['twitter'] = $this->addthis->getTwitterTemplate();
+
+    drupal_alter('addthis_configuration_share', $configuration);
+    return $addthis_share;
   }
 
 }

@@ -135,7 +135,6 @@ class AddThis {
 
     // Load resources.
     // @todo Replace this with the AddThisScriptManager.
-    self::$instance->includeWidgetJs();
     self::$instance->addConfigurationOptionsJs();
 
     // The display type exists. Now get it and get the markup.
@@ -206,152 +205,8 @@ class AddThis {
     return $rows;
   }
 
-  /**
-   * Add the AddThis Widget JavaScript to the page.
-   */
-  public function addWidgetJs() {
-    $widgetjs = new AddThisWidgetJsUrl(self::getWidgetUrl());
-    $widgetjs->addAttribute('pubid', $this->getProfileId());
-
-    if (self::getWidgetJsLoadType() != 'include') {
-      $widgetjs->addAttribute(self::getWidgetJsLoadType(), '1');
-    }
-
-    // $url = $widgetjs->getFullUrl();
-
-    // switch (self::getWidgetJsLoadType()) {
-
-    //   // Load as DOM is ready.
-    //   case 'domready':
-    //     drupal_add_js(
-    //       array(
-    //         'addthis' => array(
-    //           'widget_url' => $url,
-    //           'load_type' => self::getWidgetJsLoadType(),
-    //         ),
-    //       ),
-    //       'setting'
-    //     );
-    //     break;
-
-    //   // Load as async.
-    //   case 'async':
-    //     drupal_add_js(
-    //       array(
-    //         'addthis' => array(
-    //           'load_type' => self::getWidgetJsLoadType(),
-    //         ),
-    //       ),
-    //       'setting'
-    //     );
-
-    //     drupal_add_js(
-    //       $url,
-    //       array(
-    //         'type' => 'external',
-    //         'scope' => 'footer',
-    //       )
-    //     );
-    //     break;
-
-    //   // Load as include in the page.
-    //   default:
-    //     drupal_add_js(
-    //       $url,
-    //       array(
-    //         'type' => 'external',
-    //         'scope' => 'footer',
-    //       )
-    //     );
-    //     break;
-    // }
-
-    // // Add local internal behaviours.
-    // drupal_add_js(
-    //   drupal_get_path('module', 'addthis') . '/addthis.js',
-    //   array(
-    //     'type' => 'file',
-    //     'scope' => 'footer',
-    //   )
-    // );
-  }
-
-  /**
-   * Load function for widget information.
-   *
-   * Loading widget information only once.
-   */
-  public function includeWidgetJs() {
-    static $loaded;
-
-    if (!isset($loaded)) {
-      $loaded = TRUE;
-      $this->addWidgetJs();
-
-      return TRUE;
-    }
-    return FALSE;
-  }
-
   public function addConfigurationOptionsJs() {
-    if ($this->isCustomConfigurationCodeEnabled()) {
-      $configurationOptionsJavascript = $this->getCustomConfigurationCode();
-    }
-    else {
-      $enabledServices = $this->getServiceNamesAsCommaSeparatedString($this->getEnabledServices()) . 'more';
-      $excludedServices = $this->getServiceNamesAsCommaSeparatedString($this->getExcludedServices());
 
-      global $language;
-      $configuration = array(
-        'pubid' => $this->getProfileId(),
-        'services_compact' => $enabledServices,
-        'services_exclude' => $excludedServices,
-        'data_track_clickback' => $this->isClickbackTrackingEnabled(),
-        'ui_508_compliant' => $this->get508Compliant(),
-        'ui_click' => $this->isClickToOpenCompactMenuEnabled(),
-        'ui_cobrand' => $this->getCoBrand(),
-        'ui_delay' => $this->getUiDelay(),
-        'ui_header_background' => $this->getUiHeaderBackgroundColor(),
-        'ui_header_color' => $this->getUiHeaderColor(),
-        'ui_open_windows' => $this->isOpenWindowsEnabled(),
-        'ui_use_css' => $this->isStandardCssEnabled(),
-        'ui_use_addressbook' => $this->isAddressbookEnabled(),
-        'ui_language' => $language->language,
-      );
-      if (module_exists('googleanalytics')) {
-        if ($this->isGoogleAnalyticsTrackingEnabled()) {
-          $configuration['data_ga_property'] = variable_get('googleanalytics_account', '');
-          $configuration['data_ga_social'] = $this->isGoogleAnalyticsSocialTrackingEnabled();
-        }
-      }
-      $configuration['templates']['twitter'] = $this->getTwitterTemplate();
-      drupal_alter('addthis_configuration', $configuration);
-
-      // The $addthis_share variable is not passed through the alter to support
-      // legacy implementation of the templates variable.
-      //
-      // Any additional values passed back into the $configuration variable will
-      // be merged with the $addthis_share.
-      //
-      $addthis_share = array(
-        'templates' => $configuration['templates'],
-      );
-      unset($configuration['templates']);
-      if (isset($configuration['addthis_share'])) {
-        $addthis_share = array_merge($addthis_share, $configuration['addthis_share']);
-        unset($configuration['addthis_share']);
-      }
-      $configurationOptionsJavascript = 'var addthis_config = ' . drupal_json_encode($configuration) . "\n";
-      $configurationOptionsJavascript .= 'var addthis_share = ' . drupal_json_encode($addthis_share);
-    }
-    drupal_add_js(
-      $configurationOptionsJavascript,
-      array(
-      'type' => 'inline',
-      'scope' => 'footer',
-      'every_page' => TRUE,
-    )
-    );
   }
 
   public function getAddThisAttributesMarkup($options) {
@@ -521,7 +376,7 @@ class AddThis {
     return array();
   }
 
-  private function getServiceNamesAsCommaSeparatedString($services) {
+  public function getServiceNamesAsCommaSeparatedString($services) {
     $serviceNames = array_values($services);
     $servicesAsCommaSeparatedString = '';
     foreach ($serviceNames as $serviceName) {
