@@ -10,5 +10,6 @@ files[] = classes/AddThis.php
 files[] = classes/Services/AddThisScriptManager.php
 files[] = classes/Util/AddThisJson.php
 files[] = classes/Util/AddThisWidgetJsUrl.php
+files[] = tests/JsTest.test
 
 configure = admin/config/user-interface/addthis
