@@ -133,10 +133,6 @@ class AddThis {
       return array();
     }
 
-    // Load resources.
-    // @todo Replace this with the AddThisScriptManager.
-    self::$instance->addConfigurationOptionsJs();
-
     // The display type exists. Now get it and get the markup.
     $display_information = $formatters[$display];
 
@@ -203,10 +199,6 @@ class AddThis {
       }
     }
     return $rows;
-  }
-
-  public function addConfigurationOptionsJs() {
-
   }
 
   public function getAddThisAttributesMarkup($options) {
