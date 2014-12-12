@@ -63,5 +63,3 @@ function addthis_uninstall() {
 function addthis_update_7401() {
   variable_del('addthis_widget_async');
 }
-
-// @todo Add update to renew class registry.
