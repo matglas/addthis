@@ -47,7 +47,8 @@ class AddThis {
   const UI_HEADER_BACKGROUND_COLOR_KEY = 'addthis_ui_header_background_color';
   const UI_HEADER_COLOR_KEY = 'addthis_ui_header_color';
   const WIDGET_JS_URL_KEY = 'addthis_widget_js_url';
-  const WIDGET_JS_LOAD_TYPE = 'addthis_widget_load_type';
+  const WIDGET_JS_LOAD_DOMREADY = 'addthis_widget_load_domready';
+  const WIDGET_JS_LOAD_ASYNC = 'addthis_widget_load_async';
 
   // Twitter.
   const TWITTER_VIA_KEY = 'addthis_twitter_via';
@@ -60,7 +61,8 @@ class AddThis {
   const DEFAULT_SERVICES_CSS_URL = 'http://cache.addthiscdn.com/icons/v1/sprites/services.css';
   const DEFAULT_SERVICES_JSON_URL = 'http://cache.addthiscdn.com/services/v1/sharing.en.json';
   const DEFAULT_WIDGET_JS_URL = 'http://s7.addthis.com/js/300/addthis_widget.js';
-  const DEFAULT_WIDGET_JS_LOAD_TYPE = 'async';
+  const DEFAULT_WIDGET_JS_LOAD_DOMREADY = TRUE;
+  const DEFAULT_WIDGET_JS_LOAD_ASYNC = FALSE;
 
   // Internal resources.
   const ADMIN_CSS_FILE = 'addthis.admin.css';
@@ -263,6 +265,26 @@ class AddThis {
    */
   public function getWidgetJsLoadType() {
     return variable_get(self::WIDGET_JS_LOAD_TYPE, self::DEFAULT_WIDGET_JS_LOAD_TYPE);
+  }
+
+  /**
+   * Return if domready loading should be active.
+   *
+   * @return bool
+   *   Returns TRUE if domready is enabled.
+   */
+  public function getWidgetJsDomReady() {
+    return variable_get(self::WIDGET_JS_LOAD_DOMREADY, self::DEFAULT_WIDGET_JS_LOAD_DOMREADY);
+  }
+
+  /**
+   * Return if async initialization should be active.
+   *
+   * @return bool
+   *   Returns TRUE if async is enabled.
+   */
+  public function getWidgetJsAsync() {
+    return variable_get(self::WIDGET_JS_LOAD_ASYNC, self::DEFAULT_WIDGET_JS_LOAD_ASYNC);
   }
 
   public function isClickToOpenCompactMenuEnabled() {

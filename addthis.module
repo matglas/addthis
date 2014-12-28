@@ -80,6 +80,23 @@ function addthis_menu() {
     'file' => AddThis::ADMIN_INCLUDE_FILE,
     'weight' => 10
   );
+
+  // Test pages.
+  // Pages used in the test cases.
+  $menu_items['addthis/test/1'] = array(
+    'title' => 'Test no Javascript load',
+    'type' => MENU_CALLBACK,
+    'page callback' => 'addthis_test_no_js',
+    'access arguments' => array(AddThis::PERMISSION_ADMINISTER_ADDTHIS),
+    'file' => 'includes/addthis.test_pages.inc'
+  );
+  $menu_items['addthis/test/2'] = array(
+    'title' => 'Test Javascript load on preprocess',
+    'type' => MENU_CALLBACK,
+    'page callback' => 'addthis_test_with_js',
+    'access arguments' => array(AddThis::PERMISSION_ADMINISTER_ADDTHIS),
+    'file' => 'includes/addthis.test_pages.inc'
+  );
   return $menu_items;
 }
 
@@ -140,6 +157,21 @@ function addthis_theme($existing, $type, $theme, $path) {
       'render element' => 'addthis',
     ),
   );
+}
+
+/**
+ * Implements hook_page_build().
+ * 
+ * @todo Add load widget js on all but admin pages.
+ *   This should be based on the settings for this.
+ */
+function addthis_page_build(&$page) {
+
+  // See addthis.test.page.inc for more info.
+  if (current_path() == 'addthis/test/2') {
+    $manager = new AddThisScriptManager();
+    $manager->attachJsToElement($page['content']);
+  }
 }
 
 /**

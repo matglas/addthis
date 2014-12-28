@@ -7,12 +7,17 @@
 class AddThisScriptManager {
 
   private $addthis = NULL;
+  private $async = NULL;
+  private $domready = NULL;
 
   /**
    * Construct method.
    */
   function __construct() {
     $this->addthis = AddThis::getInstance();
+
+    $this->async = $this->addthis->getWidgetJsAsync();
+    $this->domready = $this->addthis->getWidgetJsDomReady();
   }
 
   /**
@@ -70,20 +75,17 @@ class AddThisScriptManager {
   public function attachJsToElement(&$element) {
     $widget_js = new AddThisWidgetJsUrl($this->getWidgetJsUrl());
 
-    // @todo Replace by settings.
     $pubid = $this->addthis->getProfileId();
     if (isset($pubid) && !empty($pubid) && is_string($pubid)) {
       $widget_js->addAttribute('pubid', $pubid);
     }
 
-    // @todo Replace by settings.
-    $async = FALSE;
+    $async = $this->async;
     if ($async) {
       $widget_js->addAttribute('async', 1);
     }
 
-    // @todo Replace by retrieving settings.
-    $domready = TRUE;
+    $domready = $this->domready;
     if ($domready) {
       $widget_js->addAttribute('domready', 1);
     }
@@ -120,6 +122,26 @@ class AddThisScriptManager {
         )
       )
     );
+  }
+
+  /**
+   * Enable / disable domready loading.
+   *
+   * @param bool $enabled
+   *   TRUE to enabled domready loading.
+   */
+  function setDomReady($enabled) {
+    $this->domready = $enabled;
+  }
+
+  /**
+   * Enable / disable async loading.
+   *
+   * @param bool $enabled
+   *   TRUE to enabled async loading.
+   */
+  function setAsync($enabled) {
+    $this->async = $enabled;
   }
 
   /**
