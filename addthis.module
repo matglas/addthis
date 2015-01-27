@@ -166,6 +166,11 @@ function addthis_theme($existing, $type, $theme, $path) {
  *   This should be based on the settings for this.
  */
 function addthis_page_build(&$page) {
+  // Include the widget js when we include on all but admin pages.
+  if (!path_is_admin(current_path()) && AddThis::getInstance()->getWidgetJsInclude() == AddThis::WIDGET_JS_INCLUDE_PAGE) {
+    $manager = new AddThisScriptManager();
+    $manager->attachJsToElement($page['content']);
+  }
 
   // See addthis.test.page.inc for more info.
   if (current_path() == 'addthis/test/2') {

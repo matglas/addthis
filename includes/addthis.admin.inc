@@ -341,5 +341,15 @@ function addthis_admin_settings_advanced_form($form_state) {
     '#description' => t('Use this when you have your own Ajax functionality or create things after the DOM is ready trough Javascript. Initialize the addthis functionality through addthis.init().'),
     '#default_value' => AddThis::getInstance()->getWidgetJsAsync(),
   );
+  $form['advanced_settings_fieldset'][AddThis::WIDGET_JS_INCLUDE] = array(
+      '#type' => 'select',
+      '#title' => t('Load widget js.'),
+      '#options' => array(
+        '0' => t('Don\'t include at all.'),
+        '1' => t('Include on all (non admin) pages'),
+        '2' => t('(Default) Include on widget rendering by Drupal.'),
+      ),
+      '#default_value' => AddThis::getInstance()->getWidgetJsInclude(),
+  );
   return system_settings_form($form);
 }

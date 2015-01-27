@@ -49,6 +49,7 @@ class AddThis {
   const WIDGET_JS_URL_KEY = 'addthis_widget_js_url';
   const WIDGET_JS_LOAD_DOMREADY = 'addthis_widget_load_domready';
   const WIDGET_JS_LOAD_ASYNC = 'addthis_widget_load_async';
+  const WIDGET_JS_INCLUDE = 'addthis_widget_include';
 
   // Twitter.
   const TWITTER_VIA_KEY = 'addthis_twitter_via';
@@ -63,6 +64,14 @@ class AddThis {
   const DEFAULT_WIDGET_JS_URL = 'http://s7.addthis.com/js/300/addthis_widget.js';
   const DEFAULT_WIDGET_JS_LOAD_DOMREADY = TRUE;
   const DEFAULT_WIDGET_JS_LOAD_ASYNC = FALSE;
+
+  // Type of inclusion.
+  // 0 = don't include, 1 = pages no admin, 2 = on usages only.
+  const DEFAULT_WIDGET_JS_INCLUDE = 2;
+  const WIDGET_JS_INCLUDE_NONE = 0;
+  const WIDGET_JS_INCLUDE_PAGE = 1;
+  const WIDGET_JS_INCLUDE_USAGE = 2;
+
 
   // Internal resources.
   const ADMIN_CSS_FILE = 'addthis.admin.css';
@@ -258,13 +267,13 @@ class AddThis {
   }
 
   /**
-   * Return the type of loading.
+   * Return the type of inclusion.
    *
    * @return string
    *   Retuns domready or async.
    */
-  public function getWidgetJsLoadType() {
-    return variable_get(self::WIDGET_JS_LOAD_TYPE, self::DEFAULT_WIDGET_JS_LOAD_TYPE);
+  public function getWidgetJsInclude() {
+    return variable_get(self::WIDGET_JS_INCLUDE, self::DEFAULT_WIDGET_JS_INCLUDE);
   }
 
   /**
