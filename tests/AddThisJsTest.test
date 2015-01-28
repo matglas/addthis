@@ -31,14 +31,16 @@ class AddThisJsTest extends DrupalWebTestCase {
    * Test the presense of certain Javascript elements.
    */
   public function testJavascriptPresent() {
+    $this->assertSettingsPresent();
   }
 
-  // /**
-  //  * 
-  //  */
-  // public function assertSettingsPresent() {
-  //   $this->drupalGet('<front>');
-  //   $this->assertNoTrue('Drupal.settings', 'No Drupal.settings javascript was found.');
-  // }
+   /**
+    * @todo assert is incorrect. Check with testhelper.
+    */
+   public function assertSettingsPresent() {
+
+     $html = $this->drupalGet('<front>');
+     $this->assertFalse(AddThisTestHelper::stringContains($html, 'Drupal.settings'), 'No Drupal.settings javascript was found.');
+   }
   
 }

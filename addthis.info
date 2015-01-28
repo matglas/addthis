@@ -5,11 +5,13 @@ package = Sharing
 
 dependencies[] = field
 
-files[] = addthis.test
 files[] = classes/AddThis.php
 files[] = classes/Services/AddThisScriptManager.php
 files[] = classes/Util/AddThisJson.php
 files[] = classes/Util/AddThisWidgetJsUrl.php
-files[] = tests/JsTest.test
+files[] = tests/AddThisTestHelper.php
+files[] = tests/AddThisJsTest.test
+files[] = tests/AddThisFunctionalityTestCase.test
+files[] = tests/AddThisPermissionsTestCase.test
 
 configure = admin/config/user-interface/addthis

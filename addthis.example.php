@@ -10,7 +10,7 @@ function hook_page_build(&$page) {
   // Load the scripts on a specific url or other case when you don't use the 
   // Field API.
   if (current_path() == 'node/1') {
-    $manager = new AddThisScriptManager();
+    $manager = AddThisScriptManager::getInstance();
 
     // Adjust domready and async settings for this page.
     //

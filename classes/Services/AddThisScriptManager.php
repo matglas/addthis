@@ -2,6 +2,15 @@
 /**
  * @file
  * Class definition of a script manager.
+ *
+ * This class will be used on different places. The result of the attachJsToElement()
+ * should be the same in every situation within one request and throughout the
+ * loading of the site.
+ *
+ * When manipulating the configuration do this very early in the request. This
+ * could be hook_init() for example. Any other method should be before hook_page_build().
+ * The implementation of addthis_page_build() is the first known instance where
+ * this class might get used based on the configuration.
  */
 
 class AddThisScriptManager {
@@ -13,11 +22,25 @@ class AddThisScriptManager {
   /**
    * Construct method.
    */
-  function __construct() {
+  private function __construct() {
     $this->addthis = AddThis::getInstance();
 
     $this->async = $this->addthis->getWidgetJsAsync();
     $this->domready = $this->addthis->getWidgetJsDomReady();
+  }
+
+  /**
+   * Return a single instance of the AddThisScriptManager.
+   *
+   * @return AddThisScriptManager
+   */
+  public static function getInstance() {
+    static $manager;
+
+    if (!isset($manager)) {
+      $manager = new AddThisScriptManager();
+    }
+    return $manager;
   }
 
   /**

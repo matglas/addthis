@@ -33,7 +33,7 @@ function addthis_displays_addthis_display_markup__addthis_basic_toolbox($options
   $element['#attributes'] += $addthis->getAddThisAttributesMarkup($options);
 
   // Add the widget script.
-  $script_manager = new AddThisScriptManager();
+  $script_manager = AddThisScriptManager::getInstance();
   $script_manager->attachJsToElement($element);
 
   $services = trim($options['#display']['settings']['share_services']);
@@ -138,7 +138,7 @@ function addthis_displays_addthis_display_markup__addthis_basic_button($options 
   $element['#attributes'] += $addthis->getAddThisAttributesMarkup($options);
 
   // Add the widget script.
-  $script_manager = new AddThisScriptManager();
+  $script_manager = AddThisScriptManager::getInstance();
   $script_manager->attachJsToElement($element);
 
   // Create img button.
