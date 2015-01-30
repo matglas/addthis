@@ -1,0 +1,46 @@
+<?php
+/**
+ * @file
+ * Class to test the AddThis Js functionality.
+ */
+
+/**
+ * AddThisJsTest tests
+ */
+class AddThisJsTest extends DrupalWebTestCase {
+
+  /**
+   * Simple test info
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Javascript test',
+      'description' => 'Testing the Javascript output',
+      'group' => 'AddThis',
+      );
+  }
+
+  /**
+   * Setup the test environment.
+   */
+  public function setUp() {
+    parent::setUp(array('addthis'));
+  }
+
+  /**
+   * Test the presense of certain Javascript elements.
+   */
+  public function testJavascriptPresent() {
+    $this->assertSettingsPresent();
+  }
+
+   /**
+    * @todo assert is incorrect. Check with testhelper.
+    */
+   public function assertSettingsPresent() {
+
+     $html = $this->drupalGet('<front>');
+     $this->assertFalse(AddThisTestHelper::stringContains($html, 'Drupal.settings'), 'No Drupal.settings javascript was found.');
+   }
+  
+}

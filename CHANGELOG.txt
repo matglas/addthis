@@ -1,5 +1,10 @@
 # 7.x-4.0-alpha5
+Use update.php to rebuild the registry because of class changes.
+If that does not work use the rebuild_registry module.
+
 Some undefined index where fixed on the block save for disabled display.
+More imporantly classes have been restructured and javascript loading
+has been redesigned.
 
 - Unsupported operand types on block save. [#2181367]
 - Minor changes to the documentation.

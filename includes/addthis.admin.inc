@@ -330,16 +330,26 @@ function addthis_admin_settings_advanced_form($form_state) {
     '#required' => FALSE,
     '#description' => t('AddThis custom configuration code. See format at <a href="http://addthis.com/" target="_blank">AddThis.com</a>'),
   );
-  $form['advanced_settings_fieldset'][AddThis::WIDGET_JS_LOAD_TYPE] = array(
-    '#type' => 'select',
-    '#title' => t('When to load the widget js.'),
-    '#options' => array(
-      'async' => t('When the page loads, but load assets asynchronously. (default)'),
-      'include' => t('When the page loads.'),
-      'domready' => t('When the DOM is ready at the script dynamicly.'),
-    ),
-    '#default_value' => AddThis::getInstance()->getWidgetJsLoadType(),
-    '#required' => FALSE,
+  $form['advanced_settings_fieldset'][AddThis::WIDGET_JS_LOAD_DOMREADY] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Load the AddThis resources after the DOM is ready.'),
+    '#default_value' => AddThis::getInstance()->getWidgetJsDomReady(),
+  );
+  $form['advanced_settings_fieldset'][AddThis::WIDGET_JS_LOAD_ASYNC] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Initialize asynchronously through addthis.init().'),
+    '#description' => t('Use this when you have your own Ajax functionality or create things after the DOM is ready trough Javascript. Initialize the addthis functionality through addthis.init().'),
+    '#default_value' => AddThis::getInstance()->getWidgetJsAsync(),
+  );
+  $form['advanced_settings_fieldset'][AddThis::WIDGET_JS_INCLUDE] = array(
+      '#type' => 'select',
+      '#title' => t('Load widget js.'),
+      '#options' => array(
+        '0' => t('Don\'t include at all.'),
+        '1' => t('Include on all (non admin) pages'),
+        '2' => t('(Default) Include on widget rendering by Drupal.'),
+      ),
+      '#default_value' => AddThis::getInstance()->getWidgetJsInclude(),
   );
   return system_settings_form($form);
 }
