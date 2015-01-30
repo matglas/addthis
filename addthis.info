@@ -10,6 +10,7 @@ files[] = classes/Services/AddThisScriptManager.php
 files[] = classes/Util/AddThisJson.php
 files[] = classes/Util/AddThisWidgetJsUrl.php
 files[] = tests/AddThisTestHelper.php
+files[] = tests/AddThisDrupalSettingsJsTestHelper.php
 files[] = tests/AddThisJsTest.test
 files[] = tests/AddThisFunctionalityTestCase.test
 files[] = tests/AddThisPermissionsTestCase.test
