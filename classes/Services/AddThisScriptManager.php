@@ -117,13 +117,6 @@ class AddThisScriptManager {
           $widget_js->addAttribute('domready', 1);
         }
 
-        // Always load addthis.js when we start working with addthis.
-        $addthis_js_path = drupal_get_path('module', 'addthis') . '/addthis.js';
-        $attachments['js'][$addthis_js_path] = array(
-            'type' => 'file',
-            'scope' => 'footer',
-        );
-
         // Only when the script is not loaded after the DOM is ready we include
         // the script with #attached.
         if (!$domready) {
