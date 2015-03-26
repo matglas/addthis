@@ -96,54 +96,50 @@ class AddThisScriptManager {
    *   The element to attach the JavaScript to.
    */
   public function attachJsToElement(&$element) {
-    $attachments = &drupal_static(__FUNCTION__);
 
     if ($this->addthis->getWidgetJsInclude() != AddThis::WIDGET_JS_INCLUDE_NONE) {
-      if (!isset($attachments)) {
-        $widget_js = new AddThisWidgetJsUrl($this->getWidgetJsUrl());
+      $widget_js = new AddThisWidgetJsUrl($this->getWidgetJsUrl());
 
-        $pubid = $this->addthis->getProfileId();
-        if (isset($pubid) && !empty($pubid) && is_string($pubid)) {
-          $widget_js->addAttribute('pubid', $pubid);
-        }
+      $pubid = $this->addthis->getProfileId();
+      if (isset($pubid) && !empty($pubid) && is_string($pubid)) {
+        $widget_js->addAttribute('pubid', $pubid);
+      }
 
-        $async = $this->async;
-        if ($async) {
-          $widget_js->addAttribute('async', 1);
-        }
+      $async = $this->async;
+      if ($async) {
+        $widget_js->addAttribute('async', 1);
+      }
 
-        $domready = $this->domready;
-        if ($domready) {
-          $widget_js->addAttribute('domready', 1);
-        }
+      $domready = $this->domready;
+      if ($domready) {
+        $widget_js->addAttribute('domready', 1);
+      }
 
-        // Only when the script is not loaded after the DOM is ready we include
-        // the script with #attached.
-        if (!$domready) {
-          $attachments['js'][$this->getWidgetJsUrl()] = array(
-              'type' => 'external',
-              'scope' => 'footer',
-          );
-        }
-
-        // Every setting value passed here overrides previously set values but
-        // leaves the values that are already set somewhere else and that are not
-        // passed here.
-        $attachments['js'][] = array(
-            'type' => 'setting',
-            'data' => array(
-                'addthis' => array(
-                    'async' => $async,
-                    'domready' => $domready,
-                    'widget_url' => $this->getWidgetJsUrl(),
-
-                    'addthis_config' => $this->getJsAddThisConfig(),
-                    'addthis_share' => $this->getJsAddThisShare(),
-                )
-            )
+      // Only when the script is not loaded after the DOM is ready we include
+      // the script with #attached.
+      if (!$domready) {
+        $elements['#attached']['js'][$this->getWidgetJsUrl()] = array(
+            'type' => 'external',
+            'scope' => 'footer',
         );
       }
-      $element['#attached'] = $attachments;
+
+      // Every setting value passed here overrides previously set values but
+      // leaves the values that are already set somewhere else and that are not
+      // passed here.
+      $elements['#attached']['js'][] = array(
+          'type' => 'setting',
+          'data' => array(
+              'addthis' => array(
+                  'async' => $async,
+                  'domready' => $domready,
+                  'widget_url' => $this->getWidgetJsUrl(),
+
+                  'addthis_config' => $this->getJsAddThisConfig(),
+                  'addthis_share' => $this->getJsAddThisShare(),
+              )
+          )
+      );
     }
   }
 
