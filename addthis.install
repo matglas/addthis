@@ -74,7 +74,7 @@ function addthis_update_7401() {
 //   Test if it works.
 function addthis_update_7402() {
 
-  $load_type = variable_get(AddThis::WIDGET_JS_LOAD_TYPE, NULL);
+  $load_type = variable_get('addthis_widget_load_type', NULL);
 
   switch ($load_type) {
     case 'async':
