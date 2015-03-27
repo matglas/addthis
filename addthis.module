@@ -145,9 +145,6 @@ function addthis_theme($existing, $type, $theme, $path) {
 
 /**
  * Implements hook_page_build().
- *
- * @todo Add load widget js on all but admin pages.
- *   This should be based on the settings for this.
  */
 function addthis_page_build(&$page) {
   // Include the addthis.js as a library on every page. Widget js will be loaded
