@@ -60,7 +60,7 @@ class AddThisScriptManager {
    *   TRUE if the current request is on https. 
    */
   public function isHttps() {
-    $is_https = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on';
+    global $is_https;
 
     return $is_https;
   }
