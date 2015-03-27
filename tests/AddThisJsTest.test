@@ -24,7 +24,7 @@ class AddThisJsTest extends DrupalWebTestCase {
    * Setup the test environment.
    */
   public function setUp() {
-    parent::setUp(array('addthis'));
+    parent::setUp(array('addthis', 'addthis_test'));
   }
 
   /**

@@ -81,22 +81,6 @@ function addthis_menu() {
     'weight' => 10
   );
 
-  // Test pages.
-  // Pages used in the test cases.
-  $menu_items['addthis/test/1'] = array(
-    'title' => 'Test no Javascript load',
-    'type' => MENU_CALLBACK,
-    'page callback' => 'addthis_test_no_js',
-    'access arguments' => array(AddThis::PERMISSION_ADMINISTER_ADDTHIS),
-    'file' => 'includes/addthis.test_pages.inc'
-  );
-  $menu_items['addthis/test/2'] = array(
-    'title' => 'Test Javascript load on preprocess',
-    'type' => MENU_CALLBACK,
-    'page callback' => 'addthis_test_with_js',
-    'access arguments' => array(AddThis::PERMISSION_ADMINISTER_ADDTHIS),
-    'file' => 'includes/addthis.test_pages.inc'
-  );
   return $menu_items;
 }
 
@@ -161,8 +145,9 @@ function addthis_theme($existing, $type, $theme, $path) {
 
 /**
  * Implements hook_page_build().
- * 
- * @todo Move script for addthis/test/2 into a separate module.
+ *
+ * @todo Add load widget js on all but admin pages.
+ *   This should be based on the settings for this.
  */
 function addthis_page_build(&$page) {
   // Include the addthis.js as a library on every page. Widget js will be loaded
@@ -175,12 +160,6 @@ function addthis_page_build(&$page) {
 
   // Include the widget js when we include on all but admin pages.
   if (!path_is_admin(current_path()) && AddThis::getInstance()->getWidgetJsInclude() == AddThis::WIDGET_JS_INCLUDE_PAGE) {
-    $manager = AddThisScriptManager::getInstance();
-    $manager->attachJsToElement($page['content']);
-  }
-
-  // See AddThisTestHelper.php.page.inc for more info.
-  if (current_path() == 'addthis/test/2') {
     $manager = AddThisScriptManager::getInstance();
     $manager->attachJsToElement($page['content']);
   }

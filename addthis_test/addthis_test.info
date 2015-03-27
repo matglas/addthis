@@ -1,0 +1,6 @@
+name = AddThis tests
+description = Module for testing AddThis functionality.
+core = 7.x
+
+dependencies[] = addthis
+dependencies[] = addthis_displays
