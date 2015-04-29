@@ -8,6 +8,11 @@ has been redesigned.
 
 - Unsupported operand types on block save. [#2181367]
 - Minor changes to the documentation.
+- Restructured test classes.
+- Restructured the way widget.js is included, how loading is done and
+  how the addthis.js behaves.
+  - The addthis.js is always loaded but is used as a library instead of
+    executing everything directly like it was before.
 
 # 7.x-4.0-alpha4
 Fixed two nasty bugs in 7.x-4.0-alpha3.
