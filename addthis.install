@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Install, update and uninstall functions for the AddThis module.
@@ -65,15 +64,15 @@ function addthis_update_7401() {
   variable_del('addthis_widget_async');
 }
 
-// @todo Update that removes variable addthis_widget_load_type.
-//   Transform variable in settings for domready and async.
-//   If value = async set domready TRUE and async TRUE.
-//   If value = domready set domready TRUE and async FALSE.
-//   If value = include set domready FALSE and async FALSE.
-//   
-//   Test if it works.
+/**
+ * Remove old addthis_widget_load_type and transform it into new values.
+ *
+ * Transform variable in settings for domready and async.
+ * If value = async set domready TRUE and async TRUE.
+ * If value = domready set domready TRUE and async FALSE.
+ * If value = include set domready FALSE and async FALSE.
+ */
 function addthis_update_7402() {
-
   $load_type = variable_get('addthis_widget_load_type', NULL);
 
   switch ($load_type) {
