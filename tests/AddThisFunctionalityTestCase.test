@@ -1,12 +1,5 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: matglas
- * Date: 1/28/15
- * Time: 1:34 AM
- */
-
-/**
  * @file
  * Tests for the AddThis-module.
  */

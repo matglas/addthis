@@ -22,9 +22,7 @@ function addthis_test_no_js() {
 
 /**
  * Page callback to test a page load with js loaded.
- * 
- * 
- * 
+ *
  * @return array
  *   Render array for this page.
  */
