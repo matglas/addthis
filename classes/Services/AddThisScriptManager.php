@@ -118,7 +118,7 @@ class AddThisScriptManager {
       // Only when the script is not loaded after the DOM is ready we include
       // the script with #attached.
       if (!$domready) {
-        $elements['#attached']['js'][$this->getWidgetJsUrl()] = array(
+        $element['#attached']['js'][$this->getWidgetJsUrl()] = array(
             'type' => 'external',
             'scope' => 'footer',
         );
@@ -127,7 +127,7 @@ class AddThisScriptManager {
       // Every setting value passed here overrides previously set values but
       // leaves the values that are already set somewhere else and that are not
       // passed here.
-      $elements['#attached']['js'][] = array(
+      $element['#attached']['js'][] = array(
           'type' => 'setting',
           'data' => array(
               'addthis' => array(
