@@ -504,10 +504,17 @@ class AddThis {
     return $this->getBaseBookmarkUrl() . $this->getProfileIdQueryParameterPrefixedWithAmp();
   }
 
+  /**
+   * Transform the entity title to a attribute.
+   *
+   * @remarks
+   *   The title of the entity and site can not contain double-qoutes. These are
+   *   encoded into html chars.
+   */
   private function getAttributeTitle($entity) {
     if (isset($entity->title)) {
       return array(
-        self::TITLE_ATTRIBUTE => (check_plain($entity->title) . ' - ' . variable_get('site_name')),
+        self::TITLE_ATTRIBUTE => htmlentities($entity->title . ' - ' . variable_get('site_name'), ENT_COMPAT),
       );
     }
     return array();
