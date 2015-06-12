@@ -31,14 +31,31 @@ class AddThisJsTest extends DrupalWebTestCase {
    * Test the presense of certain Javascript elements.
    */
   public function testJavascriptPresent() {
-    $this->assertSettingsPresent();
+    $this->drupalGet('<front>');
+
+    // AddThis settings are not present.
+    $settings = $this->drupalGetSettings();
+    $this->assertTrue(empty($settings['addthis']), 'Drupal.settings.addthis is not present.');
+
+    // AddThis settings are not present.
+    $this->drupalGet('addthis/test/1');
+    $settings = $this->drupalGetSettings();
+    $this->assertTrue(empty($settings['addthis']), 'Drupal.settings.addthis is not present on test page.');
+
+    // AddThis settings is present.
+    $this->drupalGet('addthis/test/2');
+    $settings = $this->drupalGetSettings();
+    $this->assertTrue(!empty($settings['addthis']), 'Drupal.settings.addthis is present on test page and loaded on hook_page_build().');
+
   }
 
   /**
-   * @todo assert is incorrect. Check with testhelper.
+   *
+   * 1. Setup with include always, load at DOM ready.
+   *    - Settings should be there
+   *
+   * 2. Setup with include never
+   *
    */
-  public function assertSettingsPresent() {
-    $html = $this->drupalGet('<front>');
-    $this->assertFalse(AddThisTestHelper::stringContains($html, 'Drupal.settings'), 'No Drupal.settings javascript was found.');
-  }
+
 }

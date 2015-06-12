@@ -5,13 +5,13 @@ class AddThisPermissionsTestCase extends DrupalWebTestCase
 
     public function setUp()
     {
-        parent::setUp(AddThis::MODULE_NAME);
+        parent::setUp('addthis');
     }
 
     public static function getInfo()
     {
         return array(
-            'name' => 'AddThis: Permission tests',
+            'name' => 'Permission tests',
             'description' => 'Permission tests for the AddThis-module.',
             'group' => 'AddThis',
         );

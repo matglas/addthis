@@ -30,7 +30,7 @@ function addthis_test_with_js() {
   $content = array();
 
   $content['explanation'] = array(
-    '#markup' => 'Widget js is loaded on this page through hook_preprocess_page().<br>
+    '#markup' => 'Widget js is loaded on this page through hook_page_build().<br>
     <!-- Go to www.addthis.com/dashboard to customize your tools -->
     <div class="addthis_sharing_toolbox"></div>',
   );

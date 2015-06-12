@@ -1,10 +1,6 @@
 /**
  * @file
  * AddThis javascript actions.
- *
- * @todo Should async be in here?
- *   Question if we need to do anything with the async setting. The developer
- *   might need to take action itself with addthis.init().
  */
 
 (function ($) {

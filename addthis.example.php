@@ -2,13 +2,11 @@
 
 /**
  * Implements hook_page_build().
- *
- * @todo Add explenation when to do this.
  */
 function hook_page_build(&$page) {
 
   // Load the scripts on a specific url or other case when you don't use the 
-  // Field API.
+  // Field API or Block.
   if (current_path() == 'node/1') {
     $manager = AddThisScriptManager::getInstance();
 
