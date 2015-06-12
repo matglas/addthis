@@ -45,7 +45,7 @@ class AddThisScriptManager {
 
   /**
    * Get the current widget js url.
-   * 
+   *
    * @return string
    *   A url reference to the widget js.
    */
@@ -55,9 +55,9 @@ class AddThisScriptManager {
 
   /**
    * Return if we are on https connection.
-   * 
+   *
    * @return bool
-   *   TRUE if the current request is on https. 
+   *   TRUE if the current request is on https.
    */
   public function isHttps() {
     global $is_https;
@@ -67,10 +67,10 @@ class AddThisScriptManager {
 
   /**
    * Change the schema from http to https if we are on https.
-   * 
+   *
    * @param  string $url
    *   A full url.
-   * 
+   *
    * @return string
    *   The changed url.
    */
@@ -86,7 +86,7 @@ class AddThisScriptManager {
 
   /**
    * Attach the widget js to the element.
-   * 
+   *
    * @todo Change the scope of the addthis.js.
    *   See if we can get the scope of the addthis.js into the header
    *   just below the settings so that the settings can be used in the loaded

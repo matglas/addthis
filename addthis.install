@@ -88,7 +88,6 @@ function addthis_update_7402() {
       variable_set(AddThis::WIDGET_JS_LOAD_DOMREADY, FALSE);
       variable_set(AddThis::WIDGET_JS_LOAD_ASYNC, FALSE);
       break;
-    
     default:
       variable_set(AddThis::WIDGET_JS_LOAD_DOMREADY, TRUE);
       variable_set(AddThis::WIDGET_JS_LOAD_ASYNC, FALSE);

@@ -6,8 +6,8 @@
 
 /**
  * Page callback to test a page load without any js loaded.
- * 
- * @return array 
+ *
+ * @return array
  *   Render array for a page.
  */
 function addthis_test_no_js() {

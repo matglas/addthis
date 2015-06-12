@@ -89,7 +89,7 @@
 
   // Document ready in case we want to load AddThis into the dom after every
   // thing is loaded.
-  // 
+  //
   // Is executed once after the attach happened.
   $(document).ready(function() {
     Drupal.behaviors.addthis.loadDomready();
