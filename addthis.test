@@ -10,7 +10,7 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
   private $user;
 
   public function setUp() {
-    parent::setUp(AddThis::MODULE_NAME);
+    parent::setUp('addthis');
     $this->createAndLoginUser();
   }
 
@@ -298,7 +298,7 @@ class AddThisFunctionalityTestCase extends DrupalWebTestCase {
 class AddThisPermissionsTestCase extends DrupalWebTestCase {
 
   public function setUp() {
-    parent::setUp(AddThis::MODULE_NAME);
+    parent::setUp('addthis');
   }
 
   public static function getInfo() {
