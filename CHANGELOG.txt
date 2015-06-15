@@ -1,3 +1,7 @@
+# 7.x-4.0-alpha7
+
+- Issue #1960656 by juampynr: Give other modules the chance to hook in once addthis variable is available [#1960656]
+
 # 7.x-4.0-alpha6
 Use update.php to rebuild the registry because of class changes.
 If that does not work use the rebuild_registry module.
