@@ -52,6 +52,9 @@
     initConfig: function () {
       addthis_config = Drupal.settings.addthis.addthis_config;
       addthis_share = Drupal.settings.addthis.addthis_share;
+
+      // Give the chance to other scripts to hook into the addthis variable.
+      $(document).trigger('addthis.init', addthis);
     },
 
     // Load the js library when the dom is ready.
