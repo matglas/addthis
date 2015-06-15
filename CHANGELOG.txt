@@ -1,13 +1,10 @@
-# 7.x-4.0-alpha5
+# 7.x-4.0-alpha6
 Use update.php to rebuild the registry because of class changes.
 If that does not work use the rebuild_registry module.
 
-Some undefined index where fixed on the block save for disabled display.
 More importantly classes have been restructured and javascript loading
 has been redesigned.
 
-- Unsupported operand types on block save. [#2181367]
-- Minor changes to the documentation.
 - Restructured test classes.
 - Restructured the way widget.js is included, how loading is done and
   how the addthis.js behaves.
@@ -50,6 +47,20 @@ has been redesigned.
     the main module.
   - addthis.test contained two test classes. These where split into two sperate
     files.
+
+# 7.x-4.0-alpha5
+Some undefined index where fixed on the block save for disabled display.
+
+- Unsupported operand types on block save. [#2181367]
+- Minor changes to the documentation.
+- Fixed issue #1943896 by fcjversc: Add Linkedin vertical counter.
+- Fixed issue #2247245 by jmuzz: Implement button orientation option for Facebook Share button.
+- Fixed issue #2250109 by matglas86, jmuzz: Add support for individual share counters.
+- Fixed issue #2233585 by matglas86, mstef: Uncaught TypeError: Object #<Object> has no method 'ready' .
+- Fixed issue #2206515 by matglas86, dubois: Add configuration 'services_excluded' (globally excluded services) to AddThis Basic Settings.
+- Fixed issue #1989152 by matglas86, labue, juampy: Allow alterations to 'addthis_share' variable in 'addthis_configuration' alter hook.
+- Fixed issue #2241967: Invalid preferred services on form validation.
+- Issue #2181367 by matglas86, dubois | 4fs: Error Fatal error: Unsupported operand types.
 
 # 7.x-4.0-alpha4
 Fixed two nasty bugs in 7.x-4.0-alpha3.
