@@ -52,9 +52,6 @@
     initConfig: function () {
       addthis_config = Drupal.settings.addthis.addthis_config;
       addthis_share = Drupal.settings.addthis.addthis_share;
-
-      // Give the chance to other scripts to hook into the addthis variable.
-      $(document).trigger('addthis.init', addthis);
     },
 
     // Load the js library when the dom is ready.
@@ -71,6 +68,11 @@
     // Callback for loading the widget.js dynamically.
     scriptReady: function () {
       this.scriptLoaded = true;
+
+      if (!typeof(addthis) != 'undefined') {
+        // Give the chance to other scripts to hook into the addthis variable.
+        $(document).trigger('addthis.init', addthis);
+      }
     },
 
     // Called when a ajax request returned.
