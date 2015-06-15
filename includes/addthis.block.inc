@@ -49,8 +49,6 @@ function addthis_block_view($block_name = '') {
  * Implements hook_block_configure().
  */
 function addthis_block_configure($delta = '') {
-  AddThis::getInstance()->includeWidgetJs();
-
   return array();
 }
 
