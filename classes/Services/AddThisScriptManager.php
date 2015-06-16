@@ -50,7 +50,8 @@ class AddThisScriptManager {
    *   A url reference to the widget js.
    */
   public function getWidgetJsUrl() {
-    return check_url(variable_get(AddThis::WIDGET_JS_URL_KEY, AddThis::DEFAULT_WIDGET_JS_URL));
+    $url = $this->addthis->transformToSecureUrl($this->addthis->getBaseWidgetJsUrl());
+    return check_url($url);
   }
 
   /**

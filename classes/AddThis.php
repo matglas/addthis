@@ -330,11 +330,11 @@ class AddThis {
   }
 
   public function getBaseWidgetJsUrl() {
-    return check_url(variable_get(self::WIDGET_JS_URL_KEY, self::DEFAULT_WIDGET_JS_URL));
+    return variable_get(self::WIDGET_JS_URL_KEY, self::DEFAULT_WIDGET_JS_URL);
   }
 
   public function getBaseBookmarkUrl() {
-    return check_url(variable_get(self::BOOKMARK_URL_KEY, self::DEFAULT_BOOKMARK_URL));
+    return variable_get(self::BOOKMARK_URL_KEY, self::DEFAULT_BOOKMARK_URL);
   }
 
   public function getCoBrand() {
@@ -374,12 +374,12 @@ class AddThis {
   }
 
   public function addStylesheets() {
-    drupal_add_css($this->getServicesCssUrl(), 'external');
+    drupal_add_css($this->transformToSecureUrl($this->getServicesCssUrl()), 'external');
     drupal_add_css($this->getAdminCssFilePath(), 'file');
   }
 
   public function getFullBookmarkUrl() {
-    return $this->getBaseBookmarkUrl() . $this->getProfileIdQueryParameterPrefixedWithAmp();
+    return$this->transformToSecureUrl($this->getBaseBookmarkUrl()) . $this->getProfileIdQueryParameterPrefixedWithAmp();
   }
 
   /**
@@ -433,17 +433,6 @@ class AddThis {
 
   private function getProfileIdQueryParameterPrefixedWithHash() {
     return $this->getProfileIdQueryParameter('#');
-  }
-
-  /**
-   * Get the url for the AddThis Widget.
-   */
-  private function getWidgetUrl() {
-    $url = ($this->currentlyOnHttps() ?
-      $this->getBaseWidgetJsUrl() : // Not https url.
-      $this->transformToSecureUrl($this->getBaseWidgetJsUrl()) // Transformed to https url.
-    );
-    return check_url($url);
   }
 
   /**
