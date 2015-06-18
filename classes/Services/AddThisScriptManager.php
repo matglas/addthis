@@ -135,6 +135,7 @@ class AddThisScriptManager {
                   'domready' => $domready,
                   'widget_url' => $this->getWidgetJsUrl(),
 
+                  'addthis_plugin_info' => $this->getJsAddThisPluginInfo(),
                   'addthis_config' => $this->getJsAddThisConfig(),
                   'addthis_share' => $this->getJsAddThisShare(),
               )
@@ -162,6 +163,23 @@ class AddThisScriptManager {
   function setAsync($enabled) {
     $this->async = $enabled;
   }
+
+
+  /**
+   * Get a array with all addthis_plugin_info values.
+   */
+  private function getJsAddThisPluginInfo() {
+    $plugin_info = array(
+      'cms_name' => 'Drupal',
+      'cms_version' => VERSION,
+      'plugin_name' => 'AddThis',
+      'plugin_version' => '7.x-4.0-alpha7',
+      'plugin_mode' => 'AddThis',
+    );
+
+    return $plugin_info;
+  }
+
 
   /**
    * Get a array with all addthis_config values.
