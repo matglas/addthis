@@ -225,7 +225,14 @@ class AddThisScriptManager {
         'templates' => $configuration['templates'],
       );
     }
-    $addthis_share['templates']['twitter'] = $this->addthis->getTwitterTemplate();
+
+    if (!empty($this->addthis->getTwitterVia())) {
+      $addthis_share['passthrough']['twitter']['via'] = $this->addthis->getTwitterVia();
+    }
+
+    if (!empty($this->addthis->getTwitterText())) {
+      $addthis_share['passthrough']['twitter']['text'] = $this->addthis->getTwitterText();
+    }
 
     drupal_alter('addthis_configuration_share', $configuration);
     return $addthis_share;
