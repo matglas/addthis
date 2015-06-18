@@ -77,7 +77,7 @@ class AddThisScriptManager {
   public function correctSchemaIfHttps($url) {
     if (is_string($url) && $this->isHttps()) {
       return str_replace('http://', 'https://', $url);
-    } 
+    }
     else {
       return $url;
     }
