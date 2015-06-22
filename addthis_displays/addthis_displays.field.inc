@@ -15,7 +15,7 @@ function addthis_displays_field_formatter_info() {
     'label' => t('Basic Toolbox'),
     'field types' => array(AddThis::FIELD_TYPE),
     'settings' => array(
-      'share_services' => 'facebook,twitter',
+      'share_services' => 'preferred_1,preferred_2,preferred_3,preferred_4,compact',
       'buttons_size' => 'addthis_16x16_style',
       'counter_orientation' => 'horizontal',
       'extra_css' => '',
