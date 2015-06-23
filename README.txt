@@ -4,7 +4,7 @@
 Add This module provides Drupal integration to addthis.com link sharing service.
 Integration has been implemented as a field.
 
-Description from addthis.com: 
+Description from addthis.com:
 The AddThis button spreads your content across the Web by making it easier for
 your visitors to bookmark and share it with other people, again... and again...
 and again. This simple yet powerful button is very easy to install and provides

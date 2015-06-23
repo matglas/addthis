@@ -77,7 +77,7 @@ class AddThisScriptManager {
   public function correctSchemaIfHttps($url) {
     if (is_string($url) && $this->isHttps()) {
       return str_replace('http://', 'https://', $url);
-    } 
+    }
     else {
       return $url;
     }
@@ -101,7 +101,7 @@ class AddThisScriptManager {
       $widget_js = new AddThisWidgetJsUrl($this->getWidgetJsUrl());
 
       $pubid = $this->addthis->getProfileId();
-      if (isset($pubid) && !empty($pubid) && is_string($pubid)) {
+      if (!empty($pubid) && is_string($pubid)) {
         $widget_js->addAttribute('pubid', $pubid);
       }
 

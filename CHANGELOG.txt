@@ -5,6 +5,11 @@
 - Issue #2505439 by julka: update Twitter settings to use supported variables (addthis_config.passthrough.twitter.via and addthis_config.passthrough.twitter.text instead of addthis_config.templates.twitter)
 - Modified default addthis_toolbox icons from facebook,twitter to preferred_1,preferred_2,preferred_3,preferred_4,compact as this provides more functionality and the most shares.
 
+Github merges
+
+- Issue #6 Changing default toolbox buttons on fields.
+- Issue #8 Minor fixes in whitespace and use of empty method.
+
 # 7.x-4.0-alpha6
 Use update.php to rebuild the registry because of class changes.
 If that does not work use the rebuild_registry module.
