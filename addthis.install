@@ -105,5 +105,4 @@ function addthis_update_7402() {
  */
 function addthis_update_7403() {
   variable_del('addthis_twitter_template');
-  variable_set(AddThis::TWITTER_TEXT_KEY, TWITTER_TEXT_DEFAULT);
 }
