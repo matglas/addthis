@@ -3,6 +3,11 @@
 - Issue #1960656 by juampynr: Give other modules the chance to hook in once addthis variable is available [#1960656]
 - Issue #2407083 by petterw03: Add support for medium sized icons (20x20) [#2407083]
 
+Github merges
+
+- Issue #6 Changing default toolbox buttons on fields.
+- Issue #8 Minor fixes in whitespace and use of empty method.
+
 # 7.x-4.0-alpha6
 Use update.php to rebuild the registry because of class changes.
 If that does not work use the rebuild_registry module.

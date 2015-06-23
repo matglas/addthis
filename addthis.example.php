@@ -5,7 +5,7 @@
  */
 function hook_page_build(&$page) {
 
-  // Load the scripts on a specific url or other case when you don't use the 
+  // Load the scripts on a specific url or other case when you don't use the
   // Field API or Block.
   if (current_path() == 'node/1') {
     $manager = AddThisScriptManager::getInstance();

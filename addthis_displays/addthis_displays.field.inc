@@ -15,7 +15,7 @@ function addthis_displays_field_formatter_info() {
     'label' => t('Basic Toolbox'),
     'field types' => array(AddThis::FIELD_TYPE),
     'settings' => array(
-      'share_services' => 'facebook,twitter',
+      'share_services' => 'preferred_1,preferred_2,preferred_3,preferred_4,compact',
       'buttons_size' => 'addthis_16x16_style',
       'counter_orientation' => 'horizontal',
       'extra_css' => '',
@@ -50,7 +50,7 @@ function addthis_displays_field_formatter_settings_form($field, $instance, $view
         '#required' => TRUE,
         '#element_validate' => array('_addthis_display_element_validate_services'),
         '#description' =>
-          t('Specify the names of the sharing services and seperate them with a , (comma). <a href="http://www.addthis.com/services/list" target="_blank">The names on this list are valid.</a>') . 
+          t('Specify the names of the sharing services and seperate them with a , (comma). <a href="http://www.addthis.com/services/list" target="_blank">The names on this list are valid.</a>') .
           t('Elements that are available but not ont the services list are (!services).',
             array('!services' => 'bubble_style, pill_style, tweet, facebook_send, twitter_follow_native, google_plusone, stumbleupon_badge, counter_* (several supported services), linkedin_counter')
         ),
