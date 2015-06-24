@@ -268,11 +268,11 @@ function addthis_admin_settings_form($form_state) {
     '#default_value' => AddThis::getInstance()->getTwitterVia(),
     '#size' => 15,
   );
-  $form['third_party_fieldset']['twitter_service'][AddThis::TWITTER_TEMPLATE_KEY] = array(
+  $form['third_party_fieldset']['twitter_service'][AddThis::TWITTER_TEXT_KEY] = array(
     '#type' => 'textfield',
-    '#title' => t('Template text'),
-    '#description' => t('The {{title}} and {{url}} are replaced from the Twitter Button.'),
-    '#default_value' => AddThis::getInstance()->getTwitterTemplate(),
+    '#title' => t('Tweet prefixed text'),
+    '#description' => t('This text will appear before the URL and via (Relates to Tweet Button)'),
+    '#default_value' => AddThis::getInstance()->getTwitterText(),
   );
 
   return system_settings_form($form);

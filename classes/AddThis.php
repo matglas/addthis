@@ -55,8 +55,8 @@ class AddThis {
   // Twitter.
   const TWITTER_VIA_KEY = 'addthis_twitter_via';
   const TWITTER_VIA_DEFAULT = 'AddThis';
-  const TWITTER_TEMPLATE_KEY = 'addthis_twitter_template';
-  const TWITTER_TEMPLATE_DEFAULT = '{{title}} {{url}} via @AddThis';
+  const TWITTER_TEXT_KEY = 'addthis_twitter_text';
+  const TWITTER_TEXT_DEFAULT = 'Check this out: ';
 
   // External resources.
   const DEFAULT_BOOKMARK_URL = 'http://www.addthis.com/bookmark.php?v=300';
@@ -350,8 +350,8 @@ class AddThis {
     return variable_get(self::TWITTER_VIA_KEY, self::TWITTER_VIA_DEFAULT);
   }
 
-  public function getTwitterTemplate() {
-    return variable_get(self::TWITTER_TEMPLATE_KEY, self::TWITTER_TEMPLATE_DEFAULT);
+  public function getTwitterText() {
+    return variable_get(self::TWITTER_TEXT_KEY, self::TWITTER_TEXT_DEFAULT);
   }
 
   public function isClickbackTrackingEnabled() {
