@@ -8,6 +8,7 @@ Github merges
 
 - Issue #6 Changing default toolbox buttons on fields.
 - Issue #8 Minor fixes in whitespace and use of empty method.
+- Issue #9 Adding a checkbox in the module configuration for enabling and disabling asynchronous loading of AddThis JavaScript
 
 # 7.x-4.0-alpha6
 Use update.php to rebuild the registry because of class changes.
