@@ -55,6 +55,7 @@ function addthis_uninstall() {
   variable_del(AddThis::WIDGET_JS_URL_KEY);
   variable_del(AddThis::WIDGET_JS_LOAD_DOMREADY);
   variable_del(AddThis::WIDGET_JS_LOAD_ASYNC);
+  variable_del(AddThis::PLUGIN_INFO_ENABLED_KEY);
 }
 
 /**
@@ -95,4 +96,11 @@ function addthis_update_7402() {
   }
 
   variable_del('addthis_widget_load_type');
+}
+
+/**
+ * Remove old PLUGIN_INFO_ENABLED_KEY variable.
+ */
+function addthis_update_7404() {
+  variable_set(AddThis::PLUGIN_INFO_ENABLED_KEY, TRUE);
 }

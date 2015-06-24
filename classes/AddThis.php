@@ -50,6 +50,7 @@ class AddThis {
   const WIDGET_JS_LOAD_DOMREADY = 'addthis_widget_load_domready';
   const WIDGET_JS_LOAD_ASYNC = 'addthis_widget_load_async';
   const WIDGET_JS_INCLUDE = 'addthis_widget_include';
+  const PLUGIN_INFO_ENABLED_KEY = 'addthis_plugin_info_enabled';
 
   // Twitter.
   const TWITTER_VIA_KEY = 'addthis_twitter_via';
@@ -371,6 +372,10 @@ class AddThis {
 
   public function isFacebookLikeCountSupportEnabled() {
     return (boolean) variable_get(self::FACEBOOK_LIKE_COUNT_SUPPORT_ENABLED, TRUE);
+  }
+
+  public function isPluginInfoEnabled() {
+    return (boolean) variable_get(self::PLUGIN_INFO_ENABLED_KEY, TRUE);
   }
 
   public function addStylesheets() {

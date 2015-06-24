@@ -119,6 +119,13 @@ function addthis_admin_settings_form($form_state) {
     '#default_value' => AddThis::getInstance()->isAddressbookEnabled(),
     '#required' => FALSE,
   );
+  $form['fieldset_compact_menu']['fieldset_additionals'][AddThis::PLUGIN_INFO_ENABLED_KEY] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Include troubleshooting information for AddThis support team'),
+    '#description' => 'If checked, troubleshooting information such as the plugin name, plugin version and Drupal version will be available in your AddThis configurations. This helps the AddThis support team with troubleshooting should you reach out to them for help. They can be contacted at <a target="_blank" href="http://support.addthis.com">support.addthis.com</a> or <a target="_blank" href="mailto:help@addthis.com">help@addthis.com</a> if you are having trouble with your AddThis tools.',
+    '#default_value' => AddThis::getInstance()->isPluginInfoEnabled(),
+    '#required' => FALSE,
+  );
 
   // Excluded Services.
   $form['fieldset_excluded_services'] = array(
