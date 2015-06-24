@@ -164,22 +164,27 @@ class AddThisScriptManager {
     $this->async = $enabled;
   }
 
-
   /**
    * Get a array with all addthis_plugin_info values.
    */
   private function getJsAddThisPluginInfo() {
-    $plugin_info = array(
-      'cms_name' => 'Drupal',
-      'cms_version' => VERSION,
-      'plugin_name' => 'AddThis',
-      'plugin_version' => '7.x-4.0-alpha7',
-      'plugin_mode' => 'AddThis',
-    );
+    if ($this->addthis->isPluginInfoEnabled()) {
+      $plugin_info = array(
+        'info_status' => 'enabled',
+        'cms_name' => 'Drupal',
+        'cms_version' => VERSION,
+        'plugin_name' => 'AddThis',
+        'plugin_version' => '7.x-4.0-alpha7',
+        'plugin_mode' => 'AddThis',
+      );
+    } else {
+      $plugin_info = array(
+        'info_status' => 'disabled',
+      );
+    }
 
     return $plugin_info;
   }
-
 
   /**
    * Get a array with all addthis_config values.
