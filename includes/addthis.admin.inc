@@ -112,6 +112,13 @@ function addthis_admin_settings_form($form_state) {
     '#default_value' => AddThis::getInstance()->get508Compliant(),
     '#required' => FALSE,
   );
+  $form['fieldset_compact_menu']['fieldset_additionals'][AddThis::WIDGET_JS_LOAD_ASYNC] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Asynchronous loading'),
+    '#description' => 'If checked, your site will load before AddThis sharing buttons are added. If unchecked, your site will not load until AddThis buttons (and AddThis JavaScript) have been loaded by your vistors.',
+    '#default_value' => AddThis::getInstance()->getWidgetJsAsync(),
+    '#required' => FALSE,
+  );
   $form['fieldset_compact_menu']['fieldset_additionals'][AddThis::ADDRESSBOOK_ENABLED_KEY] = array(
     '#type' => 'checkbox',
     '#title' => t('Use addressbook'),
