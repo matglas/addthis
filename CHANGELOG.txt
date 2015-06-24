@@ -2,6 +2,7 @@
 
 - Issue #1960656 by juampynr: Give other modules the chance to hook in once addthis variable is available [#1960656]
 - Issue #2407083 by petterw03: Add support for medium sized icons (20x20) [#2407083]
+- Issue #2505439 by julka: update Twitter settings to use supported variables (addthis_config.passthrough.twitter.via and addthis_config.passthrough.twitter.text instead of addthis_config.templates.twitter)
 
 Github merges
 

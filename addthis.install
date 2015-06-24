@@ -55,6 +55,8 @@ function addthis_uninstall() {
   variable_del(AddThis::WIDGET_JS_URL_KEY);
   variable_del(AddThis::WIDGET_JS_LOAD_DOMREADY);
   variable_del(AddThis::WIDGET_JS_LOAD_ASYNC);
+  variable_del(AddThis::TWITTER_VIA_KEY);
+  variable_del(AddThis::TWITTER_TEXT_KEY);
 }
 
 /**
@@ -95,4 +97,12 @@ function addthis_update_7402() {
   }
 
   variable_del('addthis_widget_load_type');
+}
+
+/**
+ * Remove old TWITTER_TEMPLATE_KEY variable, add default value for
+ * TWITTER_TEXT_KEY
+ */
+function addthis_update_7403() {
+  variable_del('addthis_twitter_template');
 }
