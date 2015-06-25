@@ -24,8 +24,9 @@ Field, Block
 
 -- INSTALLATION --
 
-Normal Drupal module installation, see http://drupal.org/node/70151 for further
-information.
+Normal Drupal module installation, see
+https://www.drupal.org/documentation/install/modules-themes/modules-7
+for further information.
 
 For link sharing statistics registration at http://addthis.com/ is required, but
 the module will work even without registration.
