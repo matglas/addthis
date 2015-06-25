@@ -176,14 +176,14 @@ class AddThisScriptManager {
         'plugin_mode' => 'AddThis',
       );
 
-      $pluginInfo = system_get_info('module_enabled');
+      $system_info = system_get_info('module_enabled');
 
-      if (!empty($pluginInfo['addthis']['name'])) {
-        $plugin_info['plugin_name'] = $pluginInfo['addthis']['name'];
+      if (!empty($system_info['addthis']['name'])) {
+        $plugin_info['plugin_name'] = $system_info['addthis']['name'];
       }
 
-      if (!empty($pluginInfo['addthis']['version'])) {
-        $plugin_info['plugin_version'] = $pluginInfo['addthis']['version'];
+      if (!empty($systemInfo['addthis']['version'])) {
+        $plugin_info['plugin_version'] = $system_info['addthis']['version'];
       }
     } else {
       $plugin_info = array(
