@@ -173,10 +173,18 @@ class AddThisScriptManager {
         'info_status' => 'enabled',
         'cms_name' => 'Drupal',
         'cms_version' => VERSION,
-        'plugin_name' => 'AddThis',
-        'plugin_version' => '7.x-4.0-alpha7',
         'plugin_mode' => 'AddThis',
       );
+
+      $pluginInfo = system_get_info('module_enabled');
+
+      if (!empty($pluginInfo['addthis']['name'])) {
+        $plugin_info['plugin_name'] = $pluginInfo['addthis']['name'];
+      }
+
+      if (!empty($pluginInfo['addthis']['version'])) {
+        $plugin_info['plugin_version'] = $pluginInfo['addthis']['version'];
+      }
     } else {
       $plugin_info = array(
         'info_status' => 'disabled',
