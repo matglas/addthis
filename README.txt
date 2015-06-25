@@ -1,7 +1,7 @@
 
 -- SUMMARY --
 
-Add This module provides Drupal integration to addthis.com link sharing service.
+AddThis module provides Drupal integration to addthis.com link sharing service.
 Integration has been implemented as a field.
 
 Description from addthis.com:
@@ -24,16 +24,20 @@ Field, Block
 
 -- INSTALLATION --
 
-Normal Drupal module installation, see http://drupal.org/node/70151 for further
-information.
+Normal Drupal module installation, see
+https://www.drupal.org/documentation/install/modules-themes/modules-7
+for further information.
 
-For link sharing statistics registration at http://addthis.com/ is required, but
-the module will work even without registration.
+Registration with AddThis.com is not required for basic sharing buttons. For
+sharing statistics, visitor insights, and additional on page tools (such a
+recommended content, custom messages, follow buttons) register at
+http://addthis.com and updated your AddThis Profile ID in the module's
+configuration.
 
 -- CONFIGURATION --
 
-Use the admin configuration page to configure settings and see http://drupal.org/node/1309922
-for a walkthrough on how to configure the rest.
+Use the admin configuration page to configure settings and see
+http://drupal.org/node/1309922 for a walkthrough on how to configure the rest.
 
 -- DEVELOPMENT --
 
