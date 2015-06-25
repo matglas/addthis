@@ -28,8 +28,11 @@ Normal Drupal module installation, see
 https://www.drupal.org/documentation/install/modules-themes/modules-7
 for further information.
 
-For link sharing statistics registration at http://addthis.com/ is required, but
-the module will work even without registration.
+Registration with AddThis.com is not required for basic sharing buttons. For
+sharing statistics, visitor insights, and additional on page tools (such a
+recommended content, custom messages, follow buttons) register at
+http://addthis.com and updated your AddThis Profile ID in the module's
+configuration.
 
 -- CONFIGURATION --
 
