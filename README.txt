@@ -1,7 +1,7 @@
 
 -- SUMMARY --
 
-Add This module provides Drupal integration to addthis.com link sharing service.
+AddThis module provides Drupal integration to addthis.com link sharing service.
 Integration has been implemented as a field.
 
 Description from addthis.com:
