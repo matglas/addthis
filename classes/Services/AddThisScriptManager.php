@@ -77,7 +77,7 @@ class AddThisScriptManager {
   public function correctSchemaIfHttps($url) {
     if (is_string($url) && $this->isHttps()) {
       return str_replace('http://', 'https://', $url);
-    } 
+    }
     else {
       return $url;
     }
@@ -101,7 +101,7 @@ class AddThisScriptManager {
       $widget_js = new AddThisWidgetJsUrl($this->getWidgetJsUrl());
 
       $pubid = $this->addthis->getProfileId();
-      if (isset($pubid) && !empty($pubid) && is_string($pubid)) {
+      if (!empty($pubid) && is_string($pubid)) {
         $widget_js->addAttribute('pubid', $pubid);
       }
 
@@ -225,7 +225,14 @@ class AddThisScriptManager {
         'templates' => $configuration['templates'],
       );
     }
-    $addthis_share['templates']['twitter'] = $this->addthis->getTwitterTemplate();
+
+    if (!empty($this->addthis->getTwitterVia())) {
+      $addthis_share['passthrough']['twitter']['via'] = $this->addthis->getTwitterVia();
+    }
+
+    if (!empty($this->addthis->getTwitterText())) {
+      $addthis_share['passthrough']['twitter']['text'] = $this->addthis->getTwitterText();
+    }
 
     drupal_alter('addthis_configuration_share', $configuration);
     return $addthis_share;

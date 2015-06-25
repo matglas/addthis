@@ -221,8 +221,8 @@ function theme_addthis_element($variables) {
  */
 function _addthis_settings_form($form = array(), &$form_state = array(), $display_type = NULL, $display_settings = array()) {
 
-  // Check display setting to be not null.
-  if (!isset($display_settings) || (isset($display_settings) && !is_array($display_settings))) {
+  // Check display setting to be not empty or something else then an array.
+  if (empty($display_settings) || !is_array($display_settings)) {
     $display_settings = array();
   }
 
