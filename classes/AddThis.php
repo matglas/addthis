@@ -40,6 +40,7 @@ class AddThis {
   const FACEBOOK_LIKE_COUNT_SUPPORT_ENABLED = 'addthis_facebook_like_count_support_enabled';
   const OPEN_WINDOWS_ENABLED_KEY = 'addthis_open_windows_enabled';
   const PROFILE_ID_KEY = 'addthis_profile_id';
+  const ANONYMOUS_PROFILE_ID_KEY = 'addthis_anonymous_profile_id';
   const SERVICES_CSS_URL_KEY = 'addthis_services_css_url';
   const SERVICES_JSON_URL_KEY = 'addthis_services_json_url';
   const STANDARD_CSS_ENABLED_KEY = 'addthis_standard_css_enabled';
@@ -72,6 +73,7 @@ class AddThis {
   const WIDGET_JS_INCLUDE_PAGE = 1;
   const WIDGET_JS_INCLUDE_USAGE = 2;
 
+  const ANONYMOUS_PROFILE_ID_PREFIX = 'xa';
 
   // Internal resources.
   const ADMIN_CSS_FILE = 'addthis.admin.css';
@@ -249,6 +251,20 @@ class AddThis {
 
   public function getProfileId() {
     return check_plain(variable_get(AddThis::PROFILE_ID_KEY));
+  }
+
+  private function setAnonymousProfileId() {
+    $prefix = AddThis::ANONYMOUS_PROFILE_ID_PREFIX;
+
+    Global $base_url;
+    $regex = "/^(.*\/\/)(.*?)(\/.*)?$/";
+    preg_match($regex, $base_url, $output_array);
+    $domain = $output_array[2];
+    $postfix = hash_hmac('md5', $domain, 'addthis');
+
+    $profile_id = $prefix . '-' . $postfix;
+    variable_set(AddThis::ANONYMOUS_PROFILE_ID_PREFIX, $profile_id);
+    return $profile_id;
   }
 
   public function getServicesCssUrl() {
