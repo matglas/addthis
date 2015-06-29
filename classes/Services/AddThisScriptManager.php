@@ -100,7 +100,7 @@ class AddThisScriptManager {
     if ($this->addthis->getWidgetJsInclude() != AddThis::WIDGET_JS_INCLUDE_NONE) {
       $widget_js = new AddThisWidgetJsUrl($this->getWidgetJsUrl());
 
-      $pubid = $this->addthis->getProfileId();
+      $pubid = $this->addthis->getUsableProfileId();
       if (!empty($pubid) && is_string($pubid)) {
         $widget_js->addAttribute('pubid', $pubid);
       }
@@ -180,7 +180,7 @@ class AddThisScriptManager {
     $excluded_services = $this->addthis->getServiceNamesAsCommaSeparatedString($this->addthis->getExcludedServices());
 
     $configuration = array(
-      'pubid' => $this->addthis->getProfileId(),
+      'pubid' => $this->addthis->getUsableProfileId(),
       'services_compact' => $enabled_services,
       'services_exclude' => $excluded_services,
       'data_track_clickback' => $this->addthis->isClickbackTrackingEnabled(),
