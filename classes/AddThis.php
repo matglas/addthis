@@ -253,6 +253,16 @@ class AddThis {
     return check_plain(variable_get(AddThis::PROFILE_ID_KEY));
   }
 
+  public function getAnonymousProfileId() {
+    $profile_id = check_plain(variable_get(AddThis::ANONYMOUS_PROFILE_ID_KEY));
+
+    if (!$profile_id) {
+      $profile_id = check_plain(AddThis::setAnonymousProfileId());
+    }
+
+    return $profile_id;
+  }
+
   private function setAnonymousProfileId() {
     $prefix = AddThis::ANONYMOUS_PROFILE_ID_PREFIX;
 
