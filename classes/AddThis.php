@@ -277,6 +277,15 @@ class AddThis {
     return $profile_id;
   }
 
+  public function getUsableProfileId() {
+    $profile_id = $this->getProfileId();
+    if (!$profile_id) {
+        $profile_id = $this->getAnonymousProfileId();
+    }
+
+    return $profile_id;
+  }
+
   public function getServicesCssUrl() {
     return check_url(variable_get(AddThis::SERVICES_CSS_URL_KEY, self::DEFAULT_SERVICES_CSS_URL));
   }
