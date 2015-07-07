@@ -266,7 +266,7 @@ class AddThis {
   private function setAnonymousProfileId() {
     $prefix = AddThis::ANONYMOUS_PROFILE_ID_PREFIX;
 
-    Global $base_url;
+    global $base_url;
     $regex = "/^(.*\/\/)(.*?)(\/.*)?$/";
     preg_match($regex, $base_url, $output_array);
     $domain = $output_array[2];
