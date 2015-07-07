@@ -108,7 +108,7 @@ function addthis_update_7403() {
 }
 
 /**
- * Remove old PLUGIN_INFO_ENABLED_KEY variable.
+ * Setting PLUGIN_INFO_ENABLED_KEY to false for upgrades.
  */
 function addthis_update_7404() {
   variable_set(AddThis::PLUGIN_INFO_ENABLED_KEY, FALSE);
