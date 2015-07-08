@@ -135,6 +135,7 @@ class AddThisScriptManager {
                   'domready' => $domready,
                   'widget_url' => $this->getWidgetJsUrl(),
 
+                  'addthis_plugin_info' => $this->getJsAddThisPluginInfo(),
                   'addthis_config' => $this->getJsAddThisConfig(),
                   'addthis_share' => $this->getJsAddThisShare(),
               )
@@ -161,6 +162,36 @@ class AddThisScriptManager {
    */
   function setAsync($enabled) {
     $this->async = $enabled;
+  }
+
+  /**
+   * Get a array with all addthis_plugin_info values.
+   */
+  private function getJsAddThisPluginInfo() {
+    if ($this->addthis->isPluginInfoEnabled()) {
+      $plugin_info = array(
+        'info_status' => 'enabled',
+        'cms_name' => 'Drupal',
+        'cms_version' => VERSION,
+        'plugin_mode' => 'AddThis',
+      );
+
+      $system_info = system_get_info('module_enabled');
+
+      if (!empty($system_info['addthis']['name'])) {
+        $plugin_info['plugin_name'] = $system_info['addthis']['name'];
+      }
+
+      if (!empty($systemInfo['addthis']['version'])) {
+        $plugin_info['plugin_version'] = $system_info['addthis']['version'];
+      }
+    } else {
+      $plugin_info = array(
+        'info_status' => 'disabled',
+      );
+    }
+
+    return $plugin_info;
   }
 
   /**

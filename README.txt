@@ -44,6 +44,15 @@ http://drupal.org/node/1309922 for a walkthrough on how to configure the rest.
 Please see the addthis.api.php for implementation options of different displays
 and altering configuration on rendering.
 
+-- NOTICES --
+
+In 7.x-4.0-alpha7 a new JavaScript variable (addthis_plugin_info) is added to
+pages. It's used by AddThis' support team to help in troubleshooting. By
+default it exposes that you're using Drupal, your version of Drupal, this
+plugin's name and the version of this plugin you're using. You can hide those
+details by unchecking the "Include troubleshooting information for AddThis
+support team" checkbox in the module's basic settings.
+
 -- CONTACT --
 
 Current maintainers:

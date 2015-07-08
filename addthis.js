@@ -43,7 +43,7 @@
 
     // Returns if the configuration variables needed for widget.js are defined.
     isConfigLoaded: function() {
-      if (typeof addthis_config == 'undefined' || typeof addthis_share == 'undefined') {
+      if (typeof addthis_config == 'undefined' || typeof addthis_share == 'undefined'  || typeof addthis_plugin_info == 'undefined') {
         return false;
       }
       return true;
@@ -52,6 +52,7 @@
     initConfig: function () {
       addthis_config = Drupal.settings.addthis.addthis_config;
       addthis_share = Drupal.settings.addthis.addthis_share;
+      addthis_plugin_info = Drupal.settings.addthis.addthis_plugin_info;
     },
 
     // Load the js library when the dom is ready.
@@ -90,6 +91,7 @@
   if (Drupal.behaviors.addthis.isConfigLoaded()) {
     addthis_config = Drupal.settings.addthis.addthis_config;
     addthis_share = Drupal.settings.addthis.addthis_share;
+    addthis_plugin_info = Drupal.settings.addthis.addthis_plugin_info;
   }
 
   // Document ready in case we want to load AddThis into the dom after every
