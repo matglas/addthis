@@ -226,12 +226,14 @@ class AddThisScriptManager {
       );
     }
 
-    if (!empty($this->addthis->getTwitterVia())) {
-      $addthis_share['passthrough']['twitter']['via'] = $this->addthis->getTwitterVia();
+    $twitter_via = $this->addthis->getTwitterVia();
+    if (!empty($twitter_via)) {
+      $addthis_share['passthrough']['twitter']['via'] = $twitter_via;
     }
 
-    if (!empty($this->addthis->getTwitterText())) {
-      $addthis_share['passthrough']['twitter']['text'] = $this->addthis->getTwitterText();
+    $twitter_text = $this->addthis->getTwitterText();
+    if (!empty($twitter_text)) {
+      $addthis_share['passthrough']['twitter']['text'] = $twitter_text;
     }
 
     drupal_alter('addthis_configuration_share', $configuration);
