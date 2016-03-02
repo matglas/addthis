@@ -392,7 +392,7 @@ class AddThis {
   private function getAttributeTitle($entity) {
     if (isset($entity->title)) {
       return array(
-        self::TITLE_ATTRIBUTE => htmlentities($entity->title . ' - ' . variable_get('site_name'), ENT_COMPAT),
+        self::TITLE_ATTRIBUTE => htmlspecialchars($entity->title . ' - ' . variable_get('site_name'), ENT_COMPAT),
       );
     }
     return array();
