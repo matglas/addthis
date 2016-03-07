@@ -1,8 +1,10 @@
 <?php
 /**
  * @file
- * Hook implementations for the AddThis-module. Most of the logic is defined
- * in a separate AddThis-class to keep the .module-file clean.
+ * Hook implementations for the AddThis-module.
+ *
+ *  Most of the logic is defined in a separate AddThis-class to keep the
+ * module-file clean.
  */
 
 if (module_exists('block')) {
@@ -68,17 +70,17 @@ function addthis_menu() {
     'weight' => 0,
   );
   $menu_items['admin/config/user-interface/addthis/basic'] = array(
-    'title' => t('Basic settings'),
+    'title' => 'Basic settings',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $menu_items['admin/config/user-interface/addthis/advanced'] = array(
-    'title' => t('Advanced settings'),
+    'title' => 'Advanced settings',
     'type' => MENU_LOCAL_TASK,
     'page callback' => 'drupal_get_form',
     'page arguments' => array('addthis_admin_settings_advanced_form'),
     'access arguments' => array(AddThis::PERMISSION_ADMINISTER_ADDTHIS),
     'file' => AddThis::ADMIN_INCLUDE_FILE,
-    'weight' => 10
+    'weight' => 10,
   );
 
   return $menu_items;
@@ -163,7 +165,9 @@ function addthis_page_build(&$page) {
 }
 
 /**
- * Implements hook_preprocess() for theme_addthis.
+ * Implements hook_preprocess().
+ *
+ * For theme_addthis.
  */
 function template_preprocess_addthis(&$variables) {
   if (isset($variables[0]) && count($variables) == 3) {
@@ -172,11 +176,17 @@ function template_preprocess_addthis(&$variables) {
   }
 }
 
+/**
+ * Theme function 'theme_addthis'.
+ */
 function theme_addthis($variables) {
   $markup = AddThis::getInstance()->getDisplayMarkup($variables['#display']);
   return render($markup);
 }
 
+/**
+ * Theme function 'theme_addthis_wrapper'.
+ */
 function theme_addthis_wrapper($variables) {
   $element = $variables['addthis_wrapper'];
   $output = '<' . $element['#tag'] . drupal_attributes($element['#attributes']) . '>';
@@ -256,7 +266,7 @@ function _addthis_settings_form($form = array(), &$form_state = array(), $displa
       'wrapper' => 'addthis_settings',
       'name' => 'switch_display',
       'event' => 'change',
-    )
+    ),
   );
 
   if ($no_js) {
@@ -271,7 +281,6 @@ function _addthis_settings_form($form = array(), &$form_state = array(), $displa
   }
 
   // Formatter settings.
-
   // Check the currently selected formatter, and merge persisted values for
   // formatter settings.
   $formatter_type = $display_type;
@@ -303,10 +312,16 @@ function _addthis_settings_form($form = array(), &$form_state = array(), $displa
   return $form;
 }
 
+/**
+ * Submit callback for 'addthis settings form'.
+ */
 function _addthis_settings_form_submit($form, &$form_state) {
   $form_state['rebuild'] = TRUE;
 }
 
+/**
+ * Submit callback for 'addthis settings form'.
+ */
 function _addthis_settings_form_submit_callback($form, &$form_state) {
   $form_state['rebuild'] = TRUE;
   return $form['addthis_settings']['form'];
