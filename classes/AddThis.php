@@ -468,7 +468,7 @@ class AddThis {
 
   public function prefixUrlScheme($url) {
     global $is_https;
-
+    $url = preg_replace("(^https?:)i", "", $url );
     return ($is_https ? 'https:' : 'http:') . $url;
   }
 }
