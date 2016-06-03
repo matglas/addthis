@@ -106,14 +106,15 @@ Owner:
 
 * [Vesa Palmu][7] (wesku)
 
-Current maintainers:
+Current co-maintainers:
 
 * [Jani Palsamäki][8] (janip).
 * [Matthias Glastra][9] (matglas86)
+* [Gisle Hannemyr][10] (gisle)
 
 Major contributions by:
 
-* [Lesmana Lim][10] (lesmana)
+* [Lesmana Lim][11] (lesmana)
 
 [1]: http://addthis.com/
 [2]: https://www.drupal.org/node/1309922
@@ -124,4 +125,5 @@ Major contributions by:
 [7]: https://www.drupal.org/u/wesku
 [8]: https://www.drupal.org/u/janip
 [9]: https://www.drupal.org/u/matglas86
-[10]: https://www.drupal.org/u/les-lim
+[10]: https://www.drupal.org/u/gisle
+[11]: https://www.drupal.org/u/les-lim
