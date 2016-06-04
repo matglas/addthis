@@ -241,6 +241,22 @@ function addthis_admin_settings_form($form_state) {
     '#disabled' => !$is_google_analytics_setup,
   );
 
+  //Addthis button settings
+  $form['addthis_button_fieldset'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Custom AddThis button'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+
+  $form['addthis_button_fieldset']['addthis_image_upload'] = array(
+    '#type' => 'managed_file',
+    '#title' => t('Choose a file'),
+	'#description' => 'Upload an image that you want to use instead of the default AddThis button.',
+	'#default_value' => variable_get('addthis_image_upload', ''),
+	'#upload_location' => 'public://',
+  );
+
   // Third party settings.
   $form['third_party_fieldset'] = array(
     '#type' => 'fieldset',

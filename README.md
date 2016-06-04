@@ -69,6 +69,8 @@ The Basic settings tab have the following sub-panels:
 - Excluded services: Sharing services to exclude from all AddThis
   menus.
 - Analytics & tracking: For click analytics and statistics.
+- Custom AddThis button: Upload an image that you want to use
+  instead of the default AddThis button.
 - Third Party settings: Settings for Twitter
 
 ### Advanced settings
