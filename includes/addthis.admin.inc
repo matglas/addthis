@@ -311,7 +311,7 @@ function addthis_admin_settings_advanced_form($form_state) {
   // Advanced settings.
   $form['advanced_settings_fieldset'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Advanced settings'),
+    '#title' => t('Additional customization'),
     '#access' => user_access(AddThis::PERMISSION_ADMINISTER_ADVANCED_ADDTHIS),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,

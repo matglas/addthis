@@ -62,13 +62,23 @@ To configure the module, navigate to
 
 ### Basic settings
 
-The basic settings panel lets you define *Service URLs* for the
-AddThis API.
+The Basic settings tab have the following sub-panels:
+
+- Compact menu: Configure the global behavior and style of the compact
+  menu and some additional settings
+- Excluded services: Sharing services to exclude from all AddThis
+  menus.
+- Analytics & tracking: For click analytics and statistics.
+- Third Party settings: Settings for Twitter
 
 ### Advanced settings
 
-The advanced settings panel lets you add a custom AddThis
-configuration code and toggle some advanced flags.
+There are two panels under the Advanced settings tab.
+
+The first panel lets you define *Service URLs* for the AddThis API.
+
+The second panel lets you add a custom AddThis configuration code and
+toggle some advanced flags.
 
 ### Adding fields
 
