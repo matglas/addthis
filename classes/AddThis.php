@@ -384,15 +384,11 @@ class AddThis {
 
   /**
    * Transform the entity title to a attribute.
-   *
-   * @remarks
-   *   The title of the entity and site can not contain double-qoutes. These are
-   *   encoded into html chars.
    */
   private function getAttributeTitle($entity) {
     if (isset($entity->title)) {
       return array(
-        self::TITLE_ATTRIBUTE => htmlspecialchars($entity->title . ' - ' . variable_get('site_name'), ENT_COMPAT),
+        self::TITLE_ATTRIBUTE => $entity->title . ' - ' . variable_get('site_name'),
       );
     }
     return array();
