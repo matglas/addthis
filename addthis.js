@@ -6,6 +6,7 @@
 (function ($) {
   Drupal.behaviors.addthis = {
     scriptLoaded: false,
+    scriptLoading: false,
 
     attach: function(context, settings) {
 
@@ -55,13 +56,19 @@
     },
 
     // Load the js library when the dom is ready.
-    loadDomready: function() {
+    loadDomready: function () {
+
       // If settings asks for loading the script after the dom is loaded, then
       // load the script here.
       if (!this.scriptLoaded &&
-          this.isConfigLoaded() &&
-          Drupal.settings.addthis.domready) {
-        $.getScript(Drupal.settings.addthis.widget_url, Drupal.behaviors.addthis.scriptReady);
+        this.isConfigLoaded() &&
+        Drupal.settings.addthis.domready) {
+
+        if (!this.scriptLoading) {
+          this.scriptLoading = true;
+
+          $.getScript(Drupal.settings.addthis.widget_url, Drupal.behaviors.addthis.scriptReady);
+        }
       }
     },
 
