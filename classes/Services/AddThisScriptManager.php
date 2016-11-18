@@ -118,7 +118,7 @@ class AddThisScriptManager {
       // Only when the script is not loaded after the DOM is ready we include
       // the script with #attached.
       if (!$domready) {
-        $element['#attached']['js'][$this->getWidgetJsUrl()] = array(
+        $element['#attached']['js'][$widget_js->getFullUrl()] = array(
             'type' => 'external',
             'scope' => 'footer',
         );
@@ -133,7 +133,7 @@ class AddThisScriptManager {
               'addthis' => array(
                   'async' => $async,
                   'domready' => $domready,
-                  'widget_url' => $this->getWidgetJsUrl(),
+                  'widget_url' => $widget_js->getFullUrl(),
 
                   'addthis_config' => $this->getJsAddThisConfig(),
                   'addthis_share' => $this->getJsAddThisShare(),

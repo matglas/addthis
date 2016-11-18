@@ -10,6 +10,7 @@
 - Issue #2529436 by muriqui: Fatal error in AddThisScriptManager.php
 - Issue #2644044 by mErilainen: Fixed warning htmlspecialchars
 - Issue #2285177 by matason, jcisio, matglas86, rpsu, recrit: Use schemeless URLs to avoid mixed HTTP/HTTPS problem
+- Issue #2765787 by DamienMcKenna: Pages not tracking in AddThis?
 
 Github merges
 
