@@ -116,12 +116,24 @@ function addthis_displays_addthis_display_markup__addthis_basic_button($options 
 
   $addthis = AddThis::getInstance();
   $settings = $options['#display']['settings'];
+  $addthis_image = variable_get('addthis_image_upload', '');
+
+  if($addthis_image){
+	$addthis_file = file_load($addthis_image);
+	$imguri = image_style_url("thumbnail",$addthis_file->uri);
+	$imgpath = file_create_url($imguri);
+  }
 
   $button_img = 'http://s7.addthis.com/static/btn/sm-share-en.gif';
   if (isset($settings['buttons_size']) && $settings['buttons_size'] == 'big') {
     $button_img = 'http://s7.addthis.com/static/btn/v2/lg-share-en.gif';
   }
+
   $button_img = $addthis->transformToSecureUrl($button_img);
+
+  if(isset($imgpath)){
+	$button_img = $imgpath;
+  }
 
   $extra_css = isset($settings['extra_css']) ? $settings['extra_css'] : '';
   $element = array(
