@@ -4,6 +4,12 @@
 - Issue #2407083 by petterw03: Add support for medium sized icons (20x20) [#2407083]
 - Issue #2505439 by julka: update Twitter settings to use supported variables (addthis_config.passthrough.twitter.via and addthis_config.passthrough.twitter.text instead of addthis_config.templates.twitter)
 - Issue #2706451 by xrxphawxby: Addthis widget loading not properly tracked causing double loading
+- Issue #2803109 by gisle: Fixed double htmlentities encoded
+- Issue #2713271 by pallavi_sugandhi, gisle: Everytime I click save configuration another http is added to each service url
+- Issue #2580801 by tusharbodke: Drupal conding standards issue found
+- Issue #2529436 by muriqui: Fatal error in AddThisScriptManager.php
+- Issue #2644044 by mErilainen: Fixed warning htmlspecialchars
+- Issue #2285177 by matason, jcisio, matglas86, rpsu, recrit: Use schemeless URLs to avoid mixed HTTP/HTTPS problem
 
 Github merges
 
