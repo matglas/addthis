@@ -16,6 +16,7 @@ Github merges
 
 - Issue #6 Changing default toolbox buttons on fields.
 - Issue #8 Minor fixes in whitespace and use of empty method.
+- Issue #12 Using an anonymous profile id when one isn't provided, to allow a site to get past analytics from AddThis if they sign up for an account at a later date
 
 # 7.x-4.0-alpha6
 Use update.php to rebuild the registry because of class changes.
